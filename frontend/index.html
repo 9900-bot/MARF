@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MARF - Machinery Access: Revolution for Farmers</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Kannada:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/906faa9c3f.js" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --primary-green: #173c1c;
+            --soft-earth-tone: #ffffff;
+            --accent-green: #2c6032;
+            --text-dark: #173c1c;
+            --text-light: #fff;
+            --section-padding: 80px 20px;
+        }
+
+        body {
+            font-family: 'Noto Sans Kannada', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text-dark);
+            background-color: var(--soft-earth-tone);
+            line-height: 1.8;
+        }
+
+        .container {
+            max-width: 2000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header and Navigation */
+        header {
+            background-color: var(--soft-earth-tone);
+            color: var(--text-dark);
+            padding: 1.5rem 20px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            height: 50px;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .logo img{
+            margin-left: 20px;
+            width: 100%;;
+            height: 70px;;
+            /* font-weight: 700;
+            font-size: 1.8rem;
+            color: var(--text-light);
+            text-decoration: none; */
+        }
+
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        nav a {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            /* transition: color 0.3s; */
+            font-size: 1.3rem;
+            position: relative;
+            scroll-behavior: smooth;
+        }
+
+        /* Hover effect for navigation links */
+        .nav-link:hover {
+            color: var(--primary-green);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 4px;
+            background-color: #173c1c;
+            border-radius: 2px;
+            transition: width 0.3s ease, left 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        .lang-switcher {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--text-dark);
+            border-radius: 15px;
+            overflow: hidden;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .lang-switcher button {
+            background: none;
+            border: none;
+            color: var(--text-dark);
+            padding: 15px 18px 10px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            font-family: 'Noto Sans Kannada', sans-serif;
+            font-size: 1.2rem;
+        }
+
+        .lang-switcher button.active {
+            background-color: var(--primary-green);
+            color: var(--soft-earth-tone);
+            font-weight: 700;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .cta-buttons .btn {
+            background-color: transparent;
+            color: var(--text-dark);
+            border: 2px solid var(--text-dark);
+            padding: 10px 18px 5px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: background-color 0.3s, color 0.3s;
+            font-size: 1.2rem;
+        }
+
+        .cta-buttons .btn:hover {
+            background-color: var(--text-dark);
+            color: var(--soft-earth-tone);
+        }
+
+        /* Hero Slider */
+        .hero-slider {
+            position: relative;
+            height: 50vh;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        
+        .hero-slide {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            color: var(--text-light);
+            text-align: center;
+        }
+
+        .hero-slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(23, 60, 28, 0.5);
+        }
+        
+        .hero-slide.active {
+            opacity: 1;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            padding: 20px;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            margin: 0 0 15px;
+        }
+        
+        .hero-content p {
+            font-size: 1.4rem;
+            max-width: 700px;
+            margin-bottom: 30px;
+        }
+        
+        .hero-cta-buttons .btn {
+            background-color: var(--soft-earth-tone);
+            color: var(--primary-green);
+            padding: 15px 30px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 700;
+            margin: 0 10px;
+            transition: background-color 0.3s, transform 0.3s;
+            font-size: 1.1rem;
+        }
+        
+        .hero-cta-buttons .btn:hover {
+            background-color: var(--primary-green);
+            color: var(--soft-earth-tone);
+            transform: scale(1.05);
+        }
+
+        /* Quick Features */
+        .quick-features {
+            text-align: center;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .section-heading {
+            font-size: 2.8rem;
+            color: var(--primary-green);
+            margin-bottom: 15px;
+        }
+
+        .quick-features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .feature-card {
+            background-color: var(--soft-earth-tone);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            border: 1px solid var(--primary-green);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-card .icon {
+            font-size: 3rem;
+            color: var(--primary-green);
+            margin-bottom: 5px;
+        }
+
+        .feature-card h3 {
+            margin: 0 0 5px;
+            font-size: 1.5rem;
+        }
+        
+        .feature-card p {
+            font-size: 1.1rem;
+        }
+
+        /* Featured Equipment */
+        .featured-equipment {
+            background-color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .equipment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .equipment-card {
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: relative;
+            border: 1px solid var(--primary-green);
+        }
+
+        .equipment-card img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .equipment-card-content {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .equipment-card-content h3 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        
+        .equipment-card-content p {
+            font-size: 1.1rem;
+            margin-top: 0;
+            margin-bottom: 5px; /* Reduced margin to make space for price */
+        }
+        
+        .equipment-price {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--primary-green);
+            margin-bottom: 25px;
+        }
+
+        .equipment-card-content .btn {
+            background-color: var(--primary-green);
+            color: var(--text-light);
+            padding: 15px 25px 10px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 700;
+            display: inline-block;
+            transition: background-color 0.3s;
+            font-size: 1rem;
+        }
+
+        .equipment-card-content .btn:hover {
+            background-color: var(--accent-green);
+        }
+        
+        /* How It Works */
+        .how-it-works {
+            background-color: var(--soft-earth-tone);
+            padding: 0;
+            margin: 10px 0;
+            text-align: center;
+        }
+        
+        .how-it-works-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 10px;
+            /* padding: 0; */
+            margin-top: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .how-it-works-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .how-it-works-step .icon-circle {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background-color: var(--primary-green);
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .how-it-works-step h4 {
+            font-size: 1.3rem;
+            margin-top: 0;
+            margin-bottom: 0;
+            padding-bottom: 0;
+            padding-top: 0;
+        }
+        
+        .how-it-works-step p {
+            font-size: 1.1rem;
+            margin-top: 0;
+            margin-bottom: 10px;
+            padding-bottom: 0;
+            padding-top: 0;
+        }
+
+        /* About Us */
+        .about-us {
+            background-color: var(--soft-earth-tone);
+            color: var(--text-dark);
+            padding: 0;
+            text-align: center;
+        }
+        
+        .about-us p {
+            max-width: 1200px;
+            margin: 10px auto 0;
+            font-size: 1.3rem;
+        }
+
+        /* Testimonials */
+        .testimonials {
+            padding: 0;
+            text-align: center;
+        }
+
+        .testimonial-card {
+            background-color: var(--soft-earth-tone);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            max-width: 900px;
+            margin: 20px auto;
+            border: 1px solid var(--primary-green);
+        }
+
+        .testimonial-card blockquote {
+            font-style: italic;
+            margin: 0 0 20px;
+            font-size: 1.2rem;
+        }
+        
+        .testimonial-card cite {
+            display: block;
+            font-style: normal;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        
+        /* Knowledge Hub */
+        .knowledge-hub {
+            padding: 0;
+            background-color: var(--soft-earth-tone);
+            text-align: center;
+            padding-top: 5px;
+            margin-bottom: 40px;
+        }
+
+        .knowledge-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 10px;
+        }
+
+        .knowledge-card {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+            border: 1px solid var(--primary-green);
+        }
+
+        .knowledge-card a {
+            text-decoration: none;
+            color: var(--primary-green);
+            font-weight: 700;
+            transition: color 0.3s;
+            font-size: 1.2rem;
+        }
+        .knowledge-card p {
+            text-decoration: none;
+            color: var(--primary-green);
+            font-weight: 500;
+            transition: color 0.3s;
+            padding: 0;
+            font-size: 1.1rem;
+        }
+
+        .knowledge-card a:hover {
+            color: var(--accent-green);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--primary-green);
+            color: var(--text-light);
+            padding: 0;
+            padding-top: 20px;
+            text-align: center;
+            padding-bottom: 5px;
+        }
+
+        .footer-grid {
+            display: grid;
+            justify-content: space-between;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0px;
+            text-align: center;
+            margin-bottom: 20px;
+            margin-left: 20%;
+        }
+        .footer-column{
+            width: 35%;
+
+        }
+        .footer-logo {
+            font-weight: 900;
+            font-size: 1.8rem;
+            color: var(--text-light);
+            text-decoration: none;
+        }
+
+        .footer-column h4 {
+            margin-top: 0;
+            color: var(--soft-earth-tone);
+            font-size: 1.3rem;
+            padding: 0;
+        }
+
+        .footer-column ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-column a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: color 0.3s;
+            font-size: 1rem;
+        }
+
+        .footer-column a:hover {
+            color: var(--soft-earth-tone);
+        }
+
+        .social-icons a {
+            font-size: 1.5rem;
+            margin-right: 15px;
+            color: var(--text-light);
+            transition: color 0.3s;
+        }
+        
+        .social-icons a:hover {
+            color: var(--soft-earth-tone);
+        }
+
+        .legal-links {
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 10px;
+            margin-top: 5px;
+        }
+        
+        /* Utility Classes */
+        .text-center { text-align: center; }
+
+        /* Mobile Styles */
+        @media (max-width: 768px) {
+            header {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 20px;
+            }
+            nav {
+                order: 1;
+                width: 100%;
+                text-align: center;
+            }
+            nav ul {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+            .hero-content p {
+                font-size: 1.2rem;
+            }
+            .hero-cta-buttons {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+            .hero-cta-buttons .btn {
+                width: 100%;
+            }
+            .section-heading {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <img src="../images/homelogo2.png" alt="MARF">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#home" class="nav-link" data-text-en="Home" data-text-kn="ಹೋಮ್">Home</a></li>
+                <li><a href="login.html" class="nav-link" data-text-en="List Equipment" data-text-kn="ಸಲಕರಣೆ ಪಟ್ಟಿ ಮಾಡಿ">List Equipment</a></li>
+                <li><a href="#find" class="nav-link" data-text-en="Find Equipment" data-text-kn="ಸಲಕರಣೆ ಹುಡುಕಿ">Find Equipment</a></li>
+                <li><a href="#how-it-works" class="nav-link" data-text-en="How It Works" data-text-kn="ಇದು ಹೇಗೆ ಕೆಲಸ ಮಾಡುತ್ತದೆ">How It Works</a></li>
+                <li><a href="#about" class="nav-link" data-text-en="About Us" data-text-kn="ನಮ್ಮ ಬಗ್ಗೆ">About Us</a></li>
+            </ul>
+        </nav>
+        <div class="lang-switcher">
+            <button id="lang-en" class="active">English</button>
+            <button id="lang-kn">ಕನ್ನಡ</button>
+        </div>
+        <div class="cta-buttons">
+            <a href="login.html" class="btn" data-text-en="Login | Sign Up" data-text-kn="ಲಾಗಿನ್ | ನೋಂದಣಿ">Login | Sign Up</a>
+            <!-- <a href="login.html" class="btn" data-text-en="Sign Up" data-text-kn="ನೋಂದಣಿ">Sign Up</a> -->
+        </div>
+    </header>
+
+    <!-- Hero Slider -->
+    <section id="home" class="hero-slider">
+        <div class="hero-slide active" style="background-image: url(../images/slideimage1.png)">
+            <div class="hero-content">
+                <h1 data-text-en="MARF: Machinery Access, Revolution for Farmers" data-text-kn="ಮಾರ್ಫ್: ರೈತರಿಗೆ ಯಂತ್ರಗಳ ಕ್ರಾಂತಿ">MARF: Machinery Access, Revolution for Farmers</h1>
+                <p data-text-en="Rent or list your agricultural equipment with ease." data-text-kn="ನಿಮ್ಮ ಕೃಷಿ ಯಂತ್ರಗಳನ್ನು ಸುಲಭವಾಗಿ ಬಾಡಿಗೆಗೆ ಪಡೆಯಿರಿ ಅಥವಾ ಪಟ್ಟಿ ಮಾಡಿ.">Rent or list your agricultural equipment with ease.</p>
+                <div class="hero-cta-buttons">
+                    <a href="#find" class="btn" data-text-en="Find Equipment" data-text-kn="ಸಲಕರಣೆ ಹುಡುಕಿ">Find Equipment</a>
+                    <a href="login.html" class="btn" data-text-en="List Your Equipment" data-text-kn="ನಿಮ್ಮ ಸಲಕರಣೆಗಳನ್ನು ಪಟ್ಟಿ ಮಾಡಿ">List Your Equipment</a>
+                </div>
+            </div>
+        </div>
+        <div class="hero-slide" style="background-image: url(../images/slideimage2.jpg)">
+            <div class="hero-content">
+                <h1 data-text-en="Empowering Farmers with Modern Machinery" data-text-kn="ಆಧುನಿಕ ಯಂತ್ರಗಳಿಂದ ರೈತರ ಸಬಲೀಕರಣ">Empowering Farmers with Modern Machinery</h1>
+                <p data-text-en="Access to technology that helps you grow and succeed." data-text-kn="ನಿಮ್ಮ ಬೆಳೆ ಮತ್ತು ಯಶಸ್ಸಿಗೆ ಸಹಾಯ ಮಾಡುವ ತಂತ್ರಜ್ಞಾನಕ್ಕೆ ಪ್ರವೇಶ.">Access to technology that helps you grow and succeed.</p>
+                <div class="hero-cta-buttons">
+                    <a href="#find" class="btn" data-text-en="Find Equipment" data-text-kn="ಸಲಕರಣೆ ಹುಡುಕಿ">Find Equipment</a>
+                    <a href="login.html" class="btn" data-text-en="List Your Equipment" data-text-kn="ನಿಮ್ಮ ಸಲಕರಣೆಗಳನ್ನು ಪಟ್ಟಿ ಮಾಡಿ">List Your Equipment</a>
+                </div>
+            </div>
+        </div>
+        <div class="hero-slide" style="background-image: url(../images/slideimage3.png)">
+            <div class="hero-content">
+                <h1 data-text-en="Your Partner in Agricultural Success" data-text-kn="ಕೃಷಿ ಯಶಸ್ಸಿನಲ್ಲಿ ನಿಮ್ಮ ಸಹಭಾಗಿ">Your Partner in Agricultural Success</h1>
+                <p data-text-en="Connecting communities for a prosperous future." data-text-kn="ಸಮುದ್ಧ ಭವಿಷ್ಯಕ್ಕಾಗಿ ಸಮುದಾಯಗಳನ್ನು ಸಂಪರ್ಕಿಸುವುದು.">Connecting communities for a prosperous future.</p>
+                <div class="hero-cta-buttons">
+                    <a href="#find" class="btn" data-text-en="Find Equipment" data-text-kn="ಸಲಕರಣೆ ಹುಡುಕಿ">Find Equipment</a>
+                    <a href="login.html" class="btn" data-text-en="List Your Equipment" data-text-kn="ನಿಮ್ಮ ಸಲಕರಣೆಗಳನ್ನು ಪಟ್ಟಿ ಮಾಡಿ">List Your Equipment</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Features Section -->
+    <section class="quick-features">
+        <div class="container">
+            <h2 class="section-heading" data-text-en="Quick Features" data-text-kn="ಪ್ರಮುಖ ಲಕ್ಷಣಗಳು">Quick Features</h2>
+            <div class="quick-features-grid">
+                <div class="feature-card">
+                    <div class="icon"><i class="fa-solid fa-truck-moving"></i></div>
+                    <h3 data-text-en="Easy Booking" data-text-kn="ಸುಲಭ ಬುಕಿಂಗ್">Easy Booking</h3>
+                    <p data-text-en="Simple, intuitive booking process with real-time availability. No paperwork — just a few clicks to reserve your equipment." 
+                    data-text-kn="ಸರಳ ಮತ್ತು ಬುದ್ಧಿವಂತಿಕೆಯಿಂದ ವಿನ್ಯಾಸಗೊಳಿಸಿದ ಬುಕಿಂಗ್ ಪ್ರಕ್ರಿಯೆ. ಪೇಪರ್‌ವರ್ಕ್ ಇಲ್ಲದೆ ಸುಲಭವಾಗಿ ಉಪಕರಣ ಬುಕ್ ಮಾಡಿ.">
+                    Simple, intuitive booking process with real-time availability. No paperwork — just a few clicks to reserve your equipment.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="icon"><i class="fa-solid fa-calendar-week"></i></div>
+                    <h3 data-text-en="Flexible Rentals" data-text-kn="ಹೊಂದಿಕೊಳ್ಳುವ ಬಾಡಿಗೆ">Flexible Rentals</h3>
+                    <p data-text-en="Choose daily, weekly, or monthly rental plans as needed. No commitments, rent on your terms anytime." 
+                    data-text-kn="ದಿನಂಪ್ರತಿ, ಸಾಪ್ತಾಹಿಕ ಅಥವಾ ಮಾಸಿಕ ಬಾಡಿಗೆ ಆಯ್ಕೆಮಾಡಿಕೊಳ್ಳಿ. ಬದ್ಧತೆ ಇಲ್ಲದೆ ನಿಮ್ಮ ಅನುಕೂಲತೆಗೆ ಅನುಗುಣವಾಗಿ ಬಾಡಿಗೆಗೆ ಪಡೆಯಿರಿ.">
+                    Choose daily, weekly, or monthly rental plans as needed. No commitments, rent on your terms anytime.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="icon"><i class="fa-regular fa-credit-card"></i></div>
+                    <h3 data-text-en="Secure Payments" data-text-kn="ಸುರಕ್ಷಿತ ಪಾವತಿಗಳು">Secure Payments</h3>
+                    <p data-text-en="Payments are encrypted and processed via trusted gateways. Instant receipts, full transparency, and zero hidden fees." 
+                    data-text-kn="ಪಾವತಿಗಳು ಎನ್‌ಕ್ರಿಪ್ಟ್ ಆಗಿರುವುದರಿಂದ ಮತ್ತು ನಂಬಲರ್ಹ ಗೇಟ್ವೇಗಳ ಮೂಲಕ ನಡೆಯುತ್ತವೆ. ತಕ್ಷಣದ ರಸೀತೆಗಳು ಮತ್ತು ಯಾವುದೇ ಅಡಗಿದ ಶುಲ್ಕವಿಲ್ಲದೆ ಪಾರದರ್ಶಕತೆ.">
+                    Payments are encrypted and processed via trusted gateways. Instant receipts, full transparency, and zero hidden fees.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Equipment Section -->
+    <section id="find" class="featured-equipment">
+        <div class="container">
+            <h2 class="section-heading" data-text-en="Featured Equipment" data-text-kn="ಪ್ರಮುಖ ಸಲಕರಣೆಗಳು">Featured Equipment</h2>
+            <div class="equipment-grid">
+                <div class="equipment-card">
+                    <img src="../images/homeTractor.jpg" alt="Tractor">
+                    <div class="equipment-card-content">
+                        <h3 data-text-en="Tractor" data-text-kn="ಟ್ರಾಕ್ಟರ್">Tractor</h3>
+                        <p data-text-en="Powerful tractors for all your land preparation needs." data-text-kn="ನಿಮ್ಮ ಎಲ್ಲಾ ಭೂಮಿ ಸಿದ್ಧತಾ ಕಾರ್ಯಗಳಿಗಾಗಿ ಶಕ್ತಿಶಾಲಿ ಟ್ರಾಕ್ಟರ್‌ಗಳು.">Powerful tractors for all your land preparation needs.</p>
+                        <p class="equipment-price" data-text-en="Price: ₹ 1,500/day" data-text-kn="ಬೆಲೆ: ₹ 1,500/ದಿನ">Price: ₹ 1,500/day</p>
+                        <a href="login.html" class="btn" data-text-en="Book Now" data-text-kn="ಈಗ ಬುಕ್ ಮಾಡಿ">Book Now</a>
+                    </div>
+                </div>
+                <div class="equipment-card">
+                    <img src="../images/homeRotavator.jpg" alt="Rotavator">
+                    <div class="equipment-card-content">
+                        <h3 data-text-en="Rotavator" data-text-kn="ರೋಟಾವೇಟರ್">Rotavator</h3>
+                        <p data-text-en="Efficiently till your soil for better crop yields." data-text-kn="ಉತ್ತಮ ಇಳುವರಿಗಾಗಿ ನಿಮ್ಮ ಮಣ್ಣನ್ನು ಪರಿಣಾಮಕಾರಿಯಾಗಿ ಹದಗೊಳಿಸಿ.">Efficiently till your soil for better crop yields.</p>
+                        <p class="equipment-price" data-text-en="Price: ₹ 800/day" data-text-kn="ಬೆಲೆ: ₹ 800/ದಿನ">Price: ₹ 800/day</p>
+                        <a href="login.html" class="btn" data-text-en="Book Now" data-text-kn="ಈಗ ಬುಕ್ ಮಾಡಿ">Book Now</a>
+                    </div>
+                </div>
+                <div class="equipment-card">
+                    <img src="../images/homeSprayer.jpg" alt="Sprayer">
+                    <div class="equipment-card-content">
+                        <h3 data-text-en="Sprayer" data-text-kn="ಸ್ಪ್ರೇಯರ್">Sprayer</h3>
+                        <p data-text-en="High-quality sprayers for pest and crop management." data-text-kn="ಕೀಟ ನಿರ್ವಹಣೆಗಾಗಿ ಉತ್ತಮ ಗುಣಮಟ್ಟದ ಸ್ಪ್ರೇಯರ್‌ಗಳು.">High-quality sprayers for pest and crop management.</p>
+                        <p class="equipment-price" data-text-en="Price: ₹ 500/day" data-text-kn="ಬೆಲೆ: ₹ 500/ದಿನ">Price: ₹ 500/day</p>
+                        <a href="login.html" class="btn" data-text-en="Book Now" data-text-kn="ಈಗ ಬುಕ್ ಮಾಡಿ">Book Now</a>
+                    </div>
+                </div>
+                <div class="equipment-card">
+                    <img src="../images/homeHarvester.jpg" alt="Harvester">
+                    <div class="equipment-card-content">
+                        <h3 data-text-en="Harvester" data-text-kn="ಹಾರ್ಟ್‌ವೆಸ್ಟರ್">Harvester</h3>
+                        <p data-text-en="Fast and reliable harvesting to save time." data-text-kn="ಸಮಯ ಉಳಿಸಲು ವೇಗ ಮತ್ತು ವಿಶ್ವಾಸಾರ್ಹ ಕಟಾವು ಯಂತ್ರ.">Fast and reliable harvesting to save time.</p>
+                        <p class="equipment-price" data-text-en="Price: ₹ 2,500/day" data-text-kn="ಬೆಲೆ: ₹ 2,500/ದಿನ">Price: ₹ 2,500/day</p>
+                        <a href="login.html" class="btn" data-text-en="Book Now" data-text-kn="ಈಗ ಬುಕ್ ಮಾಡಿ">Book Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="how-it-works">
+        <div class="container">
+            <h2 class="section-heading" data-text-en="How It Works" data-text-kn="ಇದು ಹೇಗೆ ಕೆಲಸ ಮಾಡುತ್ತದೆ">How It Works</h2>
+            <div class="how-it-works-grid">
+                <div class="how-it-works-step">
+                    <div class="icon-circle">1</div>
+                    <h4 data-text-en="Search" data-text-kn="ಹುಡುಕಿ">Search</h4>
+                    <p data-text-en="Browse our extensive catalog of equipment." data-text-kn="ನಮ್ಮ ವ್ಯಾಪಕ ಸಲಕರಣೆಗಳ ಪಟ್ಟಿಯನ್ನು ಬ್ರೌಸ್ ಮಾಡಿ.">Browse our extensive catalog of equipment.</p>
+                </div>
+                <div class="how-it-works-step">
+                    <div class="icon-circle">2</div>
+                    <h4 data-text-en="Book" data-text-kn="ಬುಕ್ ಮಾಡಿ">Book</h4>
+                    <p data-text-en="Select your dates and confirm your booking." data-text-kn="ನಿಮ್ಮ ದಿನಾಂಕಗಳನ್ನು ಆಯ್ಕೆ ಮಾಡಿ ಮತ್ತು ನಿಮ್ಮ ಬುಕಿಂಗ್ ಅನ್ನು ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಿ.">Select your dates and confirm your booking.</p>
+                </div>
+                <div class="how-it-works-step">
+                    <div class="icon-circle">3</div>
+                    <h4 data-text-en="Use" data-text-kn="ಬಳಸಿ">Use</h4>
+                    <p data-text-en="Get the equipment and get the job done." data-text-kn="ಸಲಕರಣೆ ಪಡೆಯಿರಿ ಮತ್ತು ಕೆಲಸ ಮುಗಿಸಿ.">Get the equipment and get the job done.</p>
+                </div>
+                <div class="how-it-works-step">
+                    <div class="icon-circle">4</div>
+                    <h4 data-text-en="Return" data-text-kn="ಹಿಂದಿರುಗಿಸಿ">Return</h4>
+                    <p data-text-en="Drop off the equipment and provide a review." data-text-kn="ಸಲಕರಣೆಯನ್ನು ಹಿಂದಿರುಗಿಸಿ ಮತ್ತು ವಿಮರ್ಶೆ ನೀಡಿ.">Drop off the equipment and provide a review.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section id="about" class="about-us">
+        <div class="container">
+            <h2 class="section-heading" data-text-en="About Us" data-text-kn="ನಮ್ಮ ಬಗ್ಗೆ">About Us</h2>
+            <p 
+                data-text-en="MARF was founded with a vision to bridge the gap between farmers and modern agricultural machinery. We aim to empower small and medium-scale farmers by making high-quality equipment accessible, affordable, and easy to rent. Through our cloud-based platform, farmers can connect with equipment owners and hire machinery as per their needs. Our system also allows owners to earn extra income by listing idle equipment for rent. MARF offers multilingual support, secure payments, real-time booking, and verified operator services. We ensure that even farmers in remote areas can leverage the benefits of modern mechanization. Our platform promotes transparency, flexibility, and convenience in agricultural rentals. With smart features like dynamic pricing, usage insights, and seasonal discounts, MARF maximizes productivity. We also foster a growing community of farmers and experts to share knowledge and best practices. At MARF, we believe technology should serve the hands that feed us — the farmers." 
+
+                data-text-kn="ರೈತರು ಮತ್ತು ಆಧುನಿಕ ಕೃಷಿ ಯಂತ್ರೋಪಕರಣಗಳ ನಡುವಿನ ಅಂತರವನ್ನು ತುಂಬುವ ದೃಷ್ಟಿಕೋನದಿಂದ ಮಾರ್ಫ್ ಅನ್ನು ಸ್ಥಾಪಿಸಲಾಗಿದೆ. ಉತ್ತಮ ಗುಣಮಟ್ಟದ ಉಪಕರಣಗಳನ್ನು ಸುಲಭವಾಗಿ, ಕೈಗೆಟುಕುವ ದರದಲ್ಲಿ ಬಾಡಿಗೆಗೆ ನೀಡುವ ಮೂಲಕ ಸಣ್ಣ ಮತ್ತು ಮಧ್ಯಮ ರೈತರನ್ನು ಸಬಲೀಕರಣಗೊಳಿಸುವುದು ನಮ್ಮ ಉದ್ದೇಶವಾಗಿದೆ. ನಮ್ಮ ಕ್ಲೌಡ್ ಆಧಾರಿತ ವೇದಿಕೆಯ ಮೂಲಕ, ರೈತರು ಯಂತ್ರೋಪಕರಣ ಮಾಲೀಕರೊಂದಿಗೆ ಸಂಪರ್ಕ ಹೊಂದಿ ತಮ್ಮ ಅಗತ್ಯಕ್ಕೆ ಅನುಗುಣವಾಗಿ ಉಪಕರಣಗಳನ್ನು ಬಾಡಿಗೆಗೆ ಪಡೆಯಬಹುದು. ಮಾಲೀಕರು ಬಾಡಿಗೆಗೆ ಬಳಸದ ಉಪಕರಣಗಳನ್ನು ಪಟ್ಟಿ ಮಾಡುವುದು ಮತ್ತು ಅತಿರಿಕ್ತ ಆದಾಯ ಗಳಿಸುವ ಅವಕಾಶವೂ ಇದೆ. ಮಾರ್ಫ್ ಬಹುಭಾಷಾ ಬೆಂಬಲ, ಸುರಕ್ಷಿತ ಪಾವತಿಗಳು, ತಕ್ಷಣದ ಬುಕಿಂಗ್ ಮತ್ತು ಪರಿಶೀಲಿತ ಆಪರೇಟರ್‌ಗಳನ್ನು ಒದಗಿಸುತ್ತದೆ. ದೂರದ ಹಳ್ಳಿಗಳಲ್ಲಿನ ರೈತರು ಕೂಡ ಯಂತ್ರೀಕರಣದ ಲಾಭ ಪಡೆಯಲು ಇದು ಸಹಕಾರಿಯಾಗುತ್ತದೆ. ಪಾರದರ್ಶಕತೆ, ಲವಚಿಕತೆ ಮತ್ತು ಅನುಕೂಲತೆಯನ್ನು ನಮ್ಮ ವೇದಿಕೆ ಉತ್ತೇಜಿಸುತ್ತದೆ. ಡೈನಾಮಿಕ್ ಪ್ರೈಸಿಂಗ್, ಉಪಯೋಗದ ಮಾಹಿತಿ ಮತ್ತು ಋತುಮಾನದ ರಿಯಾಯಿತಿಗಳಂತಹ ಸ್ಮಾರ್ಟ್ ವೈಶಿಷ್ಟ್ಯಗಳೊಂದಿಗೆ ಮಾರ್ಫ್ ಉತ್ಪಾದಕತೆಯನ್ನು ಹೆಚ್ಚಿಸುತ್ತದೆ. ನಾವು ರೈತರು ಮತ್ತು ಪರಿಣಿತರು ತಮ್ಮ ಅನುಭವ ಹಂಚಿಕೊಳ್ಳುವ ಸಮುದಾಯವನ್ನು ಸಹ ಬೆಳೆಸುತ್ತೇವೆ. ರೈತರು ಎಂಬ ಆಜೀವನ ಸೇವೆ ನೀಡುವ ಕೈಗಳಿಗೆ ತಂತ್ರಜ್ಞಾನ ಸಹಾಯ ಮಾಡಬೇಕು ಎಂಬ ನಂಬಿಕೆಯಿಂದ ಮಾರ್ಫ್ ಕಾರ್ಯನಿರ್ವಹಿಸುತ್ತದೆ.">
+                MARF was founded with a vision to bridge the gap between farmers and modern agricultural machinery. We aim to empower small and medium-scale farmers by making high-quality equipment accessible, affordable, and easy to rent. Through our cloud-based platform, farmers can connect with equipment owners and hire machinery as per their needs. Our system also allows owners to earn extra income by listing idle equipment for rent. MARF offers multilingual support, secure payments, real-time booking, and verified operator services. We ensure that even farmers in remote areas can leverage the benefits of modern mechanization. Our platform promotes transparency, flexibility, and convenience in agricultural rentals. With smart features like dynamic pricing, usage insights, and seasonal discounts, MARF maximizes productivity. We also foster a growing community of farmers and experts to share knowledge and best practices. At MARF, we believe technology should serve the hands that feed us — the farmers.
+                </p>
+
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials">
+        <div class="container">
+            <h2 class="section-heading" data-text-en="What Our Farmers Say" data-text-kn="ನಮ್ಮ ರೈತರು ಏನು ಹೇಳುತ್ತಾರೆ">What Our Farmers Say</h2>
+            <div class="testimonial-card">
+                <blockquote data-text-en="&quot;MARF made it so easy to get the tractor I needed for the season. The process was quick and the equipment was in great condition.&quot;" data-text-kn="&quot;ಮಾರ್ಫ್ ನನಗೆ ಬೇಕಾದ ಟ್ರಾಕ್ಟರ್ ಅನ್ನು ಬಾಡಿಗೆಗೆ ಪಡೆಯುವುದು ಬಹಳ ಸುಲಭ ಮಾಡಿತು. ಪ್ರಕ್ರಿಯೆ ವೇಗವಾಗಿತ್ತು ಮತ್ತು ಯಂತ್ರ ಉತ್ತಮ ಸ್ಥಿತಿಯಲ್ಲಿತ್ತು.&quot;">"MARF made it so easy to get the tractor I needed for the season. The process was quick and the equipment was in great condition."</blockquote>
+                <cite data-text-en="Raghavendra H. (Mandya, Karnataka)" data-text-kn="ರಾಘವೇಂದ್ರ ಹೆಚ್. (ಮಂಡ್ಯ, ಕರ್ನಾಟಕ)">Raghavendra H. (Mandya, Karnataka)</cite>
+            </div>
+
+            <div class="testimonial-card">
+                <blockquote 
+                    data-text-en="&quot;Listing my idle equipment on MARF helped me earn extra income during the off-season. It's a great platform for equipment owners.&quot;" 
+                    data-text-kn="&quot;ಆಫ್‌ಸೀಸನ್‌ನಲ್ಲಿ ಬಳಸದ ಉಪಕರಣಗಳನ್ನು ಮಾರ್ಫ್‌ನಲ್ಲಿ ಪಟ್ಟಿ ಮಾಡುವ ಮೂಲಕ ನನಗೆ ಹೆಚ್ಚುವರಿ ಆದಾಯ ಲಭಿಸಿದೆ. ಇದು ಉಪಕರಣ ಮಾಲೀಕರಿಗೆ ಅತ್ಯುತ್ತಮ ವೇದಿಕೆ.&quot;">
+                    "Listing my idle equipment on MARF helped me earn extra income during the off-season. It's a great platform for equipment owners."
+                </blockquote>
+                <cite 
+                    data-text-en="Anita S. (Raichur, Karnataka)" 
+                    data-text-kn="ಅನಿತಾ ಎಸ್. (ರಾಯಚೂರು, ಕರ್ನಾಟಕ)">
+                    Anita S. (Raichur, Karnataka)
+                </cite>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Knowledge Hub Section -->
+    <section class="knowledge-hub">
+        <div class="container">
+            <h2 class="section-heading" data-text-en="Knowledge Hub" data-text-kn="ಜ್ಞಾನ ಕೇಂದ್ರ">Knowledge Hub</h2>
+            <div class="knowledge-grid">
+                <div class="knowledge-grid">
+    <div class="knowledge-card">
+        <a href="#" 
+           data-text-en="5 Tips for Efficient Tilling" 
+           data-text-kn="ಪರಿಣಾಮಕಾರಿ ಬಿತ್ತನೆಗಾಗಿ 5 ಸಲಹೆಗಳು">
+           5 Tips for Efficient Tilling
+        </a>
+        <p 
+           data-text-en="Tilling prepares the soil for sowing, but doing it right boosts results. Use appropriate depth, maintain consistent speed, and avoid extreme soil conditions. Keep your tiller well-maintained to ensure efficiency." 
+           data-text-kn="ಬಿತ್ತನೆಗೆ ಮಣ್ಣನ್ನು ತಯಾರಿಸಲು ಟಿಲ್ಲಿಂಗ್ ಅಗತ್ಯವಿದೆ. ಆದರೆ ಸರಿಯಾದ ವಿಧಾನ ಅನುಸರಿಸಿದರೆ ಫಲಿತಾಂಶ ಉತ್ತಮವಾಗುತ್ತದೆ. ಸರಿಯಾದ ಆಳ, ಸ್ಥಿರ ವೇಗ ಮತ್ತು ಸೂಕ್ತ ಮಣ್ಣು ಪರಿಸ್ಥಿತಿಯನ್ನು ಆರಿಸಿ. ಯಂತ್ರೋಪಕರಣದ ನಿರ್ವಹಣೆಯನ್ನು ಕಡ್ಡಾಯವಾಗಿ ಮಾಡಬೇಕು.">
+           Tilling prepares the soil for sowing, but doing it right boosts results. Use appropriate depth, maintain consistent speed, and avoid extreme soil conditions. Keep your tiller well-maintained to ensure efficiency.
+        </p>
+    </div>
+
+    <div class="knowledge-card">
+        <a href="#" 
+           data-text-en="How to Choose the Right Sprayer" 
+           data-text-kn="ಸರಿಯಾದ ಸ್ಪ್ರೇಯರ್ ಅನ್ನು ಹೇಗೆ ಆರಿಸುವುದು">
+           How to Choose the Right Sprayer
+        </a>
+        <p 
+           data-text-en="Choosing the right sprayer depends on your crop and field size. Check for tank capacity, spray range, and nozzle types. Battery sprayers work well for small farms. Prioritize durability and safety." 
+           data-text-kn="ನಿಮ್ಮ ಬೆಳೆ ಮತ್ತು ಹೊಲದ ಗಾತ್ರವನ್ನು ಆಧರಿಸಿ ಸ್ಪ್ರೇಯರ್ ಆರಿಸಬೇಕು. ಟ್ಯಾಂಕ್ ಸಾಮರ್ಥ್ಯ, ಸ್ಪ್ರೇ ರೇಂಜ್ ಮತ್ತು ನೋಜಲ್ ಪ್ರಕಾರ ಗಮನಿಸಿ. ಚಿಕ್ಕ ಹೊಲಗಳಿಗೆ ಬ್ಯಾಟರಿ ಸ್ಪ್ರೇಯರ್ ಸೂಕ್ತ. ನಂಬಿಕೆ ಮತ್ತು ಸುರಕ್ಷತೆ ಪ್ರಮುಖವಾಗಿವೆ.">
+           Choosing the right sprayer depends on your crop and field size. Check for tank capacity, spray range, and nozzle types. Battery sprayers work well for small farms. Prioritize durability and safety.
+        </p>
+    </div>
+
+    <div class="knowledge-card">
+        <a href="#" 
+           data-text-en="Best Practices for Harvesters" 
+           data-text-kn="ಹಾರ್ವೆಸ್ಟರ್‌ಗಳಿಗೆ ಉತ್ತಮ ವಿಧಾನಗಳು">
+           Best Practices for Harvesters
+        </a>
+        <p 
+           data-text-en="Start with a well-calibrated harvester to reduce crop loss. Clean regularly, use the right header, and operate at optimal speed. Routine maintenance is key to longevity and reliability." 
+           data-text-kn="ಬೆಳೆ ನಷ್ಟ ಕಡಿಮೆ ಮಾಡಲು ಸರಿಯಾದ ಹಾರ್ವೆಸ್ಟರ್ ಅನ್ನು ಬಳಸಬೇಕು. ನಿಯಮಿತವಾಗಿ ಸ್ವಚ್ಛಗೊಳಿಸಿ, ಬೆಳೆಗೆ ತಕ್ಕ ಹೆಡರ್ ಬಳಸಿ, ಹಾಗೂ ಸೂಕ್ತ ವೇಗದಲ್ಲಿ ಚಾಲನೆ ಮಾಡಿ. ಯಂತ್ರದ ಆಯುಷ್ಯವನ್ನು ಉದ್ದೀಪಿಸುವ ನಿರ್ವಹಣೆ ಅಗತ್ಯ.">
+           Start with a well-calibrated harvester to reduce crop loss. Clean regularly, use the right header, and operate at optimal speed. Routine maintenance is key to longevity and reliability.
+        </p>
+    </div>
+</div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <a href="#" class="footer-logo" data-text-en="MARF" data-text-kn="ಮಾರ್ಫ್">MARF</a>
+                    <p data-text-en="Machinery Access: Revolution for Farmers" data-text-kn="ಯಂತ್ರೋಪಕರಣಗಳ ಪ್ರವೇಶ: ರೈತರಿಗಾಗಿ ಕ್ರಾಂತಿ">Machinery Access: Revolution for Farmers</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fa-brands fa-facebook"></i></a>
+                        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h4 data-text-en="Quick Links" data-text-kn="ತ್ವರಿತ ಲಿಂಕ್‌ಗಳು">Quick Links</h4>
+                    <ul>
+                        <li><a href="#about" data-text-en="About Us" data-text-kn="ನಮ್ಮ ಬಗ್ಗೆ">About Us</a></li>
+                        <li><a href="#" data-text-en="Contact Us" data-text-kn="ನಮ್ಮನ್ನು ಸಂಪರ್ಕಿಸಿ">Contact Us</a></li>
+                        <li><a href="#" data-text-en="FAQs" data-text-kn="ಪದೇ ಪದೇ ಕೇಳಲಾಗುವ ಪ್ರಶ್ನೆಗಳು">FAQs</a></li>
+                        <li><a href="#" data-text-en="Blog" data-text-kn="ಬ್ಲಾಗ್">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4 data-text-en="Legal" data-text-kn="ಕಾನೂನು">Legal</h4>
+                    <ul>
+                        <li><a href="#" data-text-en="Terms of Service" data-text-kn="ಸೇವಾ ನಿಯಮಗಳು">Terms of Service</a></li>
+                        <li><a href="#" data-text-en="Privacy Policy" data-text-kn="ಗೌಪ್ಯತಾ ನೀತಿ">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="legal-links">
+                <p data-text-en="&copy; 2024 MARF. All rights reserved." data-text-kn="&copy; 2024 ಮಾರ್ಫ್. ಎಲ್ಲಾ ಹಕ್ಕುಗಳನ್ನು ಕಾಯ್ದಿರಿಸಲಾಗಿದೆ.">&copy; 2024 MARF. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <script>
+        window.onload = function() {
+            // Function to update all text content based on the language
+            function updateContent(lang) {
+                const elements = document.querySelectorAll('[data-text-en]');
+                elements.forEach(el => {
+                    if (lang === 'en') {
+                        el.textContent = el.getAttribute('data-text-en');
+                    } else {
+                        el.textContent = el.getAttribute('data-text-kn');
+                    }
+                });
+
+                // Update prices
+                const priceElements = document.querySelectorAll('.equipment-price');
+                priceElements.forEach(el => {
+                    if (lang === 'en') {
+                        el.textContent = el.getAttribute('data-text-en');
+                    } else {
+                        el.textContent = el.getAttribute('data-text-kn');
+                    }
+                });
+            }
+
+            // Language Switcher functionality
+            const langEnBtn = document.getElementById('lang-en');
+            const langKnBtn = document.getElementById('lang-kn');
+
+            function switchLanguage(lang) {
+                updateContent(lang);
+
+                if (lang === 'en') {
+                    if (langEnBtn) langEnBtn.classList.add('active');
+                    if (langKnBtn) langKnBtn.classList.remove('active');
+                    document.documentElement.lang = 'en';
+                } else {
+                    if (langKnBtn) langKnBtn.classList.add('active');
+                    if (langEnBtn) langEnBtn.classList.remove('active');
+                    document.documentElement.lang = 'kn';
+                }
+            }
+
+            if (langEnBtn) {
+                langEnBtn.addEventListener('click', () => switchLanguage('en'));
+            }
+            if (langKnBtn) {
+                langKnBtn.addEventListener('click', () => switchLanguage('kn'));
+            }
+
+            // Set initial language to English on load
+            switchLanguage('en');
+
+            // Hero Slider functionality
+            const slides = document.querySelectorAll('.hero-slide');
+            let currentSlide = 0;
+
+            function showSlide(index) {
+                slides.forEach(slide => slide.classList.remove('active'));
+                if (slides[index]) {
+                    slides[index].classList.add('active');
+                }
+            }
+
+            function nextSlide() {
+                currentSlide = (currentSlide + 1) % slides.length;
+                showSlide(currentSlide);
+            }
+
+            if (slides.length > 0) {
+                // Start the slideshow
+                setInterval(nextSlide, 5000); // Change slide every 5 seconds
+            }
+        };
+    </script>
+</body>
+</html>

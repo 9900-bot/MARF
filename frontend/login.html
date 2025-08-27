@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MARF Login & Signup</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Kannada:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/906faa9c3f.js" crossorigin="anonymous"></script>
+    <!-- Google Identity Services SDK -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <style>
+        :root {
+            --primary-color: #173c1c;
+            --secondary-color: #ffffff;
+            --accent-color: #2c6032;
+        }
+
+        body {
+            font-family: 'Noto Sans Kannada', sans-serif;
+            background-color: var(--secondary-color);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .page-container {
+            display: flex;
+            background-color: var(--secondary-color);
+            border-radius: 1rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            max-width: 1500px;
+            width: 90%;
+            overflow: hidden;
+            margin: 20px;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+
+        .image-section {
+            flex: 1;
+            display: none;
+        }
+        
+        .image-section img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .form-container {
+            flex: 1;
+            padding: 3rem 4rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .logo-placeholder img {
+            height: 70px;
+            width: auto;
+            margin-bottom: 2rem;
+        }
+
+        .lang-switcher {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--primary-color);
+            border-radius: 15px;
+            overflow: hidden;
+            background-color: var(--secondary-color);
+            margin-bottom: 2rem;
+        }
+
+        .lang-switcher button {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            padding: 10px 18px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            font-family: 'Noto Sans Kannada', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .lang-switcher button.active {
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+            font-weight: 700;
+        }
+        
+        .title-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .subtitle-text {
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            opacity: 0.8;
+            margin-bottom: 2rem;
+            line-height: 1.5;
+        }
+
+        .input-group {
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--primary-color);
+            background-color: var(--secondary-color);
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        
+        .input-group input::placeholder {
+            color: var(--primary-color);
+            opacity: 0.6;
+        }
+
+        .input-group input:focus {
+            border-color: var(--accent-color);
+        }
+        
+        .form-links {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-links a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: opacity 0.2s;
+            font-weight: 500;
+        }
+        
+        .form-links a:hover {
+            opacity: 0.8;
+        }
+        
+        .or-divider {
+            color: var(--primary-color);
+            opacity: 0.7;
+            margin: 1.5rem 0;
+            font-size: 1rem;
+        }
+
+        .google-login-button {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            border-radius: 0.5rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        
+        .google-login-button i {
+            margin-right: 10px;
+        }
+        
+        .google-login-button:hover {
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+        }
+
+        .role-selection {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            margin-bottom: 2rem;
+            margin: 1rem;
+
+        }
+
+        .role-selection-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            text-align: left;
+        }
+
+        .role-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            margin-right: 2rem;
+        }
+
+        .role-option input[type="radio"] {
+            margin-right: 0.2rem;
+            accent-color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+
+        .role-option label {
+            text-align: left;
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .submit-button:hover {
+            background-color: var(--accent-color);
+        }
+
+        .footer-link {
+            margin-top: 2rem;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+
+        .footer-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+        
+        .footer-link a:hover {
+            opacity: 0.8;
+        }
+        
+        /* Modal for password reset and OTP login */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
+        }
+        .close-btn {
+            color: #aaa;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .modal-tabs {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 1rem;
+        }
+        .modal-tab-btn {
+            background: none;
+            border: none;
+            padding: 0.5rem 1rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            color: #6b7280;
+        }
+        .modal-tab-btn.active {
+            border-bottom: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        /* Media query for desktop view */
+        @media (min-width: 768px) {
+            .image-section {
+                display: block;
+            }
+            .page-container {
+                width: 80%;
+                flex-direction: row;
+            }
+            .form-container {
+                padding: 3rem;
+            }
+            .role-selection {
+                flex-direction: row;
+                gap: 1.5rem;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-container">
+        <!-- Image Section on the left (for desktop) -->
+        <div class="image-section">
+            <img src="../images/loginimage.png" alt="A tractor in a field">
+        </div>
+
+        <!-- Login & Signup Form Section on the right -->
+        <div class="form-container">
+            <!-- Logo -->
+            <div class="logo-placeholder">
+                <img src="../images/homelogo2.png" alt="MARF Logo">
+            </div>
+
+            <!-- Language Switcher -->
+            <div class="lang-switcher">
+                <button id="lang-en" class="active">English</button>
+                <button id="lang-kn">ಕನ್ನಡ</button>
+            </div>
+
+            <!-- Login Form (Visible by default) -->
+            <div id="login-form-content">
+                <h2 id="login-welcome-message" class="title-text" 
+                    data-text-en="Welcome back to MARF – Powering Your Fields with Technology." 
+                    data-text-kn="MARF ಗೆ ಸುಸ್ವಾಗತ – ತಂತ್ರಜ್ಞಾನದೊಂದಿಗೆ ನಿಮ್ಮ ಹೊಲಗಳಿಗೆ ಶಕ್ತಿ ತುಂಬಿ.">
+                    Welcome back to MARF – Powering Your Fields with Technology.
+                </h2>
+                <form id="login-form">
+                    <div class="input-group">
+                        <input type="text" id="login-email-input" 
+                            data-placeholder-en="Email / Phone Number" 
+                            data-placeholder-kn="ಇಮೇಲ್ / ಫೋನ್ ಸಂಖ್ಯೆ"
+                            placeholder="Email / Phone Number">
+                    </div>
+                    <div class="input-group">
+                        <input type="password" id="login-password-input" 
+                            data-placeholder-en="Password" 
+                            data-placeholder-kn="ಪಾಸ್ವರ್ಡ್"
+                            placeholder="Password">
+                    </div>
+                    <div class="form-links">
+                        <a href="forgotpassword.html" id="forgot-password" 
+   data-text-en="Forgot Password?" 
+   data-text-kn="ಪಾಸ್ವರ್ಡ್ ಮರೆತಿದ್ದೀರಾ?">
+   Forgot Password?
+</a>
+
+                        <a href="#" id="login-with-otp" 
+                            data-text-en="Login with OTP" 
+                            data-text-kn="OTP ಯೊಂದಿಗೆ ಲಾಗಿನ್ ಮಾಡಿ">
+                            Login with OTP
+                        </a>
+                    </div>
+                    <button type="submit" class="submit-button" id="login-button" 
+                        data-text-en="Login" 
+                        data-text-kn="ಲಾಗಿನ್">
+                        Login
+                    </button>
+                    <p class="or-divider" 
+                        data-text-en="OR" 
+                        data-text-kn="ಅಥವಾ">
+                        OR
+                    </p>
+                    
+                    <div id="g_id_onload"
+     data-client_id="162809013596-onf0p0fhii16adio8q00l83l3ij4p15i.apps.googleusercontent.com"
+     data-callback="handleCredentialResponse">
+</div>
+                    
+                    <div class="g_id_signin" data-type="standard"></div>
+                </form>
+                <p class="footer-link" id="login-signup-text">
+                    <span data-text-en="Don't have an account? " data-text-kn="ಖಾತೆ ಇಲ್ಲವೇ? ">Don't have an account? </span>
+                    <a href="signup-form-content" id="signup-link" data-text-en="Sign up now" data-text-kn="ಈಗ ನೋಂದಾಯಿಸಿ">Sign up now</a>
+                </p>
+            </div>
+
+            <!-- Signup Form (Hidden by default) -->
+            <div id="signup-form-content" class="hidden">
+                <h2 id="signup-title" class="title-text" 
+                    data-text-en="Join the Agricultural Revolution." 
+                    data-text-kn="ಕೃಷಿ ಕ್ರಾಂತಿಗೆ ಸೇರಿಕೊಳ್ಳಿ.">
+                    Join the Agricultural Revolution.
+                </h2>
+                <p id="signup-subtitle" class="subtitle-text"
+                    data-text-en="Sign up with MARF to book, rent, or offer modern machinery – hassle-free."
+                    data-text-kn="ಯಾವುದೇ ತೊಂದರೆ ಇಲ್ಲದೆ ಆಧುನಿಕ ಯಂತ್ರೋಪಕರಣಗಳನ್ನು ಬುಕ್ ಮಾಡಲು, ಬಾಡಿಗೆಗೆ ಪಡೆಯಲು ಅಥವಾ ನೀಡಲು MARF ನೊಂದಿಗೆ ಸೈನ್ ಅಪ್ ಮಾಡಿ.">
+                    Sign up with MARF to book, rent, or offer modern machinery – hassle-free.
+                </p>
+                <form id="signup-form">
+                    <div class="input-group">
+                        <input type="text" id="full-name-input" 
+                            data-placeholder-en="Full Name" 
+                            data-placeholder-kn="ಪೂರ್ಣ ಹೆಸರು"
+                            placeholder="Full Name">
+                    </div>
+                    <div class="input-group">
+                        <input type="text" id="phone-number-input" 
+                            data-placeholder-en="Phone Number" 
+                            data-placeholder-kn="ದೂರವಾಣಿ ಸಂಖ್ಯೆ"
+                            placeholder="Phone Number">
+                    </div>
+                    <div class="input-group">
+                        <input type="email" id="email-signup-input" 
+                            data-placeholder-en="Email" 
+                            data-placeholder-kn="ಇಮೇಲ್"
+                            placeholder="Email">
+                    </div>
+                    <div class="input-group">
+                        <input type="password" id="create-password-input" 
+                            data-placeholder-en="Create Password" 
+                            data-placeholder-kn="ಪಾಸ್ವರ್ಡ್ ರಚಿಸಿ"
+                            placeholder="Create Password">
+                    </div>
+                    <div class="input-group">
+                        <input type="password" id="confirm-password-input" 
+                            data-placeholder-en="Confirm Password" 
+                            data-placeholder-kn="ಪಾಸ್ವರ್ಡ್ ದೃಢೀಕರಿಸಿ"
+                            placeholder="Confirm Password">
+                    </div>
+                    <div class="role-selection">
+                        <p id="role-title" class="role-selection-title"
+                            data-text-en="Select Role:"
+                            data-text-kn="ಪಾತ್ರವನ್ನು ಆಯ್ಕೆಮಾಡಿ:">
+                            Select Role:
+                        </p>
+                        <div class="role-option">
+                            <label>
+                                <input type="radio" name="role" id="role-farmer" value="farmer" checked>
+                                <span id="label-farmer" data-text-en="Farmer" data-text-kn="ರೈತ">Farmer</span>
+                            </label>
+                            <label>
+                                <input type="radio" name="role" id="role-equipment-owner" value="owner">
+                                <span id="label-equipment-owner" data-text-en="Equipment Owner" data-text-kn="ಉಪಕರಣದ ಮಾಲೀಕರು">Equipment Owner</span>
+                            </label>
+                            <label>
+                                <input type="radio" name="role" id="role-operator" value="operator">
+                                <span id="label-operator" data-text-en="Operator" data-text-kn="ಆಪರೇಟರ್">Operator</span>
+                            </label>
+                        </div>
+                    </div>
+                    <button type="submit" class="submit-button" id="submit-button"
+                        data-text-en="Submit"
+                        data-text-kn="ಸಲ್ಲಿಸು">
+                        Submit
+                    </button>
+                </form>
+                <p class="footer-link" id="signup-login-text">
+                    <span data-text-en="Already have an account? " data-text-kn="ಖಾತೆ ಇಲ್ಲವೇ? ">Don't have an account? </span>
+                    <a href="login-form-link" id="login-link" data-text-en="Login here" data-text-kn="ಇಲ್ಲಿ ಲಾಗಿನ್ ಮಾಡಿ">Login here</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const translations = {
+            en: {
+                login: {
+                    welcome: "Welcome back to MARF – Powering Your Fields with Technology.",
+                    emailPlaceholder: "Email / Phone Number",
+                    passwordPlaceholder: "Password",
+                    forgotPassword: "Forgot Password?",
+                    loginWithOtp: "Login with OTP",
+                    loginButton: "Login",
+                    googleLoginButton: "Login with Google",
+                    footerText: "Don't have an account? ",
+                    footerLink: "Sign up now"
+                },
+                signup: {
+                    title: "Join the Agricultural Revolution.",
+                    subtitle: "Sign up with MARF to book, rent, or offer modern machinery – hassle-free.",
+                    fullNamePlaceholder: "Full Name",
+                    phoneNumberPlaceholder: "Phone Number",
+                    emailPlaceholder: "Email (optional for farmers)",
+                    createPasswordPlaceholder: "Create Password",
+                    confirmPasswordPlaceholder: "Confirm Password",
+                    roleTitle: "Select Role:",
+                    roleFarmer: "Farmer",
+                    roleEquipmentOwner: "Equipment Owner",
+                    roleOperator: "Operator",
+                    submitButton: "Submit",
+                    footerText: "Already have an account? ",
+                    footerLink: "Login here"
+                }
+            },
+            kn: {
+                login: {
+                    welcome: "MARF ಗೆ ಸುಸ್ವಾಗತ – ತಂತ್ರಜ್ಞಾನದೊಂದಿಗೆ ನಿಮ್ಮ ಹೊಲಗಳಿಗೆ ಶಕ್ತಿ ತುಂಬಿ.",
+                    emailPlaceholder: "ಇಮೇಲ್ / ಫೋನ್ ಸಂಖ್ಯೆ",
+                    passwordPlaceholder: "ಪಾಸ್ವರ್ಡ್",
+                    forgotPassword: "ಪಾಸ್ವರ್ಡ್ ಮರೆತಿದ್ದೀರಾ?",
+                    loginWithOtp: "OTP ಯೊಂದಿಗೆ ಲಾಗಿನ್ ಮಾಡಿ",
+                    loginButton: "ಲಾಗಿನ್",
+                    googleLoginButton: "ಗೂಗಲ್‌ನೊಂದಿಗೆ ಲಾಗಿನ್ ಮಾಡಿ",
+                    footerText: "ಖಾತೆ ಇಲ್ಲವೇ? ",
+                    footerLink: "ಈಗ ನೋಂದಾಯಿಸಿ"
+                },
+                signup: {
+                    title: "ಕೃಷಿ ಕ್ರಾಂತಿಗೆ ಸೇರಿಕೊಳ್ಳಿ.",
+                    subtitle: "ಯಾವುದೇ ತೊಂದರೆ ಇಲ್ಲದೆ ಆಧುನಿಕ ಯಂತ್ರೋಪಕರಣಗಳನ್ನು ಬುಕ್ ಮಾಡಲು, ಬಾಡಿಗೆಗೆ ಪಡೆಯಲು ಅಥವಾ ನೀಡಲು MARF ನೊಂದಿಗೆ ಸೈನ್ ಅಪ್ ಮಾಡಿ.",
+                    fullNamePlaceholder: "ಪೂರ್ಣ ಹೆಸರು",
+                    phoneNumberPlaceholder: "ದೂರವಾಣಿ ಸಂಖ್ಯೆ",
+                    emailPlaceholder: "ಇಮೇಲ್ (ರೈತರಿಗೆ ಐಚ್ಛಿಕ)",
+                    createPasswordPlaceholder: "ಪಾಸ್ವರ್ಡ್ ರಚಿಸಿ",
+                    confirmPasswordPlaceholder: "ಪಾಸ್ವರ್ಡ್ ದೃಢೀಕರಿಸಿ",
+                    roleTitle: "ಪಾತ್ರವನ್ನು ಆಯ್ಕೆಮಾಡಿ:",
+                    roleFarmer: "ರೈತ",
+                    roleEquipmentOwner: "ಉಪಕರಣದ ಮಾಲೀಕರು",
+                    roleOperator: "ಆಪರೇಟರ್",
+                    submitButton: "ಸಲ್ಲಿಸು",
+                    footerText: "Already have an account? ",
+                    footerLink: "Login here"
+                }
+            }
+        };
+
+        const loginFormContent = document.getElementById('login-form-content');
+        const signupFormContent = document.getElementById('signup-form-content');
+        const signupLink = document.getElementById('signup-link');
+        const loginLink = document.getElementById('login-link');
+        const langEnBtn = document.getElementById('lang-en');
+        const langKnBtn = document.getElementById('lang-kn');
+        const loginForm = document.getElementById('login-form');
+        const signupForm = document.getElementById('signup-form');
+
+        // Function to update text content and placeholders
+        function updateContent(lang) {
+            const langData = translations[lang];
+
+            const elements = document.querySelectorAll('[data-text-en]');
+            elements.forEach(el => {
+                if (lang === 'en') {
+                    el.textContent = el.getAttribute('data-text-en');
+                } else {
+                    el.textContent = el.getAttribute('data-text-kn');
+                }
+            });
+
+            const placeholders = document.querySelectorAll('[data-placeholder-en]');
+            placeholders.forEach(el => {
+                const key = el.getAttribute('data-placeholder-en');
+                if (langData.login[key]) {
+                    el.placeholder = langData.login[key];
+                } else if (langData.signup[key]) {
+                    el.placeholder = langData.signup[key];
+                }
+            });
+        }
+        
+        // Function to toggle between login and signup forms
+        function toggleForms(showLogin) {
+            if (showLogin) {
+                loginFormContent.classList.remove('hidden');
+                signupFormContent.classList.add('hidden');
+            } else {
+                loginFormContent.classList.add('hidden');
+                signupFormContent.classList.remove('hidden');
+            }
+            // Update language for the newly visible form
+            updateContent(document.documentElement.lang);
+        }
+
+        // Event listener for language buttons
+        function switchLanguage(lang) {
+            updateContent(lang);
+            document.documentElement.lang = lang;
+            if (lang === 'en') {
+                langEnBtn.classList.add('active');
+                langKnBtn.classList.remove('active');
+            } else {
+                langKnBtn.classList.add('active');
+                langEnBtn.classList.remove('active');
+            }
+        }
+
+        // --- Google Login Callback ---
+        async function handleCredentialResponse(response) {
+            const token = response.credential;
+            try {
+                const apiResponse = await fetch('http://127.0.0.1:5000/google/callback', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token: token })
+                });
+
+                const data = await apiResponse.json();
+                if (apiResponse.ok) {
+                    localStorage.setItem('access_token', data.access_token);
+                    localStorage.setItem('user_role', data.role);
+                    
+                    if (data.role === 'owner') {
+                        window.location.href = 'addequipment.html';
+                    } else {
+                        window.location.href = 'dash.html';
+                    }
+                } else {
+                    alert('Google Login failed: ' + data.msg);
+                }
+            } catch (error) {
+                console.error('Google Login Error:', error);
+                alert('An error occurred during Google login. Please try again.');
+            }
+        }
+
+        // Initial setup on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set up event listeners for form toggles
+            if (signupLink) signupLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                toggleForms(false);
+            });
+            if (loginLink) loginLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                toggleForms(true);
+            });
+
+            // Set up event listeners for language buttons
+            if (langEnBtn) langEnBtn.addEventListener('click', () => switchLanguage('en'));
+            if (langKnBtn) langKnBtn.addEventListener('click', () => switchLanguage('kn'));
+
+            // Show login form and set default language
+            toggleForms(true);
+            switchLanguage('en');
+
+            // --- API Call Logic Starts Here ---
+
+            // Handle Signup Form Submission
+            if (signupForm) {
+                signupForm.addEventListener('submit', async (event) => {
+                    event.preventDefault();
+
+                    const fullName = document.getElementById('full-name-input').value;
+                    const phoneNumberInput = document.getElementById('phone-number-input').value;
+                    const emailInput = document.getElementById('email-signup-input').value;
+                    const password = document.getElementById('create-password-input').value;
+                    const confirmPassword = document.getElementById('confirm-password-input').value;
+                    const selectedRole = document.querySelector('input[name="role"]:checked').value;
+
+                    // Basic client-side validation
+                    if (!fullName || !phoneNumberInput || !emailInput || !password) {
+                         alert("All fields are required.");
+                         return;
+                    }
+                    if (password !== confirmPassword) {
+                        alert("Passwords do not match.");
+                        return;
+                    }
+
+                    try {
+                        const response = await fetch('http://127.0.0.1:5000/register', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ 
+                                username: phoneNumberInput, 
+                                password: password, 
+                                role: selectedRole, 
+                                full_name: fullName,
+                                email: emailInput
+                            })
+                        });
+                        const data = await response.json();
+                        if (response.ok) {
+                            alert(data.msg + ' You can now log in.');
+                            toggleForms(true);
+                        } else {
+                            alert('Registration failed: ' + data.msg);
+                        }
+                    } catch (error) {
+                        console.error('Registration Error:', error);
+                        alert('An error occurred during registration. Please try again.');
+                    }
+                });
+            }
+
+            // Handle Login Form Submission
+            if (loginForm) {
+                loginForm.addEventListener('submit', async (event) => {
+                    event.preventDefault();
+
+                    const username = document.getElementById('login-email-input').value;
+                    const password = document.getElementById('login-password-input').value;
+                    
+                    if (!username || !password) {
+                        alert("Email/Phone number and password are required.");
+                        return;
+                    }
+                    
+                    try {
+                        const response = await fetch('http://127.0.0.1:5000/login', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ username, password })
+                        });
+                        const data = await response.json();
+                        if (response.ok) {
+                            localStorage.setItem('access_token', data.access_token);
+                            localStorage.setItem('user_role', data.role);
+                            
+                            if (data.role === 'owner') {
+                                window.location.href = 'addequipment.html';
+                            } else if (data.role === 'farmer') {
+                                window.location.href = 'booking.html';
+                            } else if (data.role === 'operator') {
+                                window.location.href = 'bookinghistory.html';
+                            } else {
+                                window.location.href = 'dash.html';
+                            }
+                        } else {
+                            alert('Login failed: ' + data.msg);
+                        }
+                    } catch (error) {
+                        console.error('Login Error:', error);
+                        alert('An error occurred during login. Please try again.');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

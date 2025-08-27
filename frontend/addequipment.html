@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-key="title">MARF Add Equipment</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Kannada:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/906faa9c3f.js" crossorigin="anonymous"></script>
+    <style>
+        /* CSS Variables */
+        :root {
+            --primary-green: #173c1c;
+            --soft-earth-tone: #e8f5e9;
+            --accent-orange: #FFA500;
+            --accent-dark: #CC8400;
+            --text-dark: #173c1c;
+            --text-light: #fff;
+        }
+
+        /* Typography & General Styles */
+        body {
+            font-family: 'Poppins', 'Noto Sans Kannada', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text-dark);
+            background-color: var(--soft-earth-tone);
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+
+        .font-poppins { font-family: 'Poppins', sans-serif; }
+        .font-kannada { font-family: 'Noto Sans Kannada', sans-serif; }
+        
+        .container {
+            max-width: 2000px;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .hidden { display: none !important; }
+
+        /* Animations */
+        .animate-pulse-slow {
+            animation: pulse-glow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse-glow {
+            0%, 100% {
+                filter: drop-shadow(0 0 1px rgba(255, 165, 0, 0.4));
+                transform: scale(1);
+            }
+            50% {
+                filter: drop-shadow(0 0 8px rgba(255, 165, 0, 0.8));
+                transform: scale(1.05);
+            }
+        }
+        
+        /* Header and Navigation */
+        header {
+            background-color: white;
+            color: var(--text-dark);
+            padding: 1.5rem 20px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            height: 50px;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+        }
+        .header-logo-text img{
+            width: 100%;
+            height: 70px;
+            margin-left: 40px;
+        }
+
+        /* Desktop Nav */
+        .desktop-nav {
+            display: none;
+            flex-grow: 1;
+            justify-content: center;
+            gap: 30px;
+        }
+        @media (min-width: 768px) {
+            .desktop-nav { display: flex; }
+        }
+        .desktop-nav a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.3rem;
+            position: relative;
+            transition: color 0.3s;
+            margin-right: 15px;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary-green);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 4px;
+            background-color: #173c1c;
+            border-radius: 2px;
+            transition: width 0.3s ease, left 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        .desktop-search-container {
+            display: none;
+            width: 25%;
+            align-items: center;
+            gap: 15px;
+            margin-right: 40px;
+        }
+        @media (min-width: 768px) {
+            .desktop-search-container { display: flex; }
+        }
+        
+        .desktop-search-bar {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            height: 40px;
+            gap: 0.5rem;
+            background-color: #f3f4f6;
+            border-radius: 9999px;
+            padding: 0.5rem 1rem;
+            border: 1px solid #e5e7eb;
+        }
+
+        .desktop-search-bar input {
+            background: transparent;
+            font-size: 1.3rem;
+            border: none;
+            outline: none;
+            color: var(--text-dark);
+        }
+
+        .location-detector-btn {
+            width: 20%;
+            background: none;
+            border: none;
+            color: var(--accent-orange);
+            padding: 0.5rem;
+            margin-left: 20px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .location-detector-btn i{
+            width: 100%;
+        }
+        .location-detector-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* Mobile Nav */
+        .mobile-header-group {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .mobile-menu-button {
+            background: none;
+            border: none;
+            color: var(--primary-green);
+            cursor: pointer;
+        }
+        @media (min-width: 768px) {
+            .mobile-menu-button { display: none; }
+        }
+        .mobile-nav-menu {
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+            padding: 1rem 0;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            margin-top: 10px;
+        }
+        .mobile-nav-menu a {
+            padding: 0.5rem 1rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+        .mobile-search-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background-color: #f3f4f6;
+            border-radius: 9999px;
+            border: 1px solid #e5e7eb;
+        }
+        .mobile-search-container input {
+            background: transparent;
+            border: none;
+            outline: none;
+            width: 100%;
+            color: var(--text-dark);
+        }
+        .mobile-search-container input::placeholder {
+            color: #6b7280;
+        }
+
+        /* User & Lang Switcher */
+        .user-menu-dropdown-container {
+            position: relative;
+            width: 5%;
+        }
+        .user-menu-button {
+            background: var(--soft-earth-tone);
+            border: none;
+            color: var(--primary-green);
+            padding: 0.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .user-menu-button:hover { background-color: rgba(23, 60, 28, 0.1); }
+        .user-dropdown {
+            position: absolute;
+            top: 112%;
+            right: 0;
+            margin-top: 10px;
+            width: 350px;
+            background-color: white;
+            /* border: 1px solid var(--primary-green); */
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+        .lang-switcher-container { 
+            padding: 10px;
+            width: 50%;
+            margin: 0 auto;            
+        }
+        .lang-switcher {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--text-dark);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        .lang-switcher button {
+            background: none;
+            border: none;
+            color: var(--text-dark);
+            padding: 15px 18px 10px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            font-family: 'Noto Sans Kannada', sans-serif;
+            font-size: 1.2rem;
+            flex: 1;
+        }
+        .lang-switcher button.active {
+            background-color: var(--primary-green);
+            color: var(--text-light);
+            font-weight: 700;
+        }
+        .user-dropdown-link {
+            display: block;
+            padding: 15px;
+            margin-left: 10px;
+            font-size: 1.5rem;
+            font-weight: 500;
+            text-decoration: none;
+            color: var(--text-dark);
+            transition: background-color 0.3s;
+        }
+        .user-dropdown-link:hover { background-color: #f3f4f6; }
+
+        .logout-btn{
+            background-color: #173c1c;
+            margin: 0 auto;
+            color: white;
+            border-radius: 15px;
+            height: 50px;
+            width: 160px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .logout-btn:hover{
+            background-color: var(--soft-earth-tone);
+            color: var(--text-dark);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 2rem 1rem;
+            max-width: 2000px;
+            margin: 0 auto;
+            margin-top: 10px;
+            padding-top: 0;
+        }
+        .main-content h2{
+            text-align: center;
+            margin: 1rem auto;
+        }
+        .section-heading {
+            font-size: 2.8rem;
+            color: var(--primary-green);
+            /* margin-bottom: 2rem; */
+            margin: 0 auto;
+            padding: 0;
+        }
+        .sub-heading {
+            padding: 0;
+            margin-top: 0;
+            font-size: 1.5rem;
+            color: var(--primary-green);
+            margin-bottom: 1rem;
+        }
+        /* Form Card */
+        .form-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: 1px solid var(--primary-green);
+            padding: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+            margin-bottom: 0;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 5px;
+            border: 1px solid var(--text-dark);
+            background-color: #f3f4f6;
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            box-sizing: border-box;
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: #6b7280;
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .price-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .price-group span {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-right: 0.5rem;
+        }
+        
+        .form-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .form-buttons button {
+            padding: 1rem 2rem;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border: none;
+        }
+        
+        .save-btn {
+            background-color: var(--primary-green);
+            color: var(--text-light);
+        }
+        .save-btn:hover {
+            background-color: var(--soft-earth-tone);
+            color: var(--text-dark);
+        }
+
+        .reset-btn {
+            background-color: #f3f4f6;
+            color: var(--text-dark);
+            border: 1px solid #e5e7eb;
+        }
+        .reset-btn:hover {
+            background-color: #e5e7eb;
+        }
+        
+        .success-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            z-index: 1001;
+            text-align: center;
+            border: 1px solid var(--primary-green);
+        }
+
+        /* Footer */
+        footer {
+            width: 100%;
+            background-color: var(--primary-green);
+            color: var(--text-light);
+            text-align: center;
+            padding: 20px 0 5px;
+        }
+
+        .legal-links p {
+            font-size: 1.3rem;
+            color: var(--text-light);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 10px;
+            margin-top: 5px;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .desktop-nav, .desktop-search-container { display: none; }
+            .mobile-header-group { flex-grow: 1; }
+            header { flex-wrap: wrap; height: auto; }
+            .user-menu-dropdown-container { order: 2; }
+            .user-dropdown { position: static; width: 100%; margin-top: 10px; }
+            .mobile-nav-menu.active { display: flex; }
+            .main-content { padding-top: 1rem; }
+            .form-card { padding: 1rem; }
+            .form-buttons { flex-direction: column; }
+            .form-buttons button { width: 100%; }
+        }
+    </style>
+    <!-- Leaflet CSS + JS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="mobile-header-group">
+            <button id="mobile-menu-button" class="mobile-menu-button">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="header-logo-text font-poppins"><img src="../images/homelogo2.png" alt="MARF"></div>
+        </div>
+
+        <!-- Desktop Navigation -->
+        <nav class="desktop-nav">
+            <a href="dash.html" class="nav-link" data-key="nav_home">Home</a>
+            <a href="addequipment.html" class="nav-link" data-key="nav_add_equipment">Add Equipment</a>
+            <a href="hireoperators.html" class="nav-link" data-key="nav_hire_operator">Hire Operator</a>
+            <a href="addsolutions.html" class="nav-link" data-key="nav_knowledge_hub">Knowledge Hub</a>
+            <a href="addvideos.html" class="nav-link" data-key="nav_equipment_videos">Equipment Videos</a>
+        </nav>
+
+        <div class="desktop-search-container">
+            <div class="desktop-search-bar">
+                <i class="fas fa-search fa-2x"></i>
+                <input type="text" id="search-input-desktop" data-key-placeholder="search_placeholder" placeholder="Search for equipment...">
+            </div>
+            <button class="location-detector-btn">
+                <i class="fas fa-location-arrow animate-pulse-slow fa-3x"></i>
+            </button>
+        </div>
+
+        <div class="user-menu-dropdown-container">
+            <button id="user-menu-button" class="user-menu-button">
+                <i class="fas fa-user-circle fa-4x"></i>
+            </button>
+            <div id="user-dropdown" class="user-dropdown hidden">
+                <div class="lang-switcher-container">
+                    <div class="lang-switcher">
+                        <button id="lang-en" class="active">English</button>
+                        <button id="lang-kn">ಕನ್ನಡ</button>
+                    </div>
+                </div>
+                <a href="account.html" class="user-dropdown-link"><span data-key="account">Account</span></a>
+                <a href="bookinghistory.html" class="user-dropdown-link"><span data-key="booking_history">Booking History</span></a>
+                <a href="payment-history.html" class="user-dropdown-link"><span data-key="payment_history">Payment History</span></a>
+                <button type="button" class="user-dropdown-link logout-btn" 
+                    data-key="logout"> 
+                    Logout
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Nav -->
+        <nav id="mobile-nav" class="mobile-nav-menu">
+            <a href="dash.html" class="nav-link" data-key="nav_home">Home</a>
+            <a href="addequipment.html" class="nav-link" data-key="nav_add_equipment">Add Equipment</a>
+            <a href="hireoperators.html" class="nav-link" data-key="nav_hire_operator">Hire Operator</a>
+            <a href="addsolutions.html" class="nav-link" data-key="nav_knowledge_hub">Knowledge Hub</a>
+            <a href="addvideos.html" class="nav-link" data-key="nav_equipment_videos">Equipment Videos</a>
+            <div class="mobile-search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search-input-mobile" data-key-placeholder="search_placeholder" placeholder="Search for equipment...">
+            </div>
+            <button class="location-detector-btn">
+                <i class="fas fa-location-arrow animate-pulse-slow"></i>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <h2 class="section-heading font-poppins" id="page-title" data-key="main_title">
+            Add Your Equipment
+            <!-- <span class="font-kannada" style="display: block; font-size: 1.5rem; font-weight: normal; margin-top: 0.5rem;" data-key="main_title_kn">ನಿಮ್ಮ ಉಪಕರಣ ಸೇರಿಸಿ</span> -->
+        </h2>
+        
+        <div class="form-card">
+            <form id="add-equipment-form" enctype="multipart/form-data">
+                <!-- Equipment Name -->
+                <div class="form-group">
+                    <label for="equipment-name" data-key="equipment_name_label">Equipment Name</label>
+                    <select id="equipment-name" name="name">
+                        <option value="" disabled selected data-key="equipment_name_select">Select Equipment</option>
+                        <option value="Tractor" data-key="equipment_name_tractor">Tractor</option>
+                        <option value="Rotavator" data-key="equipment_name_rotavator">Rotavator</option>
+                        <option value="Sprayer" data-key="equipment_name_sprayer">Sprayer</option>
+                        <option value="Harvester" data-key="equipment_name_harvester">Harvester</option>
+                    </select>
+                </div>
+
+                <!-- Equipment Type -->
+                <div class="form-group">
+                    <label for="equipment-type" data-key="equipment_type_label">Equipment Type</label>
+                    <select id="equipment-type" name="type">
+                        <option value="" disabled selected data-key="equipment_type_select">Select Type</option>
+                        <option value="Tilling" data-key="equipment_type_tilling">Tilling</option>
+                        <option value="Planting" data-key="equipment_type_planting">Planting</option>
+                        <option value="Spraying" data-key="equipment_type_spraying">Spraying</option>
+                        <option value="Harvesting" data-key="equipment_type_harvesting">Harvesting</option>
+                        <option value="Others" data-key="equipment_type_others">Others</option>
+                    </select>
+                </div>
+                
+                <!-- Contact Number -->
+                <div class="form-group">
+                    <label for="contact-number" data-key="contact_number_label">Contact Number</label>
+                    <div style="display: flex; align-items: center;">
+                        <input type="text" value="+91" style="width: 60px; text-align: center; margin-right: 0.5rem;" readonly>
+                        <input type="tel" id="contact-number" name="contact_number" data-key-placeholder="contact_number_placeholder" placeholder="Phone Number" style="flex-grow: 1;">
+                    </div>
+                </div>
+
+                <!-- Price -->
+                <div class="form-group">
+                    <label for="price" data-key="price_label">Price</label>
+                    <div class="price-group">
+                        <span data-key="currency">₹</span>
+                        <input type="number" id="price" name="price" data-key-placeholder="price_placeholder" placeholder="Price per day">
+                    </div>
+                </div>
+
+                <!-- Equipment Description -->
+                <div class="form-group">
+                    <label for="description" data-key="description_label">Equipment Description</label>
+                    <textarea id="description" name="description" data-key-placeholder="description_placeholder" placeholder="Provide a detailed description of the equipment..."></textarea>
+                </div>
+
+                <!-- Upload Image -->
+                <div class="form-group">
+                    <label for="image-upload" data-key="image_upload_label">Upload Equipment Image</label>
+                    <input type="file" id="image-upload" name="image" accept="image/*">
+                </div>
+
+   <!-- Location -->
+<!-- Location -->
+<div class="form-group">
+    <label for="location">Location</label>
+    <input type="text" id="location" name="location" placeholder="Enter your equipment location">
+    <button type="button" onclick="getLocation()">📍 Use My Location</button>
+</div>
+<div id="map" style="height:300px;"></div>
+
+
+    <!-- Yellow location button inside input
+    <button type="button" 
+            id="getLocationBtn" 
+            class="absolute right-2 top-9 text-yellow-500 hover:text-yellow-600">
+        <i class="fas fa-location-arrow animate-pulse-slow"></i>
+    </button>
+</div>
+ Map for selecting location -->
+<!-- <div id="map" style="height:300px; margin-top:10px;"></div> --> 
+
+
+<script>
+var map = L.map('map').setView([15.3, 74.5], 13); // Default center
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+}).addTo(map);
+
+var marker = L.marker([15.3, 74.5], {draggable:true}).addTo(map);
+
+marker.on('dragend', function(e) {
+    var latlng = marker.getLatLng();
+    fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latlng.lat}&lon=${latlng.lng}`)
+    .then(r => r.json())
+    .then(data => {
+        document.getElementById("location").value = data.display_name;
+    });
+});
+</script>
+
+
+                <!-- Availability -->
+                <div class="form-group">
+                    <label for="availability" data-key="availability_label">Availability</label>
+                    <select id="availability">
+                        <option value="available" data-key="availability_available">Available</option>
+                        <option value="unavailable" data-key="availability_unavailable">Unavailable</option>
+                        <option value="available-date" data-key="availability_available_date">Available from [date]</option>
+                    </select>
+                </div>
+
+                <!-- Relevant Information -->
+                <div class="form-group">
+                    <label for="relevant-info" data-key="relevant_info_label">Relevant Information (Optional)</label>
+                    <textarea id="relevant-info" data-key-placeholder="relevant_info_placeholder" placeholder="Add extra rental terms, notes, or specific details about the equipment..."></textarea>
+                </div>
+
+                <!-- Buttons -->
+                <div class="form-buttons">
+                    <button type="button" class="reset-btn" id="reset-button" data-key="reset_button">Reset Form</button>
+                    <button type="submit" class="save-btn" id="save-button" data-key="save_button">Save & Publish</button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- Success Message Modal -->
+    <div id="success-modal" class="success-message hidden">
+        <h3 class="font-poppins" data-key="success_title">Success!</h3>
+        <p data-key="success_text">Your equipment has been listed successfully!</p>
+        <button id="close-modal-btn" class="save-btn" data-key="close_button">Close</button>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="legal-links">
+            <p data-key="footer_text">&copy; 2024 MARF. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const translations = {
+            en: {
+                title: 'MARF Add Equipment',
+                nav_home: 'Home',
+                nav_add_equipment: 'Add Equipment',
+                nav_hire_operator: 'Hire Operator',
+                nav_knowledge_hub: 'Knowledge Hub',
+                nav_equipment_videos: 'Equipment Videos',
+                main_title: 'Add Your Equipment',
+                equipment_name_label: 'Equipment Name',
+                equipment_name_select: 'Select Equipment',
+                equipment_name_tractor: 'Tractor',
+                equipment_name_rotavator: 'Rotavator',
+                equipment_name_sprayer: 'Sprayer',
+                equipment_name_harvester: 'Harvester',
+                equipment_type_label: 'Equipment Type',
+                equipment_type_select: 'Select Type',
+                equipment_type_tilling: 'Tilling',
+                equipment_type_planting: 'Planting',
+                equipment_type_spraying: 'Spraying',
+                equipment_type_harvesting: 'Harvesting',
+                equipment_type_others: 'Others',
+                contact_number_label: 'Contact Number',
+                contact_number_placeholder: 'Phone Number',
+                price_label: 'Price',
+                currency: '₹',
+                price_placeholder: 'Price per day',
+                description_label: 'Equipment Description',
+                description_placeholder: 'Provide a detailed description of the equipment...',
+                image_upload_label: 'Upload Equipment Image',
+                location_label: 'Location',
+                location_placeholder: 'Enter your equipment location',
+                availability_label: 'Availability',
+                availability_available: 'Available',
+                availability_unavailable: 'Unavailable',
+                availability_available_date: 'Available from [date]',
+                relevant_info_label: 'Relevant Information (Optional)',
+                relevant_info_placeholder: 'Add extra rental terms, notes, or specific details about the equipment...',
+                reset_button: 'Reset Form',
+                save_button: 'Save & Publish',
+                success_title: 'Success!',
+                success_text: 'Your equipment has been listed successfully!',
+                close_button: 'Close',
+                account: 'ಖಾತೆ',
+                booking_history: 'ಬುಕಿಂಗ್ ಇತಿಹಾಸ',
+                payment_history: 'ಪಾವತಿ ಇತಿಹಾಸ',
+                logout: 'ಲಾಗ್ ಔಟ್',
+                footer_text: '&copy; 2024 MARF. All rights reserved.'
+            },
+            kn: {
+                title: 'ಮಾರ್ಫ್ ಉಪಕರಣ ಸೇರಿಸಿ',
+                nav_home: 'ಹೋಮ್',
+                nav_add_equipment: 'ಸಲಕರಣೆ ಸೇರಿಸಿ',
+                nav_hire_operator: 'ಆಪರೇಟರ್ ನೇಮಿಸಿ',
+                nav_knowledge_hub: 'ಜ್ಞಾನ ಕೇಂದ್ರ',
+                nav_farm_solutions: 'ಕೃಷಿ ಪರಿಹಾರಗಳು',
+                nav_equipment_videos: 'ಉಪಕರಣ ವಿಡಿಯೋಗಳು',
+                main_title: 'ನಿಮ್ಮ ಉಪಕರಣ ಸೇರಿಸಿ',
+                equipment_name_label: 'ಉಪಕರಣದ ಹೆಸರು',
+                equipment_name_select: 'ಉಪಕರಣ ಆಯ್ಕೆಮಾಡಿ',
+                equipment_name_tractor: 'ಟ್ರಾಕ್ಟರ್',
+                equipment_name_rotavator: 'ರೋಟಾವೇಟರ್',
+                equipment_name_sprayer: 'ಸ್ಪ್ರೇಯರ್',
+                equipment_name_harvester: 'ಹಾರ್ವೆಸ್ಟರ್',
+                equipment_type_label: 'ಉಪಕರಣದ ಪ್ರಕಾರ',
+                equipment_type_select: 'ಪ್ರಕಾರ ಆಯ್ಕೆಮಾಡಿ',
+                equipment_type_tilling: 'ಹದಗೊಳಿಸುವುದು',
+                equipment_type_planting: 'ಬಿತ್ತನೆ',
+                equipment_type_spraying: 'ಸಿಂಪಡಿಸುವಿಕೆ',
+                equipment_type_harvesting: 'ಕಟಾವು',
+                equipment_type_others: 'ಇತರರು',
+                contact_number_label: 'ಸಂಪರ್ಕ ಸಂಖ್ಯೆ',
+                contact_number_placeholder: 'ದೂರವಾಣಿ ಸಂಖ್ಯೆ',
+                price_label: 'ಬೆಲೆ',
+                currency: '₹',
+                price_placeholder: 'ಪ್ರತಿ ದಿನದ ಬೆಲೆ',
+                description_label: 'ಉಪಕರಣದ ವಿವರಣೆ',
+                description_placeholder: 'ಉಪಕರಣದ ಬಗ್ಗೆ ವಿವರವಾದ ವಿವರಣೆ ನೀಡಿ...',
+                image_upload_label: 'ಉಪಕರಣದ ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ',
+                location_label: 'ಸ್ಥಳ',
+                location_placeholder: 'ನಿಮ್ಮ ಉಪಕರಣದ ಸ್ಥಳವನ್ನು ನಮೂದಿಸಿ',
+                availability_label: 'ಲಭ್ಯತೆ',
+                availability_available: 'ಲಭ್ಯವಿದೆ',
+                availability_unavailable: 'ಲಭ್ಯವಿಲ್ಲ',
+                availability_available_date: '[ದಿನಾಂಕದಿಂದ] ಲಭ್ಯವಿದೆ',
+                relevant_info_label: 'ಸಂಬಂಧಿತ ಮಾಹಿತಿ (ಐಚ್ಛಿಕ)',
+                relevant_info_placeholder: 'ಬಾಡಿಗೆ ನಿಯಮಗಳು, ಟಿಪ್ಪಣಿಗಳು ಅಥವಾ ಉಪಕರಣದ ಬಗ್ಗೆ ನಿರ್ದಿಷ್ಟ ವಿವರಗಳನ್ನು ಸೇರಿಸಿ...',
+                reset_button: 'ಫಾರ್ಮ್ ಮರುಹೊಂದಿಸಿ',
+                save_button: 'ಉಳಿಸಿ ಮತ್ತು ಪ್ರಕಟಿಸಿ',
+                success_title: 'ಯಶಸ್ಸು!',
+                success_text: 'ನಿಮ್ಮ ಉಪಕರಣವನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಸೇರಿಸಲಾಗಿದೆ!',
+                close_button: 'ಮುಚ್ಚಿ',
+                account: 'ಖಾತೆ',
+                booking_history: 'ಬುಕಿಂಗ್ ಇತಿಹಾಸ',
+                payment_history: 'ಪಾವತಿ ಇತಿಹಾಸ',
+                logout: 'ಲಾಗ್ ಔಟ್',
+                footer_text: '&copy; 2024 ಮಾರ್ಫ್. ಎಲ್ಲಾ ಹಕ್ಕುಗಳನ್ನು ಕಾಯ್ದಿರಿಸಲಾಗಿದೆ.'
+            }
+        };
+
+        let currentLang = 'en';
+
+        const updateContent = (lang) => {
+            const langData = translations[lang];
+
+            const titleElement = document.querySelector('title');
+            if (titleElement) {
+                const key = titleElement.getAttribute('data-key');
+                if (langData[key]) {
+                    titleElement.textContent = langData[key];
+                }
+            }
+
+            const textElements = document.querySelectorAll('[data-key]:not(input):not(textarea):not(select):not(option)');
+            textElements.forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (langData[key]) {
+                    el.textContent = langData[key];
+                }
+            });
+
+            const placeholders = document.querySelectorAll('[data-key-placeholder]');
+            placeholders.forEach(el => {
+                const key = el.getAttribute('data-key-placeholder');
+                if (langData[key]) {
+                    el.placeholder = langData[key];
+                }
+            });
+        };
+
+        const switchLanguage = (lang) => {
+            currentLang = lang;
+            updateContent(lang);
+
+            const langEnBtn = document.getElementById('lang-en');
+            const langKnBtn = document.getElementById('lang-kn');
+
+            if (langEnBtn) langEnBtn.classList.remove('active');
+            if (langKnBtn) langKnBtn.classList.remove('active');
+            if (lang === 'en' && langEnBtn) {
+                langEnBtn.classList.add('active');
+                document.documentElement.lang = 'en';
+            } else if (lang === 'kn' && langKnBtn) {
+                langKnBtn.classList.add('active');
+                document.documentElement.lang = 'kn';
+            }
+        };
+
+        const showSuccessModal = () => {
+            const modal = document.getElementById('success-modal');
+            if (modal) {
+                modal.classList.remove('hidden');
+            }
+        };
+
+        const hideSuccessModal = () => {
+            const modal = document.getElementById('success-modal');
+            if (modal) {
+                modal.classList.add('hidden');
+            }
+        };
+
+        window.onload = function() {
+            switchLanguage('en');
+
+            const addEquipmentForm = document.getElementById('add-equipment-form');
+            if (addEquipmentForm) {
+                addEquipmentForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+
+                    const userRole = localStorage.getItem('user_role');
+                    const token = localStorage.getItem('access_token');
+                    if (!token || userRole !== 'owner') {
+                        alert("Permission denied. You must be logged in as an owner to add equipment.");
+                        return;
+                    }
+                    
+                    const name = document.getElementById('equipment-name').value;
+                    const description = document.getElementById('description').value;
+                    const priceInput = document.getElementById('price');
+                    const price = parseFloat(priceInput.value);
+                    const imageFile = document.getElementById('image-upload').files[0];
+                    const contactNumber = document.getElementById('contact-number').value;
+                    const location = document.getElementById('location').value;
+
+                    if (!name) {
+                        alert("Please select an equipment name.");
+                        return;
+                    }
+                    if (!contactNumber) {
+                        alert("Please enter a contact number.");
+                        return;
+                    }
+                    const phoneRegex = /^\d{10}$/;
+                    if (!phoneRegex.test(contactNumber)) {
+                        alert("Please enter a valid 10-digit contact number.");
+                        return;
+                    }
+                    if (!description) {
+                        alert("Please provide a detailed description.");
+                        return;
+                    }
+                    if (isNaN(price) || price <= 0) {
+                        alert("Please enter a valid price.");
+                        return;
+                    }
+                    if (!imageFile) {
+                        alert("Please upload an equipment image.");
+                        return;
+                    }
+                    if (!location) {
+                        alert("Please enter a location.");
+                        return;
+                    }
+                    
+                    const formData = new FormData();
+                    formData.append('name', name);
+                    formData.append('description', description);
+                    formData.append('price', price);
+                    formData.append('contact_number', contactNumber);
+                    formData.append('location', location);
+                    formData.append('image', imageFile);
+
+                    try {
+                        const response = await fetch('http://127.0.0.1:5000/addequipment', {
+                            method: 'POST',
+                            headers: {
+                                'Authorization': `Bearer ${token}`
+                            },
+                            body: formData
+                        });
+                        const data = await response.json();
+                        if (response.ok) {
+                            showSuccessModal();
+                            addEquipmentForm.reset();
+                        } else {
+                            alert('Failed to add equipment: ' + data.msg);
+                        }
+                    } catch (error) {
+                        console.error('Error adding equipment:', error);
+                        alert('An error occurred. Please try again.');
+                    }
+                });
+            }
+            
+            const resetButton = document.getElementById('reset-button');
+            if (resetButton && addEquipmentForm) {
+                resetButton.addEventListener('click', () => {
+                    addEquipmentForm.reset();
+                });
+            }
+
+            const closeModalBtn = document.getElementById('close-modal-btn');
+            if (closeModalBtn) {
+                closeModalBtn.addEventListener('click', hideSuccessModal);
+            }
+        };
+
+        // Geolocation Script
+        document.addEventListener("DOMContentLoaded", () => {
+            const locationInput = document.getElementById("location");
+            const detectButtons = document.querySelectorAll(".location-detector-btn");
+
+            function detectLocation() {
+                if (!navigator.geolocation) {
+                    alert("Geolocation is not supported by your browser.");
+                    return;
+                }
+
+                navigator.geolocation.getCurrentPosition(success, error);
+            }
+
+            function success(position) {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+
+                fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const address = data.display_name || `${latitude}, ${longitude}`;
+                        locationInput.value = address;
+                    })
+                    .catch(() => {
+                        locationInput.value = `${latitude}, ${longitude}`;
+                    });
+            }
+
+            function error() {
+                alert("Unable to retrieve your location.");
+            }
+
+            detectButtons.forEach(btn => btn.addEventListener("click", detectLocation));
+        });
+    </script>
+<script>
+(function () {
+  const locationInput = document.getElementById('location');
+  const locateBtn = document.getElementById('getLocationBtn');
+
+  let map, marker;
+
+  // 1) Init map at a neutral default, marker draggable
+  function initMap(lat = 15.3, lng = 74.5, zoom = 13) {
+    map = L.map('map').setView([lat, lng], zoom);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    marker = L.marker([lat, lng], { draggable: true }).addTo(map);
+
+    // Update address when marker moves
+    marker.on('dragend', handleMarkerMoved);
+
+    // Also allow click-to-move
+    map.on('click', (e) => {
+      marker.setLatLng(e.latlng);
+      handleMarkerMoved();
+    });
+
+    // Fix first-render sizing
+    setTimeout(() => map.invalidateSize(), 300);
+  }
+
+  // 2) Reverse geocode marker position → fill input
+  function reverseGeocode(lat, lng) {
+    fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`)
+      .then(r => r.json())
+      .then(data => {
+        const address = data.display_name || `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+        locationInput.value = address;
+      })
+      .catch(() => {
+        locationInput.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+      });
+  }
+
+  function handleMarkerMoved() {
+    const { lat, lng } = marker.getLatLng();
+    reverseGeocode(lat, lng);
+  }
+
+  // 3) Try to auto-locate the user (on load and on button click)
+  function locateUser() {
+    if (!navigator.geolocation) {
+      console.warn('Geolocation not supported');
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+
+        if (!map) initMap(lat, lng, 16);
+        else {
+          map.setView([lat, lng], 16);
+          marker.setLatLng([lat, lng]);
+        }
+        reverseGeocode(lat, lng);
+      },
+      (err) => {
+        console.warn('Geolocation failed:', err);
+        if (!map) initMap(); // show default map if we haven't yet
+      },
+      { enableHighAccuracy: true, timeout: 8000, maximumAge: 30000 }
+    );
+  }
+
+  // 4) Forward geocode when user types an address (optional but handy)
+  function forwardGeocode(query) {
+    if (!query || query.trim().length < 5) return;
+    fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&q=${encodeURIComponent(query)}&limit=1`)
+      .then(r => r.json())
+      .then(res => {
+        if (res && res[0]) {
+          const lat = parseFloat(res[0].lat);
+          const lng = parseFloat(res[0].lon);
+          map.setView([lat, lng], 16);
+          marker.setLatLng([lat, lng]);
+        }
+      })
+      .catch(() => {});
+  }
+
+  // Wire up
+  initMap();        // show map immediately with default
+  locateUser();     // auto-fetch current location & fill input
+
+  locateBtn?.addEventListener('click', locateUser);
+  locationInput.addEventListener('change', () => forwardGeocode(locationInput.value));
+})();
+</script>
+
+<script>
+var map = L.map('map').setView([15.3, 74.5], 13); 
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+}).addTo(map);
+
+var marker = L.marker([15.3, 74.5], {draggable:true}).addTo(map);
+
+function buildAddress(components) {
+    return [
+        components.road || "",
+        components.village || components.town || components.city || "",
+        components.state || "",
+        components.postcode || "",
+        components.country || ""
+    ].filter(Boolean).join(", ");
+}
+
+function setAddress(lat, lon) {
+    fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`)
+    .then(r => r.json())
+    .then(data => {
+        let address = buildAddress(data.address);
+        document.getElementById("location").value = address || data.display_name;
+        marker.setLatLng([lat, lon]);
+        map.setView([lat, lon], 15);
+    });
+}
+
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(pos) {
+            setAddress(pos.coords.latitude, pos.coords.longitude);
+        }, function(err) {
+            alert("Unable to retrieve location: " + err.message);
+        });
+    } else {
+        alert("Geolocation not supported");
+    }
+}
+
+marker.on('dragend', function(e) {
+    var latlng = marker.getLatLng();
+    setAddress(latlng.lat, latlng.lng);
+});
+</script>
+
+
+
+</body>
+</html>

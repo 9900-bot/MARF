@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-key="title">MARF Hire Operators</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Kannada:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/906faa9c3f.js" crossorigin="anonymous"></script>
+    <style>
+        /* CSS Variables */
+        :root {
+            --primary-green: #173c1c;
+            --soft-earth-tone: #e8f5e9;
+            --accent-orange: #FFA500;
+            --accent-dark: #CC8400;
+            --text-dark: #173c1c;
+            --text-light: #fff;
+        }
+
+        /* Typography & General Styles */
+        body {
+            font-family: 'Poppins', 'Noto Sans Kannada', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text-dark);
+            background-color: var(--soft-earth-tone);
+            line-height: 1.8;
+            /* min-height: 100vh; */
+        }
+
+        .font-poppins { font-family: 'Poppins', sans-serif; }
+        .font-kannada { font-family: 'Noto Sans Kannada', sans-serif; }
+        
+        .container {
+            max-width: 2000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .hidden { display: none !important; }
+
+        /* Animations */
+        .animate-pulse-slow {
+            animation: pulse-glow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse-glow {
+            0%, 100% {
+                filter: drop-shadow(0 0 1px rgba(255, 165, 0, 0.4));
+                transform: scale(1);
+            }
+            50% {
+                filter: drop-shadow(0 0 8px rgba(255, 165, 0, 0.8));
+                transform: scale(1.05);
+            }
+        }
+        
+         /* Header and Navigation */
+        header {
+            background-color: white;
+            color: var(--text-dark);
+            padding: 1.5rem 20px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            height: 50px;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+        }
+        .header-logo-text img{
+            width: 100%;
+            height: 70px;
+            margin-left: 40px;
+        }
+
+        /* Desktop Nav */
+        .desktop-nav {
+            display: none;
+            flex-grow: 1;
+            justify-content: center;
+            gap: 30px;
+        }
+        @media (min-width: 768px) {
+            .desktop-nav { display: flex; }
+        }
+        .desktop-nav a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.3rem;
+            position: relative;
+            transition: color 0.3s;
+            margin-right: 15px;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary-green);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 4px;
+            background-color: #173c1c;
+            border-radius: 2px;
+            transition: width 0.3s ease, left 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        .desktop-search-container {
+            display: none;
+            width: 25%;
+            align-items: center;
+            gap: 15px;
+            margin-right: 40px;
+        }
+        @media (min-width: 768px) {
+            .desktop-search-container { display: flex; }
+        }
+        
+        .desktop-search-bar {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            height: 40px;
+            gap: 0.5rem;
+            background-color: #f3f4f6;
+            border-radius: 9999px;
+            padding: 0.5rem 1rem;
+            border: 1px solid #e5e7eb;
+        }
+
+        .desktop-search-bar input {
+            background: transparent;
+            font-size: 1.3rem;
+            border: none;
+            outline: none;
+            color: var(--text-dark);
+        }
+
+        .location-detector-btn {
+            width: 20%;
+            background: none;
+            border: none;
+            color: var(--accent-orange);
+            padding: 0.5rem;
+            margin-left: 20px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .location-detector-btn i{
+            width: 100%;
+        }
+        .location-detector-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* Mobile Nav */
+        .mobile-header-group {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .mobile-menu-button {
+            background: none;
+            border: none;
+            color: var(--primary-green);
+            cursor: pointer;
+        }
+        @media (min-width: 768px) {
+            .mobile-menu-button { display: none; }
+        }
+        .mobile-nav-menu {
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+            padding: 1rem 0;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            margin-top: 10px;
+        }
+        .mobile-nav-menu a {
+            padding: 0.5rem 1rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+        .mobile-search-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background-color: #f3f4f6;
+            border-radius: 9999px;
+            border: 1px solid #e5e7eb;
+        }
+        .mobile-search-container input {
+            background: transparent;
+            border: none;
+            outline: none;
+            width: 100%;
+            color: var(--text-dark);
+        }
+        .mobile-search-container input::placeholder {
+            color: #6b7280;
+        }
+
+        /* User & Lang Switcher */
+        .user-menu-dropdown-container {
+            position: relative;
+            width: 5%;
+        }
+        .user-menu-button {
+            background: var(--soft-earth-tone);
+            border: none;
+            color: var(--primary-green);
+            padding: 0.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .user-menu-button:hover { background-color: rgba(23, 60, 28, 0.1); }
+        .user-dropdown {
+            position: absolute;
+            top: 112%;
+            right: 0;
+            margin-top: 10px;
+            width: 350px;
+            background-color: white;
+            /* border: 1px solid var(--primary-green); */
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+        .lang-switcher-container { 
+            padding: 10px;
+            width: 50%;
+            margin: 0 auto;            
+        }
+        .lang-switcher {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--text-dark);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        .lang-switcher button {
+            background: none;
+            border: none;
+            color: var(--text-dark);
+            padding: 15px 18px 10px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            font-family: 'Noto Sans Kannada', sans-serif;
+            font-size: 1.2rem;
+            flex: 1;
+        }
+        .lang-switcher button.active {
+            background-color: var(--primary-green);
+            color: var(--text-light);
+            font-weight: 700;
+        }
+        .user-dropdown-link {
+            display: block;
+            padding: 15px;
+            margin-left: 10px;
+            font-size: 1.5rem;
+            font-weight: 500;
+            text-decoration: none;
+            color: var(--text-dark);
+            transition: background-color 0.3s;
+        }
+        .user-dropdown-link:hover { background-color: #f3f4f6; }
+
+        .logout-btn{
+            background-color: #173c1c;
+            margin: 0 auto;
+            color: white;
+            border-radius: 15px;
+            height: 50px;
+            width: 160px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .logout-btn:hover{
+            background-color: var(--soft-earth-tone);
+            color: var(--text-dark);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 2rem 1rem;
+            max-width: 2000px;
+            margin: 0 auto;
+            margin-top: 10px;
+            padding-top: 0;
+        }
+         .main-content h2{
+            text-align: center;
+            margin: 1rem auto;
+        }
+        .section-heading {
+            font-size: 2.8rem;
+            color: var(--primary-green);
+            /* margin-bottom: 2rem; */
+            margin: 0 auto;
+            padding: 0;
+        }
+        .sub-heading {
+            padding: 0;
+            margin-top: 0;
+            font-size: 1.5rem;
+            color: var(--primary-green);
+            margin-bottom: 1rem;
+        }
+        .operators-section h3{
+             margin-top: 0;
+            padding-top: 0;
+            font-size: 2.8rem;
+            text-align: center;
+            margin: 1rem auto;
+        }
+        
+        /* Register as Operator Form */
+        .register-form-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: 1px solid var(--primary-green);
+            padding: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            display: block;
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 5px;
+            border: 1px solid var(--text-dark);
+            background-color: #f3f4f6;
+            font-size: 1.2rem;
+            color: var(--text-dark);
+            box-sizing: border-box;
+        }
+        .form-group input::placeholder {
+            color: #6b7280;
+        }
+        .input-with-icon {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .input-with-icon input {
+            flex-grow: 1;
+        }
+        .form-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        .submit-btn {
+            background-color: var(--primary-green);
+            color: var(--text-light);
+            padding: 1rem 2rem;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border: none;
+            width: 100%;
+        }
+        .submit-btn:hover { 
+            background-color: var(--soft-earth-tone);
+            color: var(--text-dark);
+        }
+        .reset-btn {
+            background-color: #f3f4f6;
+            color: var(--text-dark);
+            border: 1px solid #e5e7eb;
+        }
+        .reset-btn:hover { background-color: #e5e7eb; }
+
+        /* Operator Search Section */
+        .operators-section {
+            margin-top: 4rem;
+        }
+        .operators-search-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: white;
+            border-radius: 9999px;
+            padding: 0.5rem 1rem;
+            border: 1px solid #e5e7eb;
+            max-width: 500px;
+            margin: 0 auto 2rem;
+        }
+        .operators-search-bar input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text-dark);
+            width: 100%;
+        }
+        .operators-search-bar input::placeholder {
+            color: #6b7280;
+        }
+        .operators-filters {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .operators-filters select {
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            border: 1px solid var(--text-dark);
+            background-color: white;
+            font-size: 1rem;
+        }
+        .operators-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        .operator-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: 1px solid var(--primary-green);
+            transition: transform 0.3s;
+        }
+        .operator-card:hover { transform: translateY(-5px); }
+        .operator-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .status-available { color: #2c6032; font-weight: 700; }
+        .status-unavailable { color: #d9534f; font-weight: 700; }
+        .operator-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 0 1rem;
+        }
+        .operator-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            font-size: 1.2rem;
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+        .operator-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .operator-meta i {
+            color: var(--primary-green);
+        }
+        .hire-btn {
+            background-color: var(--primary-green);
+            color: var(--text-light);
+            padding: 1rem 2rem;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border: none;
+            width: 100%;
+        }
+        .hire-btn:hover { 
+            background-color: var(--soft-earth-tone);
+            color: var(--text-dark); 
+        }
+        
+        /* Success/Error Message Modal */
+        .message-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            z-index: 1001;
+            text-align: center;
+            border: 1px solid var(--primary-green);
+        }
+        .close-modal-btn {
+            background-color: var(--primary-green);
+            color: var(--text-light);
+            padding: 1rem 2rem;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border: none;
+            margin-top: 1rem;
+        }
+        .close-modal-btn:hover { background-color: var(--accent-dark); }
+
+        /* Footer */
+        footer {
+            width: 100%;
+            background-color: var(--primary-green);
+            color: var(--text-light);
+            text-align: center;
+            padding: 20px 0 5px;
+        }
+        .legal-links p {
+            font-size: 1.3rem;
+            color: var(--text-light);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 10px;
+            margin-top: 5px;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .desktop-nav, .desktop-search-container { display: none; }
+            .mobile-header-group { flex-grow: 1; }
+            header { flex-wrap: wrap; height: auto; }
+            .user-menu-dropdown-container { order: 2; }
+            .user-dropdown { position: static; width: 100%; margin-top: 10px; }
+            .mobile-nav-menu.active { display: flex; }
+            .main-content { padding-top: 1rem; }
+            .register-form-card { padding: 1rem; }
+            .operators-search-bar { width: 100%; margin-bottom: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="mobile-header-group">
+            <button id="mobile-menu-button" class="mobile-menu-button">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="header-logo-text font-poppins"><img src="../images/homelogo2.png" alt="MARF"></div>
+        </div>
+
+        <!-- Desktop Navigation -->
+        <nav class="desktop-nav">
+            <a href="dash.html" class="nav-link" data-key="nav_home">Home</a>
+            <a href="addequipment.html" class="nav-link" data-key="nav_add_equipment">Add Equipment</a>
+            <a href="hireoperators.html" class="nav-link" data-key="nav_hire_operator">Hire Operator</a>
+            <a href="addsolutions.html" class="nav-link" data-key="nav_farm_solutions">Farm Solutions</a>
+            <a href="addvideos.html" class="nav-link" data-key="nav_equipment_videos">Equipment Videos</a>
+        </nav>
+
+        <div class="desktop-search-container">
+            <div class="desktop-search-bar">
+                <i class="fas fa-search fa-2x"></i>
+                <input type="text" id="search-input-desktop" data-key-placeholder="search_placeholder" placeholder="Search for operator...">
+            </div>
+            <button class="location-detector-btn">
+                <i class="fas fa-location-arrow animate-pulse-slow fa-3x"></i>
+            </button>
+        </div>
+
+        <div class="user-menu-dropdown-container">
+            <button id="user-menu-button" class="user-menu-button">
+                <i class="fas fa-user-circle fa-4x"></i>
+            </button>
+            <div id="user-dropdown" class="user-dropdown hidden">
+                <div class="lang-switcher-container">
+                    <div class="lang-switcher">
+                        <button id="lang-en" class="active">English</button>
+                        <button id="lang-kn">ಕನ್ನಡ</button>
+                    </div>
+                </div>
+                <a href="account.html" class="user-dropdown-link"><span data-key="account">Account</span></a>
+                <a href="bookinghistory.html" class="user-dropdown-link"><span data-key="booking_history">Booking History</span></a>
+                <a href="payment-history.html" class="user-dropdown-link"><span data-key="payment_history">Payment History</span></a>
+                <button type="button" class="user-dropdown-link logout-btn" 
+                    data-key="logout"> 
+                    Logout
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Nav -->
+        <nav id="mobile-nav" class="mobile-nav-menu">
+            <a href="dashboard.html" class="nav-link" data-key="nav_home">Home</a>
+            <a href="add-equipment.html" class="nav-link" data-key="nav_add_equipment">Add Equipment</a>
+            <a href="hireoperators.html" class="nav-link" data-key="nav_hire_operator">Hire Operator</a>
+            <a href="farm-solutions.html" class="nav-link" data-key="nav_farm_solutions">Farm Solutions</a>
+            <a href="equipment-videos.html" class="nav-link" data-key="nav_equipment_videos">Equipment Videos</a>
+            <div class="mobile-search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search-input-mobile" data-key-placeholder="search_placeholder" placeholder="Search for equipment...">
+            </div>
+            <button class="location-detector-btn">
+                <i class="fas fa-location-arrow animate-pulse-slow"></i>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <h2 class="section-heading font-poppins" id="page-title" data-key="main_title">
+            Hire Operators
+            <!-- <span class="font-kannada" style="display: block; font-size: 1.5rem; font-weight: normal; margin-top: 0.5rem;" data-key="main_title_kn">ಕೃಷಿ ಪರಿಹಾರಗಳು</span> -->
+        </h2>
+        
+        
+        <!-- Section 1 - Register as an Operator -->
+        <section class="register-form-card">
+            <h3 class="sub-heading" data-key="register_operator_title">Register as an Operator</h3>
+            <form id="register-operator-form">
+                <div class="form-group">
+                    <label for="operator-name" data-key="operator_name_label">Operator Name</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-user fa-2x"></i>
+                        <input type="text" id="operator-name" data-key-placeholder="operator_name_placeholder" placeholder="Your Name">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="contact-number" data-key="contact_number_label">Contact Number</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-phone fa-2x"></i>
+                        <input type="tel" id="contact-number" data-key-placeholder="contact_number_placeholder" placeholder="Phone Number">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="location" data-key="your_location_label">Your Location</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-map-marker-alt fa-2x"></i>
+                        <input type="text" id="location" data-key-placeholder="your_location_placeholder" placeholder="e.g., Mandya, Karnataka">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="availability" data-key="availability_label">Availability</label>
+                    <select id="availability">
+                        <option value="available" data-key="availability_available">Available</option>
+                        <option value="unavailable" data-key="availability_unavailable">Not Available</option>
+                    </select>
+                </div>
+                <div class="form-buttons">
+                    <button type="submit" class="submit-btn" id="register-btn" data-key="register_btn">Register</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Section 2 - Search for Nearby Operators -->
+        <section class="operators-section">
+            <h3 class="section-heading" data-key="find_operators_title">Find Nearby Operators</h3>
+            <!-- <div class="operators-search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" id="operators-search-input" data-key-placeholder="operators_search_placeholder" placeholder="Search operators...">
+                <button class="location-detector-btn"><i class="fas fa-location-arrow"></i></button>
+            </div> -->
+            <!-- <div class="operators-filters">
+                <select id="availability-filter">
+                    <option value="all" data-key="filter_all">All</option>
+                    <option value="available" data-key="filter_available">Available</option>
+                </select>
+                <select id="distance-filter">
+                    <option value="any" data-key="filter_any">Any distance</option>
+                    <option value="5km">5 km</option>
+                    <option value="10km">10 km</option>
+                    <option value="20km">20 km</option>
+                </select>
+            </div> -->
+            <div id="operators-grid" class="operators-grid">
+                <!-- Operator cards will be dynamically inserted here -->
+                <div class="operator-card">
+                    <div class="operator-status">
+                        <h4 class="operator-name" data-key="operator_1_name">Suresh Kumar</h4>
+                        <span class="status-available" data-key="status_available">Available</span>
+                    </div>
+                    <div class="operator-meta">
+                        <span><i class="fas fa-phone"></i> <a href="tel:919876543210" data-key="operator_1_phone">9876543210</a></span>
+                        <span><i class="fas fa-map-marker-alt"></i> <span data-key="operator_1_location">Mandya, Karnataka</span></span>
+                    </div>
+                    <button class="hire-btn" data-key="hire_now_btn">Hire Now</button>
+                </div>
+                <div class="operator-card">
+                    <div class="operator-status">
+                        <h4 class="operator-name" data-key="operator_2_name">Anitha Patil</h4>
+                        <span class="status-unavailable" data-key="status_unavailable">Not Available</span>
+                    </div>
+                    <div class="operator-meta">
+                        <span><i class="fas fa-phone"></i> <a href="tel:919876543211" data-key="operator_2_phone">9876543211</a></span>
+                        <span><i class="fas fa-map-marker-alt"></i> <span data-key="operator_2_location">Raichur, Karnataka</span></span>
+                    </div>
+                    <button class="hire-btn" data-key="hire_now_btn">Hire Now</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Success Message Modal -->
+    <div id="success-modal" class="message-modal hidden">
+        <h3 class="font-poppins" data-key="success_title">Success!</h3>
+        <p data-key="success_text">Your registration has been submitted successfully!</p>
+        <button id="close-modal-btn" class="close-modal-btn" data-key="close_button">Close</button>
+    </div>
+    
+    <!-- No Operators Message -->
+    <div id="no-operators-message" class="message-modal hidden">
+        <h3 class="font-poppins" data-key="no_operators_title">Oops!</h3>
+        <p data-key="no_operators_text">No operators found nearby.</p>
+        <button id="close-no-operators-btn" class="close-modal-btn" data-key="close_button">Close</button>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="legal-links">
+            <p data-key="footer_text">&copy; 2024 MARF. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const translations = {
+            en: {
+                title: 'MARF Hire Operators',
+                nav_home: 'Home',
+                nav_add_equipment: 'Add Equipment',
+                nav_hire_operator: 'Hire Operator',
+                nav_knowledge_hub: 'Knowledge Hub',
+                nav_farm_solutions: 'Farm Solutions',
+                nav_equipment_videos: 'Equipment Videos',
+                main_title: 'Hire Operators',
+                main_title_kn: 'ಆಪರೇಟರ್ ನೇಮಿಸಿ',
+                register_operator_title: 'Register as an Operator',
+                operator_name_label: 'Operator Name',
+                operator_name_placeholder: 'Your Name',
+                contact_number_label: 'Contact Number',
+                contact_number_placeholder: 'Phone Number',
+                your_location_label: 'Your Location',
+                your_location_placeholder: 'e.g., Mandya, Karnataka',
+                availability_label: 'Availability',
+                availability_available: 'Available',
+                availability_unavailable: 'Not Available',
+                register_btn: 'Register',
+                find_operators_title: 'Find Nearby Operators',
+                search_placeholder: 'Search for operators...',
+                filter_all: 'All',
+                filter_available: 'Available',
+                filter_any: 'Any distance',
+                operator_1_name: 'Suresh Kumar',
+                operator_1_phone: '9876543210',
+                operator_1_location: 'Mandya, Karnataka',
+                operator_2_name: 'Anitha Patil',
+                operator_2_phone: '9876543211',
+                operator_2_location: 'Raichur, Karnataka',
+                status_available: 'Available',
+                status_unavailable: 'Not Available',
+                hire_now_btn: 'Hire Now',
+                no_operators_title: 'Oops!',
+                no_operators_text: 'No operators found nearby.',
+                success_title: 'Success!',
+                success_text: 'Your registration has been submitted successfully!',
+                close_button: 'Close',
+                account: 'Account',
+                booking_history: 'Booking History',
+                payment_history: 'Payment History',
+                logout: 'Logout',
+                footer_text: '&copy; 2024 MARF. All rights reserved.'
+            },
+            kn: {
+                title: 'ಮಾರ್ಫ್ ಆಪರೇಟರ್ ನೇಮಿಸಿ',
+                nav_home: 'ಹೋಮ್',
+                nav_add_equipment: 'ಸಲಕರಣೆ ಸೇರಿಸಿ',
+                nav_hire_operator: 'ಆಪರೇಟರ್ ನೇಮಿಸಿ',
+                nav_knowledge_hub: 'ಜ್ಞಾನ ಕೇಂದ್ರ',
+                nav_farm_solutions: 'ಕೃಷಿ ಪರಿಹಾರಗಳು',
+                nav_equipment_videos: 'ಉಪಕರಣ ವಿಡಿಯೋಗಳು',
+                main_title: 'ಆಪರೇಟರ್ ನೇಮಿಸಿ',
+                main_title_kn: 'ಆಪರೇಟರ್ ನೇಮಿಸಿ',
+                register_operator_title: 'ಆಪರೇಟರ್ ಆಗಿ ನೋಂದಾಯಿಸಿ',
+                operator_name_label: 'ಆಪರೇಟರ್ ಹೆಸರು',
+                operator_name_placeholder: 'ನಿಮ್ಮ ಹೆಸರು',
+                contact_number_label: 'ಸಂಪರ್ಕ ಸಂಖ್ಯೆ',
+                contact_number_placeholder: 'ದೂರವಾಣಿ ಸಂಖ್ಯೆ',
+                your_location_label: 'ನಿಮ್ಮ ಸ್ಥಳ',
+                your_location_placeholder: 'ಉದಾ: ಮಂಡ್ಯ, ಕರ್ನಾಟಕ',
+                availability_label: 'ಲಭ್ಯತೆ',
+                availability_available: 'ಲಭ್ಯವಿದೆ',
+                availability_unavailable: 'ಲಭ್ಯವಿಲ್ಲ',
+                register_btn: 'ನೋಂದಾಯಿಸಿ',
+                find_operators_title: 'ಸಮೀಪದ ಆಪರೇಟರ್‌ಗಳನ್ನು ಹುಡುಕಿ',
+                search_placeholder: 'ಆಪರೇಟರ್‌ಗಳನ್ನು ಹುಡುಕಿ...',
+                filter_all: 'ಎಲ್ಲವೂ',
+                filter_available: 'ಲಭ್ಯವಿದೆ',
+                filter_any: 'ಯಾವುದೇ ದೂರ',
+                operator_1_name: 'ಸುರೇಶ್ ಕುಮಾರ್',
+                operator_1_phone: '9876543210',
+                operator_1_location: 'ಮಂಡ್ಯ, ಕರ್ನಾಟಕ',
+                operator_2_name: 'ಅನಿತಾ ಪಾಟೀಲ್',
+                operator_2_phone: '9876543211',
+                operator_2_location: 'ರಾಯಚೂರು, ಕರ್ನಾಟಕ',
+                status_available: 'ಲಭ್ಯವಿದೆ',
+                status_unavailable: 'ಲಭ್ಯವಿಲ್ಲ',
+                hire_now_btn: 'ಈಗ ನೇಮಿಸಿ',
+                no_operators_title: 'ಕ್ಷಮಿಸಿ!',
+                no_operators_text: 'ಸಮೀಪದಲ್ಲಿ ಯಾವುದೇ ಆಪರೇಟರ್‌ಗಳು ಕಂಡುಬಂದಿಲ್ಲ.',
+                success_title: 'ಯಶಸ್ಸು!',
+                success_text: 'ನಿಮ್ಮ ನೋಂದಣಿ ಯಶಸ್ವಿಯಾಗಿ ಸಲ್ಲಿಸಲಾಗಿದೆ!',
+                close_button: 'ಮುಚ್ಚಿ',
+                account: 'ಖಾತೆ',
+                booking_history: 'ಬುಕಿಂಗ್ ಇತಿಹಾಸ',
+                payment_history: 'ಪಾವತಿ ಇತಿಹಾಸ',
+                logout: 'ಲಾಗ್ ಔಟ್',
+                footer_text: '&copy; 2024 ಮಾರ್ಫ್. ಎಲ್ಲಾ ಹಕ್ಕುಗಳನ್ನು ಕಾಯ್ದಿರಿಸಲಾಗಿದೆ.'
+            }
+        };
+
+        let currentLang = 'en';
+
+        // Function to update all text content based on the language
+        const updateContent = (lang) => {
+            const langData = translations[lang];
+
+            // Update title
+            const titleElement = document.querySelector('title');
+            if (titleElement) {
+                const key = titleElement.getAttribute('data-key');
+                if (langData[key]) {
+                    titleElement.textContent = langData[key];
+                }
+            }
+
+            // Update all elements with data-key for textContent
+            const textElements = document.querySelectorAll('[data-key]:not(input):not(textarea):not(select):not(option)');
+            textElements.forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (langData[key]) {
+                    el.textContent = langData[key];
+                }
+            });
+
+            // Update placeholders with data-key-placeholder
+            const placeholders = document.querySelectorAll('[data-key-placeholder]');
+            placeholders.forEach(el => {
+                const key = el.getAttribute('data-key-placeholder');
+                if (langData[key]) {
+                    el.placeholder = langData[key];
+                }
+            });
+
+            // Update select options with data-key
+            const selectOptions = document.querySelectorAll('select option[data-key]');
+            selectOptions.forEach(option => {
+                const key = option.getAttribute('data-key');
+                if (langData[key]) {
+                    option.textContent = langData[key];
+                }
+            });
+
+            // Special handling for elements with nested spans (like the page title)
+            const pageTitleElement = document.getElementById('page-title');
+            if (pageTitleElement) {
+                const mainTitleSpan = pageTitleElement.querySelector('span[data-key="main_title"]');
+                const kannadaSpan = pageTitleElement.querySelector('span[data-key="main_title_kn"]');
+                
+                if (mainTitleSpan && langData.main_title) {
+                    mainTitleSpan.textContent = langData.main_title;
+                }
+                if (kannadaSpan && langData.main_title_kn) {
+                    kannadaSpan.textContent = langData.main_title_kn;
+                }
+            }
+            
+            // Update nav links
+            const navLinks = document.querySelectorAll('.desktop-nav a, .mobile-nav-menu a');
+            navLinks.forEach(link => {
+                const key = link.getAttribute('data-key');
+                if (langData[key]) {
+                    link.textContent = langData[key];
+                }
+            });
+            
+            // Update user dropdown links
+            const userLinks = document.querySelectorAll('.user-dropdown-link span');
+            userLinks.forEach(span => {
+                const key = span.getAttribute('data-key');
+                if (langData[key]) {
+                    span.textContent = langData[key];
+                }
+            });
+            
+            // Update other specific texts
+            const registerBtn = document.getElementById('register-btn');
+            if (registerBtn) registerBtn.textContent = langData.register_btn;
+            const hireNowBtn = document.getElementById('hire-now-btn');
+            if (hireNowBtn) hireNowBtn.textContent = langData.hire_now_btn;
+            const statusAvailable = document.querySelector('.status-available');
+            if (statusAvailable) statusAvailable.textContent = langData.status_available;
+            const statusUnavailable = document.querySelector('.status-unavailable');
+            if (statusUnavailable) statusUnavailable.textContent = langData.status_unavailable;
+
+            // Update placeholder in search bars
+            const searchInputDesktop = document.getElementById('search-input-desktop');
+            if (searchInputDesktop) {
+                searchInputDesktop.placeholder = langData.search_placeholder;
+            }
+            const searchInputMobile = document.getElementById('search-input-mobile');
+            if (searchInputMobile) {
+                searchInputMobile.placeholder = langData.search_placeholder;
+            }
+        };
+
+        // Function to switch language
+        const switchLanguage = (lang) => {
+            currentLang = lang;
+            updateContent(lang);
+
+            const langEnBtn = document.getElementById('lang-en');
+            const langKnBtn = document.getElementById('lang-kn');
+
+            if (langEnBtn) langEnBtn.classList.remove('active');
+            if (langKnBtn) langKnBtn.classList.remove('active');
+            if (lang === 'en' && langEnBtn) {
+                langEnBtn.classList.add('active');
+                document.documentElement.lang = 'en';
+            } else if (lang === 'kn' && langKnBtn) {
+                langKnBtn.classList.add('active');
+                document.documentElement.lang = 'kn';
+            }
+        };
+
+        // Modal functions
+        const showMessageModal = (modalId) => {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('hidden');
+            }
+        };
+
+        const hideMessageModal = (modalId) => {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('hidden');
+            }
+        };
+
+        window.onload = function() {
+            // Set initial language to English on load
+            switchLanguage('en');
+
+            // Header and dropdown functionality
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileNav = document.getElementById('mobile-nav');
+            if (mobileMenuButton && mobileNav) {
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileNav.classList.toggle('hidden');
+                });
+            }
+
+            const userMenuButton = document.getElementById('user-menu-button');
+            const userDropdown = document.getElementById('user-dropdown');
+            if (userMenuButton && userDropdown) {
+                userMenuButton.addEventListener('click', (event) => {
+                    userDropdown.classList.toggle('hidden');
+                    event.stopPropagation();
+                });
+            }
+
+            document.addEventListener('click', (event) => {
+                if (userDropdown && !userDropdown.contains(event.target) && !userMenuButton.contains(event.target)) {
+                    userDropdown.classList.add('hidden');
+                }
+            });
+
+            // Language Switcher
+            const langEnBtn = document.getElementById('lang-en');
+            if (langEnBtn) {
+                 langEnBtn.addEventListener('click', () => switchLanguage('en'));
+            }
+            const langKnBtn = document.getElementById('lang-kn');
+            if (langKnBtn) {
+                 langKnBtn.addEventListener('click', () => switchLanguage('kn'));
+            }
+            
+            // Register form submission logic
+            const form = document.getElementById('register-operator-form');
+            if (form) {
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    showMessageModal('success-modal');
+                    form.reset();
+                });
+            }
+            
+            // Close modal buttons
+            const closeModalBtn = document.getElementById('close-modal-btn');
+            if (closeModalBtn) {
+                closeModalBtn.addEventListener('click', () => hideMessageModal('success-modal'));
+            }
+            const closeNoOperatorsBtn = document.getElementById('close-no-operators-btn');
+            if (closeNoOperatorsBtn) {
+                closeNoOperatorsBtn.addEventListener('click', () => hideMessageModal('no-operators-message'));
+            }
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MARF Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Kannada:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/906faa9c3f.js" crossorigin="anonymous"></script>
+    <style>
+        /* CSS Variables */
+        :root {
+            --primary-green: #173c1c;
+            --soft-earth-tone: #e8f5e9;
+            --accent-orange: #FFA500;
+            --accent-dark: #CC8400;
+            --text-dark: #173c1c;
+            --text-light: #fff;
+            --section-padding: 80px 20px;
+        }
+
+        /* Typography & General Styles */
+        body {
+            font-family: 'Lato', 'Noto Sans Kannada', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text-dark);
+            background-color: var(--soft-earth-tone);
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+
+        .font-poppins { font-family: 'Poppins', sans-serif; }
+        .font-lato { font-family: 'Lato', sans-serif; }
+        .font-kannada { font-family: 'Noto Sans Kannada', sans-serif; }
+
+        .container {
+            max-width: 2000px;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .hidden { display: none; }
+
+        /* Animations */
+        .animate-pulse-slow {
+            animation: pulse-glow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse-glow {
+            0%, 100% {
+                filter: drop-shadow(0 0 1px rgba(255, 165, 0, 0.4));
+                transform: scale(1);
+            }
+            50% {
+                filter: drop-shadow(0 0 8px rgba(255, 165, 0, 0.8));
+                transform: scale(1.05);
+            }
+        }
+        
+        /* Header and Navigation */
+        header {
+            background-color: white;
+            color: var(--text-dark);
+            padding: 1.5rem 20px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            height: 50px;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+        }
+
+        header .logo-text img{
+            width: 100%;
+            height: 70px;
+            margin-left: 40px;
+        }
+
+        /* Desktop Nav */
+        .desktop-nav {
+            display: none;
+            flex-grow: 1;
+            justify-content: center;
+            gap: 30px;
+        }
+        @media (min-width: 768px) {
+            .desktop-nav { display: flex; }
+        }
+        .desktop-nav a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.3rem;
+            position: relative;
+            transition: color 0.3s;
+            margin-right: 15px;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-green);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 4px;
+            background-color: #173c1c;
+            border-radius: 2px;
+            transition: width 0.3s ease, left 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        .desktop-search-container {
+            display: none;
+            width: 25%;
+            align-items: center;
+            gap: 15px;
+            margin-right: 40px;
+        }
+        @media (min-width: 768px) {
+            .desktop-search-container { display: flex; }
+        }
+        
+        .desktop-search-bar {
+            display: flex;
+            width: 100%;
+            height: 40px;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: #f3f4f6;
+            border-radius: 9999px;
+            padding: 0.5rem 1rem;
+            border: 1px solid #e5e7eb;
+        }
+
+        .desktop-search-bar input {
+            background: transparent;
+            font-size: 1.3rem;
+            border: none;
+            outline: none;
+            color: var(--text-dark);
+        }
+
+        .location-detector-btn {
+            width: 20%;
+            background: none;
+            border: none;
+            color: var(--accent-orange);
+            padding: 0.5rem;
+            margin-left: 20px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .location-detector-btn i{
+            width: 100%;
+        }
+        .location-detector-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* Mobile Nav */
+        .mobile-header-group {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .mobile-menu-button {
+            background: none;
+            border: none;
+            color: var(--primary-green);
+            cursor: pointer;
+        }
+        @media (min-width: 768px) {
+            .mobile-menu-button { display: none; }
+        }
+        .mobile-nav-menu {
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+            padding: 1rem 0;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            margin-top: 10px;
+        }
+        .mobile-nav-menu a {
+            padding: 0.5rem 1rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+        .mobile-search-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background-color: #f3f4f6;
+            border-radius: 9999px;
+            border: 1px solid #e5e7eb;
+        }
+        .mobile-search-container input {
+            background: transparent;
+            border: none;
+            outline: none;
+            width: 100%;
+            color: var(--text-dark);
+        }
+
+        /* User & Lang Switcher */
+        .user-menu-dropdown-container {
+            position: relative;
+            width: 5%;
+        }
+        .user-menu-button {
+            background: var(--soft-earth-tone);
+            border: none;
+            color: var(--primary-green);
+            padding: 0.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .user-menu-button:hover { background-color: rgba(23, 60, 28, 0.1); }
+        .user-dropdown {
+            position: absolute;
+            top: 112%;
+            right: 0;
+            margin-top: 10px;
+            width: 350px;
+            background-color: white;
+            /* border: 1px solid var(--primary-green); */
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+        .lang-switcher-container { 
+            padding: 10px;
+            width: 50%;
+            margin: 0 auto;
+        }
+        .lang-switcher {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--text-dark);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        .lang-switcher button {
+            background: none;
+            border: none;
+            color: var(--text-dark);
+            padding: 15px 18px 10px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            font-family: 'Noto Sans Kannada', sans-serif;
+            font-size: 1.2rem;
+            flex: 1;
+        }
+        .lang-switcher button.active {
+            background-color: var(--primary-green);
+            color: var(--text-light);
+            font-weight: 700;
+        }
+        .user-dropdown-link {
+            display: block;
+            padding: 15px;
+            margin-left: 10px;
+            font-size: 1.5rem;
+            font-weight: 500;
+            text-decoration: none;
+            color: var(--text-dark);
+            transition: background-color 0.3s;
+        }
+        .user-dropdown-link:hover { background-color: #f3f4f6; }
+
+        .logout-btn{
+            background-color: #173c1c;
+            margin: 0 auto;
+            color: white;
+            border-radius: 15px;
+            height: 50px;
+            width: 160px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .logout-btn:hover{
+            background-color: var(--soft-earth-tone);
+            color: var(--text-dark);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 0rem 1rem 1rem;
+            max-width: 2000px;
+            margin: 0 auto;
+            margin-bottom: 20px;
+        }
+        .section-heading {
+            font-size: 2.8rem;
+            color: var(--primary-green);
+            margin-bottom: 2rem;
+            padding: 0;
+        }
+
+        /* Equipment Grid */
+        .equipment-grid {
+            width: 100%;
+            display: grid;
+            justify-content: center;
+            grid-template-columns: repeat(4, minmax(450px, 1fr));
+            gap: 30px;
+        }
+        .equipment-card {
+            width: 100%;
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            /* border: 1px solid var(--primary-green); */
+            transition: transform 0.3s;
+        }
+        .equipment-card:hover {
+            transform: translateY(-5px);
+        }
+        .equipment-card-img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+        .equipment-card-content {
+            padding: 20px;
+        }
+        .equipment-card-content h3 {
+            font-size: 1.5rem;
+            margin-top: 0;
+            margin-bottom: 5px;
+            margin-left: 10px;
+        }
+        .equipment-card-content p {
+            font-size: 1.3rem;
+            margin-top: 0;
+            margin-bottom: 10px;
+            margin-left: 10px;
+        }
+        .equipment-price {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: var(--primary-green);
+            margin-bottom: 20px;
+            margin-left: 10px;
+        }
+        .book-now-button {
+            background-color: var(--text-light);
+            color: var(--text-dark);
+            padding: 15px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border: 1px solid var(--primary-green);
+            display: block;
+            width: 100%;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .book-now-button:hover { 
+            background-color: var(--primary-green);
+            color: var(--text-light);
+        }
+
+        /* Footer */
+        footer {
+            width: 100%;
+            background-color: var(--primary-green);
+            color: var(--text-light);
+            text-align: center;
+            padding: 20px 0 5px;
+        }
+
+        .legal-links p{
+            font-size: 1.3rem;
+            color: var(--text-light);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 10px;
+            margin-top: 5px;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .desktop-nav, .desktop-search-container { display: none; }
+            .mobile-header-group { flex-grow: 1; }
+            header { flex-wrap: wrap; height: auto; }
+            .user-menu-dropdown-container { order: 2; }
+            .user-dropdown { position: static; width: 100%; margin-top: 10px; }
+            .mobile-nav-menu.active { display: flex; }
+            .main-content { padding-top: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="mobile-header-group">
+            <button id="mobile-menu-button" class="mobile-menu-button">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="logo-text font-poppins">
+                <img src="../images/homelogo2.png" alt="MARF">
+            </div>
+        </div>
+
+        <!-- Desktop Navigation -->
+        <nav class="desktop-nav">
+            <a href="dash.html" class="nav-link" data-text-en="Home" data-text-kn="ಹೋಮ್">Home</a>
+            <a href="addequipment.html" class="nav-link" data-text-en="Add Equipment" data-text-kn="ಸಲಕರಣೆ ಸೇರಿಸಿ">Add Equipment</a>
+            <a href="hireoperators.html" class="nav-link" data-text-en="Hire Operator" data-text-kn="ಆಪರೇಟರ್ ನೇಮಿಸಿ">Hire Operator</a>
+            <a href="addsolutions.html" class="nav-link" data-text-en="Knowledge Hub" data-text-kn="ಜ್ಞಾನ ಕೇಂದ್ರ">Knowledge Hub</a>
+            <a href="addvideos.html" class="nav-link" data-text-en="Equipment Videos" data-text-kn="ಸಲಕರಣೆ ವಿಡಿಯೋಗಳು">Equipment Videos</a>
+        </nav>
+
+
+
+        <div class="desktop-search-container">
+            <div class="desktop-search-bar">
+                <i class="fas fa-search fa-2x"></i>
+                <input type="text" id="search-input-desktop" data-text-en="Search for equipment..." data-text-kn="ಉಪಕರಣಗಳನ್ನು ಹುಡುಕಿ..." placeholder="Search for equipment...">
+            </div>
+            <button class="location-detector-btn">
+                <i class="fas fa-location-arrow animate-pulse-slow fa-3x"></i>
+            </button>
+        </div>
+
+        <div class="user-menu-dropdown-container">
+            <button id="user-menu-button" class="user-menu-button">
+                <i class="fas fa-user-circle fa-4x"></i>
+            </button>
+            <div id="user-dropdown" class="user-dropdown hidden">
+                <div class="lang-switcher-container">
+                    <div class="lang-switcher">
+                        <button id="lang-en" class="active">English</button>
+                        <button id="lang-kn">ಕನ್ನಡ</button>
+                    </div>
+                </div>
+                <a href="account.html" class="user-dropdown-link" data-text-en="Account" data-text-kn="ಖಾತೆ">Account</a>
+                <a href="bookinghistory.html" class="user-dropdown-link" data-text-en="Booking History" data-text-kn="ಬುಕಿಂಗ್ ಇತಿಹಾಸ">Booking History</a>
+                <a href="payment-history.html" class="user-dropdown-link" data-text-en="Payment History" data-text-kn="ಪಾವತಿ ಇತಿಹಾಸ">Payment History</a>
+                <button type="button" class="user-dropdown-link logout-btn" 
+                        data-text-en="Logout" 
+                        data-text-kn="ಲಾಗ್ ಔಟ್">
+                    Logout
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Nav -->
+        <nav id="mobile-nav" class="mobile-nav-menu">
+            <a href="dash.html" class="nav-link" data-text-en="Home" data-text-kn="ಹೋಮ್">Home</a>
+            <a href="addequipment.html" class="nav-link" data-text-en="Add Equipment" data-text-kn="ಸಲಕರಣೆ ಸೇರಿಸಿ">Add Equipment</a>
+            <a href="hireoperators.html" class="nav-link" data-text-en="Hire Operator" data-text-kn="ಆಪರೇಟರ್ ನೇಮಿಸಿ">Hire Operator</a>
+            <a href="addsolutions.html" class="nav-link" data-text-en="Knowledge Hub" data-text-kn="ಜ್ಞಾನ ಕೇಂದ್ರ">Knowledge Hub</a>
+            <a href="addvideos.html" class="nav-link" data-text-en="Equipment Videos" data-text-kn="ಸಲಕರಣೆ ವಿಡಿಯೋಗಳು">Equipment Videos</a>
+            <div class="mobile-search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search-input-mobile" data-text-en="Search for equipment..." data-text-kn="ಉಪಕರಣಗಳನ್ನು ಹುಡುಕಿ..." placeholder="Search for equipment...">
+            </div>
+            <button class="location-detector-btn">
+                <i class="fas fa-location-arrow animate-pulse-slow"></i>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <h2 id="main-title" class="section-heading font-poppins">Nearby Equipment</h2>
+        <div id="equipment-grid" class="equipment-grid">
+            <!-- Equipment cards will be inserted here by JavaScript -->
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+            <div class="legal-links">
+                <p data-text-en="&copy; 2024 MARF. All rights reserved." data-text-kn="&copy; 2024 ಮಾರ್ಫ್. ಎಲ್ಲಾ ಹಕ್ಕುಗಳನ್ನು ಕಾಯ್ದಿರಿಸಲಾಗಿದೆ.">&copy; 2024 MARF. All rights reserved.</p>
+            </div>
+    </footer>
+
+    <script>
+        const translations = {
+            en: {
+                home: 'Home',
+                list_equipment: 'List Equipment',
+                find_equipment: 'Find Equipment',
+                how_it_works: 'How It Works',
+                about_us: 'About Us',
+                search_placeholder: 'Search for equipment...',
+                account: 'Account',
+                booking_history: 'Booking History',
+                payment_history: 'Payment History',
+                logout: 'Logout',
+                main_title: 'Nearby Equipment',
+                price_suffix: '/day',
+                distance_suffix: ' km away',
+                book_now: 'Book Now',
+                equipment_types: {
+                    'Tractor': 'Tractor',
+                    'Rotavator': 'Rotavator',
+                    'Excavator': 'Excavator',
+                    'Water Pump': 'Water Pump',
+                    'Sprayer': 'Sprayer'
+                }
+            },
+            kn: {
+                home: 'ಹೋಮ್',
+                list_equipment: 'ಸಲಕರಣೆ ಪಟ್ಟಿ ಮಾಡಿ',
+                find_equipment: 'ಸಲಕರಣೆ ಹುಡುಕಿ',
+                how_it_works: 'ಇದು ಹೇಗೆ ಕೆಲಸ ಮಾಡುತ್ತದೆ',
+                about_us: 'ನಮ್ಮ ಬಗ್ಗೆ',
+                search_placeholder: 'ಉಪಕರಣಗಳನ್ನು ಹುಡುಕಿ...',
+                account: 'ಖಾತೆ',
+                booking_history: 'ಬುಕಿಂಗ್ ಇತಿಹಾಸ',
+                payment_history: 'ಪಾವತಿ ಇತಿಹಾಸ',
+                logout: 'ಲಾಗ್ ಔಟ್',
+                main_title: 'ಹತ್ತಿರದ ಉಪಕರಣ',
+                price_suffix: '/ದಿನ',
+                distance_suffix: ' ಕಿ.ಮೀ ದೂರ',
+                book_now: 'ಈಗ ಬುಕ್ ಮಾಡಿ',
+                equipment_types: {
+                    'Tractor': 'ಟ್ರಾಕ್ಟರ್',
+                    'Rotavator': 'ರೋಟಾವೇಟರ್',
+                    'Excavator': 'ಅಗೆಯುವ ಯಂತ್ರ',
+                    'Water Pump': 'ನೀರಿನ ಪಂಪ್',
+                    'Sprayer': 'ಸಿಂಪಡಿಸುವ ಯಂತ್ರ'
+                }
+            }
+        };
+
+        const equipmentData = [
+            { name: 'John Deere 5050D Tractor', type: 'Tractor', price: 1500, distance: 2.5, image: 'https://placehold.co/600x400/173c1c/e8f5e9?text=John+Deere' },
+            { name: 'Mahindra 265 DI Power Plus', type: 'Tractor', price: 1200, distance: 4.1, image: 'https://placehold.co/600x400/173c1c/e8f5e9?text=Mahindra' },
+            { name: 'Shaktiman Rotavator', type: 'Rotavator', price: 800, distance: 1.8, image: 'https://placehold.co/600x400/173c1c/e8f5e9?text=Shaktiman' },
+            { name: 'JCB 3DX Super', type: 'Excavator', price: 3000, distance: 6.7, image: 'https://placehold.co/600x400/173c1c/e8f5e9?text=JCB' },
+            { name: 'Kirloskar Centrifugal Pump', type: 'Water Pump', price: 350, distance: 3.2, image: 'https://placehold.co/600x400/173c1c/e8f5e9?text=Kirloskar' },
+            { name: 'New Holland 3630 TX Plus', type: 'Tractor', price: 1650, distance: 5.0, image: 'https://placehold.co/600x400/173c1c/e8f5e9?text=New+Holland' },
+            { name: 'Stihl Sprayer', type: 'Sprayer', price: 450, distance: 0.9, image: 'https://placehold.co/600x400/173c1c/e8f5e9?text=Stihl' },
+            { name: 'Massey Ferguson 241 DI Dynatrack', type: 'Tractor', price: 1400, distance: 7.3, image: 'https://placehold.co/600x400/173c1c/e8f5e9?text=Massey+Ferguson' },
+        ];
+        
+        let currentLang = 'en';
+
+        const createEquipmentCard = (equipment) => {
+            const lang = translations[currentLang];
+            const equipmentType = lang.equipment_types[equipment.type] || equipment.type;
+            
+            return `
+                <div class="equipment-card">
+                    <img
+                        src="${equipment.image}"
+                        alt="${equipment.name}"
+                        class="equipment-card-img"
+                        onerror="this.onerror=null; this.src='https://placehold.co/600x400/cccccc/333333?text=Image+Not+Found';"
+                    />
+                    <div class="equipment-card-content">
+                        <h3 class="card-title font-poppins">${equipment.name}</h3>
+                        <p class="card-type">${equipmentType}</p>
+                        <p class="equipment-price">₹${equipment.price}<span>${lang.price_suffix}</span></p>
+                        <p class="card-distance"><i class="fa-solid fa-location-dot"></i> ${equipment.distance} ${lang.distance_suffix}</p>
+                        <button class="book-now-button">${lang.book_now}</button>
+                    </div>
+                </div>
+            `;
+        };
+
+        const updateContent = (lang) => {
+            const elements = document.querySelectorAll('[data-text-en]');
+            elements.forEach(el => {
+                el.textContent = el.getAttribute(`data-text-${lang}`);
+            });
+            
+            document.getElementById('search-input-desktop').placeholder = translations[lang].search_placeholder;
+            document.getElementById('search-input-mobile').placeholder = translations[lang].search_placeholder;
+
+            // Update equipment cards
+            const equipmentGrid = document.getElementById('equipment-grid');
+            equipmentGrid.innerHTML = equipmentData.map(createEquipmentCard).join('');
+        };
+
+        const switchLanguage = (lang) => {
+            currentLang = lang;
+            updateContent(lang);
+
+            const langEnBtn = document.getElementById('lang-en');
+            const langKnBtn = document.getElementById('lang-kn');
+
+            if (lang === 'en') {
+                langEnBtn.classList.add('active');
+                langKnBtn.classList.remove('active');
+                document.documentElement.lang = 'en';
+            } else {
+                langKnBtn.classList.add('active');
+                langEnBtn.classList.remove('active');
+                document.documentElement.lang = 'kn';
+            }
+        };
+
+        window.onload = function() {
+            // Set initial language to English on load
+            switchLanguage('en');
+
+            // Language Switcher functionality
+            const langEnBtn = document.getElementById('lang-en');
+            const langKnBtn = document.getElementById('lang-kn');
+            langEnBtn.addEventListener('click', () => switchLanguage('en'));
+            langKnBtn.addEventListener('click', () => switchLanguage('kn'));
+
+            // Mobile menu toggle logic
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileNav = document.getElementById('mobile-nav');
+            mobileMenuButton.addEventListener('click', () => {
+                mobileNav.classList.toggle('hidden');
+            });
+
+            // User menu toggle logic
+            const userMenuButton = document.getElementById('user-menu-button');
+            const userDropdown = document.getElementById('user-dropdown');
+            userMenuButton.addEventListener('click', (event) => {
+                userDropdown.classList.toggle('hidden');
+                event.stopPropagation();
+            });
+
+            document.addEventListener('click', (event) => {
+                if (!userDropdown.contains(event.target) && !userMenuButton.contains(event.target)) {
+                    userDropdown.classList.add('hidden');
+                }
+            });
+        };
+    </script>
+</body>
+</html>

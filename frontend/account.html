@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-key="title">MARF Account</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Kannada:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/906faa9c3f.js" crossorigin="anonymous"></script>
+    <style>
+        /* CSS Variables */
+        :root {
+            --primary-green: #173c1c;
+            --soft-earth-tone: #e8f5e9;
+            --accent-orange: #FFA500;
+            --accent-dark: #CC8400;
+            --text-dark: #173c1c;
+            --text-light: #fff;
+        }
+
+        /* Typography & General Styles */
+        body {
+            font-family: 'Poppins', 'Noto Sans Kannada', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text-dark);
+            background-color: var(--soft-earth-tone);
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+
+        .font-poppins { font-family: 'Poppins', sans-serif; }
+        .font-kannada { font-family: 'Noto Sans Kannada', sans-serif; }
+        
+        .container {
+            max-width: 2000px;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .hidden { display: none !important; }
+
+        /* Animations */
+        .animate-pulse-slow {
+            animation: pulse-glow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse-glow {
+            0%, 100% {
+                filter: drop-shadow(0 0 1px rgba(255, 165, 0, 0.4));
+                transform: scale(1);
+            }
+            50% {
+                filter: drop-shadow(0 0 8px rgba(255, 165, 0, 0.8));
+                transform: scale(1.05);
+            }
+        }
+        
+        /* Header and Navigation */
+        header {
+            background-color: white;
+            color: var(--text-dark);
+            padding: 1.5rem 20px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            height: 50px;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+        }
+        .header-logo-text img{
+            width: 100%;
+            height: 70px;
+            margin-left: 40px;
+        }
+
+        /* Desktop Nav */
+        .desktop-nav {
+            display: none;
+            flex-grow: 1;
+            justify-content: center;
+            gap: 30px;
+        }
+        @media (min-width: 768px) {
+            .desktop-nav { display: flex; }
+        }
+        .desktop-nav a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.3rem;
+            position: relative;
+            transition: color 0.3s;
+            margin-right: 15px;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary-green);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 4px;
+            background-color: #173c1c;
+            border-radius: 2px;
+            transition: width 0.3s ease, left 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        .desktop-search-container {
+            display: none;
+            width: 25%;
+            align-items: center;
+            gap: 15px;
+            margin-right: 40px;
+        }
+        @media (min-width: 768px) {
+            .desktop-search-container { display: flex; }
+        }
+        
+        .desktop-search-bar {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            height: 40px;
+            gap: 0.5rem;
+            background-color: #f3f4f6;
+            border-radius: 9999px;
+            padding: 0.5rem 1rem;
+            border: 1px solid #e5e7eb;
+        }
+
+        .desktop-search-bar input {
+            background: transparent;
+            font-size: 1.3rem;
+            border: none;
+            outline: none;
+            width: 100%;
+            color: var(--text-dark);
+        }
+
+        .location-detector-btn {
+            width: 20%;
+            background: none;
+            border: none;
+            color: var(--accent-orange);
+            padding: 0.5rem;
+            margin-left: 20px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .location-detector-btn i{
+            width: 100%;
+        }
+        .location-detector-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* Mobile Nav */
+        .mobile-header-group {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .mobile-menu-button {
+            background: none;
+            border: none;
+            color: var(--primary-green);
+            cursor: pointer;
+        }
+        @media (min-width: 768px) {
+            .mobile-menu-button { display: none; }
+        }
+        .mobile-nav-menu {
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+            padding: 1rem 0;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            margin-top: 10px;
+        }
+        .mobile-nav-menu a {
+            padding: 0.5rem 1rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+        .mobile-search-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background-color: #f3f4f6;
+            border-radius: 9999px;
+            border: 1px solid #e5e7eb;
+        }
+        .mobile-search-container input {
+            background: transparent;
+            border: none;
+            outline: none;
+            width: 100%;
+            color: var(--text-dark);
+        }
+        .mobile-search-container input::placeholder {
+            color: #6b7280;
+        }
+
+        /* User & Lang Switcher */
+        .user-menu-dropdown-container {
+            position: relative;
+            width: 5%;
+        }
+        .user-menu-button {
+            background: var(--soft-earth-tone);
+            border: none;
+            color: var(--primary-green);
+            padding: 0.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .user-menu-button:hover { background-color: rgba(23, 60, 28, 0.1); }
+        .user-dropdown {
+            position: absolute;
+            top: 112%;
+            right: 0;
+            margin-top: 10px;
+            width: 350px;
+            background-color: white;
+            /* border: 1px solid var(--primary-green); */
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+        .lang-switcher-container { 
+            padding: 10px;
+            width: 50%;
+            margin: 0 auto;            
+        }
+        .lang-switcher {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--text-dark);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        .lang-switcher button {
+            background: none;
+            border: none;
+            color: var(--text-dark);
+            padding: 15px 18px 10px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            font-family: 'Noto Sans Kannada', sans-serif;
+            font-size: 1.2rem;
+            flex: 1;
+        }
+        .lang-switcher button.active {
+            background-color: var(--primary-green);
+            color: var(--text-light);
+            font-weight: 700;
+        }
+        .user-dropdown-link {
+            display: block;
+            padding: 15px;
+            margin-left: 10px;
+            font-size: 1.5rem;
+            font-weight: 500;
+            text-decoration: none;
+            color: var(--text-dark);
+            transition: background-color 0.3s;
+        }
+        .user-dropdown-link:hover { background-color: #f3f4f6; }
+
+        .logout-btn{
+            background-color: #173c1c;
+            margin: 0 auto;
+            color: white;
+            border-radius: 15px;
+            height: 50px;
+            width: 160px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .logout-btn:hover{
+            background-color: var(--soft-earth-tone);
+            color: var(--text-dark);
+        }
+
+
+        /* Main Content */
+        .main-content {
+            padding: 0rem 1rem 1rem;
+            max-width: 1500px;
+            margin: 0 auto;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+        .main-content h2{
+            text-align: center;
+            margin: 1rem auto;
+        }
+        .section-heading {
+            font-size: 2.8rem;
+            color: var(--primary-green);
+            margin-bottom: 2rem;
+        }
+        .sub-heading {
+            font-size: 1.5rem;
+            color: var(--primary-green);
+            margin-bottom: 1rem;
+        }
+
+        /* Profile Section */
+        .profile-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: 1px solid var(--primary-green);
+            padding: 2rem;
+            max-width: 600px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .profile-card-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+        .profile-image-container {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid var(--primary-green);
+            margin-bottom: 1rem;
+        }
+        .profile-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .profile-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .profile-details h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0;
+        }
+        .profile-details p {
+            font-size: 1.2rem;
+            color: #6b7280;
+            margin: 0;
+        }
+        .edit-details-btn {
+            background-color: var(--primary-green);
+            color: var(--text-light);
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border: none;
+        }
+        .edit-details-btn:hover { 
+            background-color: var(--soft-earth-tone); 
+            color: var(--text-dark);
+        }
+        
+        /* Tabs and Sections */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+        .tab-btn {
+            background-color: white;
+            color: var(--text-dark);
+            padding: 1rem 2rem;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            border: 1px solid var(--primary-green);
+        }
+        .tab-btn.active {
+            background-color: var(--primary-green);
+            color: var(--text-light);
+        }
+        .tab-content {
+            /* background-color: white; */
+            border-radius: 10px;
+            /* box-shadow: 0 4px 6px rgba(0,0,0,0.1); */
+            /* border: 1px solid var(--primary-green); */
+            padding: 2rem;
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            /* height: 500px; */
+            gap: 2rem;
+        }
+        .equipment-card, .solution-card {
+            background-color: var(--soft-earth-tone);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            /* border: 1px solid var(--primary-green); */
+            transition: transform 0.3s;
+            position: relative;
+        }
+        .equipment-card:hover, .solution-card:hover { transform: translateY(-5px); }
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .card-meta {
+            font-size: 1.2rem;
+            color: #6b7280;
+        }
+        .card-actions {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 5px;
+        }
+        .card-actions button {
+            background-color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .edit-btn { 
+            color: #2c6032;
+            font-size: 1.5rem;
+        }
+        .delete-btn { 
+            color: #d9534f; 
+            font-size: 1.5rem;
+        }
+        .no-content-message {
+            text-align: center;
+            padding: 4rem 2rem;
+            font-size: 1.5rem;
+            color: #6b7280;
+        }
+
+        /* Footer */
+        footer {
+            width: 100%;
+            background-color: var(--primary-green);
+            color: var(--text-light);
+            text-align: center;
+            padding: 20px 0 5px;
+        }
+
+        .legal-links p {
+            font-size: 1.3rem;
+            color: var(--text-light);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 10px;
+            margin-top: 5px;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .desktop-nav, .desktop-search-container { display: none; }
+            .mobile-header-group { flex-grow: 1; }
+            header { flex-wrap: wrap; height: auto; }
+            .user-menu-dropdown-container { order: 2; }
+            .user-dropdown { position: static; width: 100%; margin-top: 10px; }
+            .mobile-nav-menu.active { display: flex; }
+            .main-content { padding-top: 1rem; }
+            .profile-card { padding: 1rem; }
+            .tabs { flex-direction: column; }
+            .tab-btn { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="mobile-header-group">
+            <button id="mobile-menu-button" class="mobile-menu-button">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="header-logo-text font-poppins"><img src="../images/homelogo2.png" alt="MARF"></div>
+        </div>
+
+        <!-- Desktop Navigation -->
+        <nav class="desktop-nav">
+            <a href="dash.html" class="nav-link" data-key="nav_home">Home</a>
+            <a href="addequipment.html" class="nav-link" data-key="nav_add_equipment">Add Equipment</a>
+            <a href="hireoperators.html" class="nav-link" data-key="nav_hire_operator">Hire Operator</a>
+            <a href="addsolutions.html" class="nav-link" data-key="nav_knowledge_hub">Knowledge Hub</a>
+            <a href="addvideos.html" class="nav-link" data-key="nav_equipment_videos">Equipment Videos</a>
+        </nav>
+
+        <div class="desktop-search-container">
+            <div class="desktop-search-bar">
+                <i class="fas fa-search fa-2x"></i>
+                <input type="text" id="search-input-desktop" data-key-placeholder="search_placeholder" placeholder="Search...">
+            </div>
+            <button class="location-detector-btn">
+                <i class="fas fa-location-arrow animate-pulse-slow fa-3x"></i>
+            </button>
+        </div>
+
+        <div class="user-menu-dropdown-container">
+            <button id="user-menu-button" class="user-menu-button">
+                <i class="fas fa-user-circle fa-4x"></i>
+            </button>
+            <div id="user-dropdown" class="user-dropdown hidden">
+                <div class="lang-switcher-container">
+                    <div class="lang-switcher">
+                        <button id="lang-en" class="active">English</button>
+                        <button id="lang-kn">ಕನ್ನಡ</button>
+                    </div>
+                </div>
+                <a href="account.html" class="user-dropdown-link"><span data-key="account">Account</span></a>
+                <a href="bookinghistory.html" class="user-dropdown-link"><span data-key="booking_history">Booking History</span></a>
+                <a href="payment-history.html" class="user-dropdown-link"><span data-key="payment_history">Payment History</span></a>
+                <button type="button" class="user-dropdown-link logout-btn" 
+                    data-key="logout"> 
+                    Logout
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Nav -->
+        <nav id="mobile-nav" class="mobile-nav-menu">
+            <a href="dash.html" class="nav-link" data-key="nav_home">Home</a>
+            <a href="addequipment.html" class="nav-link" data-key="nav_add_equipment">Add Equipment</a>
+            <a href="hireoperators.html" class="nav-link" data-key="nav_hire_operator">Hire Operator</a>
+            <a href="addsolutions.html" class="nav-link" data-key="nav_knowledge_hub">Knowledge Hub</a>
+            <a href="addvideos.html" class="nav-link" data-key="nav_equipment_videos">Equipment Videos</a>
+            <div class="mobile-search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search-input-mobile" data-key-placeholder="search_placeholder" placeholder="Search...">
+            </div>
+            <button class="location-detector-btn">
+                <i class="fas fa-location-arrow animate-pulse-slow"></i>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <h2 class="section-heading font-poppins" id="page-title" data-key="main_title">
+            My Account
+            <!-- <span class="font-kannada" style="display: block; font-size: 1.5rem; font-weight: normal; margin-top: 0.5rem;" data-key="main_title_kn">ಉಪಕರಣ ವಿಡಿಯೋಗಳು</span> -->
+        </h2>
+        <!-- <h2 class="section-heading font-poppins" id="page-title">
+            <span data-key="main_title">My Account</span>
+            <span class="font-kannada" style="display: block; font-size: 1.5rem; font-weight: normal; margin-top: 0.5rem;" data-key="main_title_kn">ನನ್ನ ಖಾತೆ</span>
+        </h2> -->
+        
+        <!-- Profile Section -->
+        <section class="profile-card">
+            <div class="profile-card-header">
+                <div class="profile-image-container">
+                    <img src="https://placehold.co/120x120/173c1c/e8f5e9?text=U" alt="User Profile Picture">
+                </div>
+                <div class="profile-details">
+                    <h3 id="profile-name" data-key="profile_name">John Doe</h3>
+                    <p><i class="fas fa-envelope"></i> <span id="profile-email" data-key="profile_email">john.doe@example.com</span></p>
+                    <p><i class="fas fa-phone"></i> <span id="profile-phone" data-key="profile_phone">+91 9876543210</span></p>
+                    <p><i class="fas fa-map-marker-alt"></i> <span data-key="profile_address">Mandya, Karnataka</span></p>
+                    <p><i class="fas fa-globe"></i> <span data-key="profile_language">English</span></p>
+                </div>
+                <button class="edit-details-btn" data-key="edit_details_btn">Edit Details</button>
+            </div>
+        </section>
+
+        <!-- Tabs for Equipment and Solutions -->
+        <div class="tabs">
+            <button id="my-equipment-tab" class="tab-btn active" data-key="my_equipment_tab">My Equipment</button>
+            <button id="my-solutions-tab" class="tab-btn" data-key="my_solutions_tab">My Farm Solutions</button>
+        </div>
+
+        <div id="tab-content-container">
+            <!-- My Equipment Tab Content (Visible by default) -->
+            <div id="my-equipment-content" class="tab-content">
+                <div id="equipment-grid" class="card-grid ">
+                    <!-- Equipment cards will be dynamically inserted here -->
+                </div>
+                <div id="no-equipment-message" class="no-content-message hidden">
+                    <p data-key="no_equipment">No equipment listed yet.</p>
+                </div>
+            </div>
+
+            <!-- My Farm Solutions Tab Content (Hidden by default) -->
+            <div id="my-solutions-content" class="tab-content hidden">
+                <div id="solutions-grid" class="card-grid ">
+                    <!-- Solution cards will be dynamically inserted here -->
+                </div>
+                <div id="no-solutions-message" class="no-content-message hidden">
+                    <p data-key="no_solutions">No solutions submitted yet.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="legal-links">
+            <p data-key="footer_text">&copy; 2024 MARF. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const translations = {
+            en: {
+                title: 'MARF Account',
+                nav_home: 'Home',
+                nav_add_equipment: 'Add Equipment',
+                nav_hire_operator: 'Hire Operator',
+                nav_knowledge_hub: 'Knowledge Hub',
+                nav_farm_solutions: 'Farm Solutions',
+                nav_equipment_videos: 'Equipment Videos',
+                main_title: 'My Account',
+                main_title_kn: 'ನನ್ನ ಖಾತೆ',
+                profile_name: 'John Doe',
+                profile_email: 'john.doe@example.com',
+                profile_phone: '+91 9876543210',
+                profile_address: 'Mandya, Karnataka',
+                profile_language: 'English',
+                edit_details_btn: 'Edit Details',
+                my_equipment_tab: 'My Equipment',
+                my_solutions_tab: 'My Farm Solutions',
+                equipment_name: 'John Deere Tractor',
+                equipment_type: 'Tractor',
+                equipment_price: '₹1500/day',
+                equipment_availability_available: 'Available',
+                equipment_availability_unavailable: 'Unavailable',
+                edit_btn: 'Edit',
+                delete_btn: 'Delete',
+                solution_title: 'Drip Irrigation for Water Conservation',
+                solution_desc: 'A detailed guide on implementing low-cost drip irrigation systems for small farms.',
+                solution_date: 'Posted on 2024-05-20',
+                no_equipment: 'No equipment listed yet.',
+                no_solutions: 'No solutions submitted yet.',
+                account: 'Account',
+                booking_history: 'Booking History',
+                payment_history: 'Payment History',
+                logout: 'Logout',
+                search_placeholder: 'Search...',
+                footer_text: '&copy; 2024 MARF. All rights reserved.'
+            },
+            kn: {
+                title: 'ಮಾರ್ಫ್ ಖಾತೆ',
+                nav_home: 'ಹೋಮ್',
+                nav_add_equipment: 'ಸಲಕರಣೆ ಸೇರಿಸಿ',
+                nav_hire_operator: 'ಆಪರೇಟರ್ ನೇಮಿಸಿ',
+                nav_knowledge_hub: 'ಜ್ಞಾನ ಕೇಂದ್ರ',
+                nav_farm_solutions: 'ಕೃಷಿ ಪರಿಹಾರಗಳು',
+                nav_equipment_videos: 'ಉಪಕರಣ ವಿಡಿಯೋಗಳು',
+                main_title: 'ನನ್ನ ಖಾತೆ',
+                main_title_kn: 'ನನ್ನ ಖಾತೆ',
+                profile_name: 'ಜಾನ್ ಡೋ',
+                profile_email: 'john.doe@example.com',
+                profile_phone: '+91 9876543210',
+                profile_address: 'ಮಂಡ್ಯ, ಕರ್ನಾಟಕ',
+                profile_language: 'ಕನ್ನಡ',
+                edit_details_btn: 'ವಿವರಗಳನ್ನು ಸಂಪಾದಿಸಿ',
+                my_equipment_tab: 'ನನ್ನ ಉಪಕರಣಗಳು',
+                my_solutions_tab: 'ನನ್ನ ಪರಿಹಾರಗಳು',
+                equipment_name: 'ಜಾನ್ ಡೀರೆ ಟ್ರಾಕ್ಟರ್',
+                equipment_type: 'ಟ್ರಾಕ್ಟರ್',
+                equipment_price: '₹1500/ದಿನ',
+                equipment_availability_available: 'ಲಭ್ಯವಿದೆ',
+                equipment_availability_unavailable: 'ಲಭ್ಯವಿಲ್ಲ',
+                edit_btn: 'ಸಂಪಾದಿಸಿ',
+                delete_btn: 'ಅಳಿಸಿ',
+                solution_title: 'ನೀರು ಉಳಿತಾಯಕ್ಕಾಗಿ ಡ್ರಿಪ್ ನೀರಾವರಿ',
+                solution_desc: 'ಸಣ್ಣ ಹೊಲಗಳಲ್ಲಿ ಕಡಿಮೆ ಬೆಲೆಯ ಡ್ರಿಪ್ ನೀರಾವರಿ ವ್ಯವಸ್ಥೆಗಳನ್ನು ಅಳವಡಿಸುವ ಬಗ್ಗೆ ವಿವರವಾದ ಮಾರ್ಗದರ್ಶಿ.',
+                solution_date: 'ಪೋಸ್ಟ್ ಮಾಡಿದ ದಿನಾಂಕ: 2024-05-20',
+                no_equipment: 'ಯಾವುದೇ ಉಪಕರಣ ಪಟ್ಟಿ ಮಾಡಿಲ್ಲ.',
+                no_solutions: 'ಯಾವುದೇ ಪರಿಹಾರಗಳನ್ನು ಸಲ್ಲಿಸಿಲ್ಲ.',
+                account: 'ಖಾತೆ',
+                booking_history: 'ಬುಕಿಂಗ್ ಇತಿಹಾಸ',
+                payment_history: 'ಪಾವತಿ ಇತಿಹಾಸ',
+                logout: 'ಲಾಗ್ ಔಟ್',
+                search_placeholder: 'ಹುಡುಕಿ...',
+                footer_text: '&copy; 2024 ಮಾರ್ಫ್. ಎಲ್ಲಾ ಹಕ್ಕುಗಳನ್ನು ಕಾಯ್ದಿರಿಸಲಾಗಿದೆ.'
+            }
+        };
+
+        const solutionsData = [
+            { id: 1, title: 'Drip Irrigation for Water Conservation', desc: 'A detailed guide on implementing low-cost drip irrigation systems for small farms.', date: '2024-05-20' },
+            { id: 2, title: 'Organic Pest Control with Neem Oil', desc: 'A natural and effective method to control pests using a simple mix of neem oil and water.', date: '2024-05-18' },
+        ];
+
+        let currentLang = 'en';
+
+        const updateContent = (lang) => {
+            const langData = translations[lang];
+
+            const titleElement = document.querySelector('title');
+            if (titleElement) {
+                const key = titleElement.getAttribute('data-key');
+                if (langData[key]) {
+                    titleElement.textContent = langData[key];
+                }
+            }
+
+            const textElements = document.querySelectorAll('[data-key]:not(input):not(textarea):not(select):not(option)');
+            textElements.forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (langData[key]) {
+                    el.textContent = langData[key];
+                }
+            });
+
+            const placeholders = document.querySelectorAll('[data-key-placeholder]');
+            placeholders.forEach(el => {
+                const key = el.getAttribute('data-key-placeholder');
+                if (langData[key]) {
+                    el.placeholder = langData[key];
+                }
+            });
+        };
+
+        const switchLanguage = (lang) => {
+            currentLang = lang;
+            updateContent(lang);
+
+            const langEnBtn = document.getElementById('lang-en');
+            const langKnBtn = document.getElementById('lang-kn');
+
+            if (langEnBtn) langEnBtn.classList.remove('active');
+            if (langKnBtn) langKnBtn.classList.remove('active');
+            if (lang === 'en' && langEnBtn) {
+                langEnBtn.classList.add('active');
+                document.documentElement.lang = 'en';
+            } else if (lang === 'kn' && langKnBtn) {
+                langKnBtn.classList.add('active');
+                document.documentElement.lang = 'kn';
+            }
+        };
+
+        const renderSolutionCards = (lang) => {
+            const grid = document.getElementById('solutions-grid');
+            const noSolutionsMessage = document.getElementById('no-solutions-message');
+            if (!grid || !noSolutionsMessage) return;
+
+            grid.innerHTML = '';
+            if (solutionsData.length === 0) {
+                grid.classList.add('hidden');
+                noSolutionsMessage.classList.remove('hidden');
+                return;
+            }
+            noSolutionsMessage.classList.add('hidden');
+            grid.classList.remove('hidden');
+
+            solutionsData.forEach(item => {
+                const card = document.createElement('div');
+                card.classList.add('solution-card');
+                card.innerHTML = `
+                    <div class="card-actions">
+                        <button class="edit-btn"><i class="fas fa-edit"></i></button>
+                        <button class="delete-btn"><i class="fas fa-trash-alt"></i></button>
+                    </div>
+                    <h3 class="card-title">${item.title}</h3>
+                    <p class="card-meta">${item.desc}</p>
+                    <p class="card-meta">Posted on ${item.date}</p>
+                `;
+                grid.appendChild(card);
+            });
+        };
+        
+        const createEquipmentCard = (item) => {
+            return `
+                <div class="equipment-card">
+                    <div class="card-actions">
+                        <button class="edit-btn"><i class="fas fa-edit"></i></button>
+                        <button class="delete-btn"><i class="fas fa-trash-alt"></i></button>
+                    </div>
+                    <img src="http://127.0.0.1:5000${item.image_url}" alt="${item.name}" style="width: 100%; height: 150px; object-fit: cover; border-radius: 8px;">
+                    <h3 class="card-title">${item.name}</h3>
+                    <p class="card-meta">${item.description}</p>
+                    <p class="card-meta">
+                        <i class="fas fa-tag"></i>
+                        <span>₹${item.price}/day</span>
+                    </p>
+                    <p class="card-meta">
+                        <i class="fas fa-phone"></i>
+                        <span>${item.contact_number}</span>
+                    </p>
+                </div>
+            `;
+        };
+
+        const renderEquipmentCards = (equipmentData, lang) => {
+            const grid = document.getElementById('equipment-grid');
+            const noEquipmentMessage = document.getElementById('no-equipment-message');
+            if (!grid || !noEquipmentMessage) return;
+
+            grid.innerHTML = '';
+            if (equipmentData.length === 0) {
+                grid.classList.add('hidden');
+                noEquipmentMessage.classList.remove('hidden');
+                return;
+            }
+
+            noEquipmentMessage.classList.add('hidden');
+            grid.classList.remove('hidden');
+            
+            equipmentData.forEach(item => {
+                const card = document.createElement('div');
+                card.classList.add('equipment-card');
+                card.innerHTML = createEquipmentCard(item);
+                grid.appendChild(card);
+            });
+        };
+
+        async function fetchMyEquipment() {
+            const token = localStorage.getItem("access_token");
+            const role = localStorage.getItem("user_role");
+            const equipmentGrid = document.getElementById('equipment-grid');
+            const noEquipmentMessage = document.getElementById('no-equipment-message');
+
+            if (!token) {
+                if (equipmentGrid) equipmentGrid.classList.add('hidden');
+                if (noEquipmentMessage) {
+                    noEquipmentMessage.classList.remove('hidden');
+                    noEquipmentMessage.querySelector('p').textContent = "Please login to see your equipment.";
+                }
+                return;
+            }
+
+            if (role !== 'owner') {
+                if (equipmentGrid) equipmentGrid.classList.add('hidden');
+                if (noEquipmentMessage) {
+                    noEquipmentMessage.classList.remove('hidden');
+                    noEquipmentMessage.querySelector('p').textContent = "Permission denied. This tab is only for equipment owners.";
+                }
+                return;
+            }
+
+            try {
+                const response = await fetch("http://127.0.0.1:5000/my-equipment", {
+                    method: "GET",
+                    headers: {
+                        "Authorization": "Bearer " + token
+                    }
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    if (equipmentGrid) equipmentGrid.classList.add('hidden');
+                    if (noEquipmentMessage) {
+                         noEquipmentMessage.classList.remove('hidden');
+                         noEquipmentMessage.querySelector('p').textContent = error.msg || "Error fetching equipment";
+                    }
+                    return;
+                }
+
+                const equipmentData = await response.json();
+                renderEquipmentCards(equipmentData, currentLang);
+            } catch (error) {
+                console.error("Error fetching equipment:", error);
+                if (equipmentGrid) equipmentGrid.classList.add('hidden');
+                if (noEquipmentMessage) {
+                    noEquipmentMessage.classList.remove('hidden');
+                    noEquipmentMessage.querySelector('p').textContent = "Failed to load equipment.";
+                }
+            }
+        }
+
+        const setupTabs = () => {
+            const equipmentTabBtn = document.getElementById('my-equipment-tab');
+            const solutionsTabBtn = document.getElementById('my-solutions-tab');
+            const equipmentContent = document.getElementById('my-equipment-content');
+            const solutionsContent = document.getElementById('my-solutions-content');
+
+            const showTab = (tabName) => {
+                if (equipmentTabBtn) equipmentTabBtn.classList.remove('active');
+                if (solutionsTabBtn) solutionsTabBtn.classList.remove('active');
+                if (equipmentContent) equipmentContent.classList.add('hidden');
+                if (solutionsContent) solutionsContent.classList.add('hidden');
+
+                if (tabName === 'equipment') {
+                    if (equipmentTabBtn) equipmentTabBtn.classList.add('active');
+                    if (equipmentContent) equipmentContent.classList.remove('hidden');
+                    fetchMyEquipment();
+                } else if (tabName === 'solutions') {
+                    if (solutionsTabBtn) solutionsTabBtn.classList.add('active');
+                    if (solutionsContent) solutionsContent.classList.remove('hidden');
+                    renderSolutionCards(currentLang);
+                }
+            };
+            
+            if (equipmentTabBtn) {
+                equipmentTabBtn.addEventListener('click', () => showTab('equipment'));
+            }
+            if (solutionsTabBtn) {
+                solutionsTabBtn.addEventListener('click', () => showTab('solutions'));
+            }
+
+            const initialRole = localStorage.getItem('user_role');
+            if (initialRole === 'owner') {
+                showTab('equipment');
+            } else {
+                 if (equipmentTabBtn) equipmentTabBtn.classList.add('hidden');
+                 showTab('solutions');
+            }
+        };
+
+        window.onload = function() {
+            switchLanguage('en');
+
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileNav = document.getElementById('mobile-nav');
+            if (mobileMenuButton && mobileNav) {
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileNav.classList.toggle('hidden');
+                });
+            }
+
+            const userMenuButton = document.getElementById('user-menu-button');
+            const userDropdown = document.getElementById('user-dropdown');
+            if (userMenuButton && userDropdown) {
+                userMenuButton.addEventListener('click', (event) => {
+                    userDropdown.classList.toggle('hidden');
+                    event.stopPropagation();
+                });
+            }
+
+            document.addEventListener('click', (event) => {
+                if (userDropdown && !userDropdown.contains(event.target) && !userMenuButton.contains(event.target)) {
+                    userDropdown.classList.add('hidden');
+                }
+            });
+
+            const langEnBtn = document.getElementById('lang-en');
+            if (langEnBtn) {
+                 langEnBtn.addEventListener('click', () => switchLanguage('en'));
+            }
+            const langKnBtn = document.getElementById('lang-kn');
+            if (langKnBtn) {
+                 langKnBtn.addEventListener('click', () => switchLanguage('kn'));
+            }
+            
+            setupTabs();
+        };
+    </script>
+</body>
+</html>

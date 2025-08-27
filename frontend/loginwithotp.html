@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-key="title">MARF OTP Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Kannada:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/906faa9c3f.js" crossorigin="anonymous"></script>
+    <style>
+        /* CSS Variables */
+        :root {
+            --primary-green: #173c1c;
+            --soft-earth-tone: #e8f5e9;
+            --accent-orange: #FFA500;
+            --accent-dark: #CC8400;
+            --text-dark: #173c1c;
+            --text-light: #fff;
+            --primary-color: #173c1c;
+            --secondary-color: #ffffff;
+            --accent-color: #2c6032;
+        }
+
+        /* Typography & General Styles */
+        body {
+            font-family: 'Poppins', 'Noto Sans Kannada', sans-serif;
+            background-color: var(--soft-earth-tone);
+            margin: 0;
+            padding: 0;
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            line-height: 1.8;
+            background-color: var(--soft-earth-tone);
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .page-container {
+            display: flex;
+            background-color: var(--text-light);
+            border-radius: 1rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 90%;
+            overflow: hidden;
+            margin: 20px;
+            padding: 3rem 2rem;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .hidden { display: none !important; }
+
+        .logo-placeholder { margin-bottom: 2rem; }
+        .logo-placeholder img { height: 70px; width: auto; }
+
+        .lang-switcher {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--primary-color);
+            border-radius: 15px;
+            overflow: hidden;
+            background-color: var(--secondary-color);
+            margin-bottom: 2rem;
+        }
+
+        .lang-switcher button {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            padding: 10px 18px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            font-family: 'Noto Sans Kannada', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .lang-switcher button.active {
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+            font-weight: 700;
+        }
+
+        .title-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-green);
+            margin: 0;
+            line-height: 1.2;
+        }
+        .subtitle-text {
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            opacity: 0.8;
+            margin: 1rem 0 2rem;
+            line-height: 1.5;
+        }
+        
+        .form-section { width: 100%; }
+
+        .input-group {
+            width: 100%;
+            margin-bottom: 1.5rem;
+        }
+        .input-with-icon {
+            display: flex;
+            align-items: center;
+            border-radius: 0.5rem;
+            border: 1px solid var(--primary-green);
+            background-color: #f3f4f6;
+            overflow: hidden;
+            padding: 0.8rem 1rem;
+        }
+        .input-with-icon i {
+            color: var(--primary-green);
+            margin-right: 0.75rem;
+            font-size: 1.2rem;
+        }
+        .input-with-icon input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            outline: none;
+            font-size: 1.1rem;
+            color: var(--text-dark);
+        }
+        .input-with-icon input::placeholder {
+            color: var(--text-dark);
+            opacity: 0.6;
+        }
+
+        .otp-fields-container {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .otp-fields-container input {
+            width: 40px;
+            height: 50px;
+            text-align: center;
+            font-size: 1.5rem;
+            border-radius: 5px;
+            border: 1px solid var(--primary-green);
+            background-color: #f3f4f6;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .otp-fields-container input:focus {
+            border-color: var(--accent-dark);
+        }
+
+        .send-otp-btn, .verify-otp-btn {
+            width: 100%;
+            padding: 1rem 2rem;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border: none;
+            color: var(--text-light);
+            background-color: var(--primary-green);
+        }
+        .send-otp-btn:hover, .verify-otp-btn:hover { 
+            background-color: var(--soft-earth-tone); 
+            color: var(--text-dark);
+        }
+
+        .form-links {
+            margin-top: 1.5rem;
+            font-size: 1rem;
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+        .form-links a {
+            color: var(--primary-green);
+            text-decoration: none;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+        .form-links a:hover { opacity: 0.8; }
+        
+        .footer-note {
+            margin-top: 2rem;
+            color: var(--text-dark);
+            opacity: 0.7;
+            font-size: 1rem;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .page-container {
+                width: 95%;
+                padding: 2rem 1.5rem;
+            }
+            .title-text {
+                font-size: 1.5rem;
+            }
+            .subtitle-text {
+                font-size: 1rem;
+            }
+            .otp-fields-container {
+                gap: 0.5rem;
+            }
+            .otp-fields-container input {
+                width: 35px;
+                height: 45px;
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-container">
+        <!-- Logo -->
+        <div class="logo-placeholder">
+            <img src="../images/homelogo2.png" alt="MARF">
+        </div>
+
+        <!-- Language Switcher -->
+        <div class="lang-switcher">
+            <button id="lang-en" class="active">English</button>
+            <button id="lang-kn">ಕನ್ನಡ</button>
+        </div>
+
+        <!-- Form Content -->
+        <div class="form-section">
+            <h2 class="title-text" data-key="main_title">Login with OTP</h2>
+            <p class="subtitle-text" data-key="subtitle">Quick and secure login using your phone number.</p>
+
+            <form id="otp-form">
+                <!-- Phone Number Input -->
+                <div id="phone-input-group" class="input-group">
+                    <div class="input-with-icon">
+                        <i class="fas fa-phone"></i>
+                        <input type="tel" id="phone-number" data-key-placeholder="phone_number_placeholder" placeholder="Phone Number">
+                    </div>
+                </div>
+
+                <!-- OTP Input Fields (Hidden by default) -->
+                <div id="otp-input-group" class="input-group hidden">
+                    <div class="otp-fields-container">
+                        <input type="text" maxlength="1" class="otp-input" id="otp-1">
+                        <input type="text" maxlength="1" class="otp-input" id="otp-2">
+                        <input type="text" maxlength="1" class="otp-input" id="otp-3">
+                        <input type="text" maxlength="1" class="otp-input" id="otp-4">
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <button type="button" class="send-otp-btn" id="send-otp-btn" data-key="send_otp_btn">Send OTP</button>
+                <button type="submit" class="verify-otp-btn hidden" id="verify-otp-btn" data-key="verify_otp_btn">Verify OTP</button>
+
+                <div id="additional-links" class="form-links">
+                    <a href="#" id="resend-otp-link" class="hidden" data-key="resend_otp_link">Resend OTP</a>
+                    <a href="#" id="back-to-login-link" data-key="back_to_login_link">Back to Password Login</a>
+                </div>
+            </form>
+
+            <!-- <p class="footer-note" data-key="support_note">Having trouble? Contact Support.</p> -->
+        </div>
+    </div>
+
+    <script>
+        const translations = {
+            en: {
+                title: 'MARF OTP Login',
+                main_title: 'Login with OTP',
+                subtitle: 'Quick and secure login using your phone number.',
+                phone_number_placeholder: 'Phone Number',
+                send_otp_btn: 'Send OTP',
+                verify_otp_btn: 'Verify OTP',
+                resend_otp_link: 'Resend OTP',
+                back_to_login_link: 'Back to Password Login',
+                support_note: 'Having trouble? Contact Support.',
+                invalid_phone_alert: 'Please enter a valid 10-digit phone number.',
+                otp_sent_alert: 'OTP sent to your phone number.',
+                otp_error_alert: 'Invalid OTP. Please try again.',
+                otp_resend_alert: 'OTP has been resent.',
+                
+            },
+            kn: {
+                title: 'ಮಾರ್ಫ್ OTP ಲಾಗಿನ್',
+                main_title: 'OTP ಮೂಲಕ ಲಾಗಿನ್ ಮಾಡಿ',
+                subtitle: 'ನಿಮ್ಮ ಫೋನ್ ಸಂಖ್ಯೆಯನ್ನು ಬಳಸಿಕೊಂಡು ತ್ವರಿತ ಮತ್ತು ಸುರಕ್ಷಿತ ಲಾಗಿನ್.',
+                phone_number_placeholder: 'ಫೋನ್ ಸಂಖ್ಯೆ',
+                send_otp_btn: 'OTP ಕಳುಹಿಸಿ',
+                verify_otp_btn: 'OTP ಪರಿಶೀಲಿಸಿ',
+                resend_otp_link: 'OTP ಮರು ಕಳುಹಿಸಿ',
+                back_to_login_link: 'ಪಾಸ್ವರ್ಡ್ ಲಾಗಿನ್‌ಗೆ ಹಿಂತಿರುಗಿ',
+                support_note: 'ಸಮಸ್ಯೆ ಇದೆಯೇ? ಬೆಂಬಲವನ್ನು ಸಂಪರ್ಕಿಸಿ.',
+                invalid_phone_alert: 'ದಯವಿಟ್ಟು ಸರಿಯಾದ 10-ಅಂಕಿಯ ಫೋನ್ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ.',
+                otp_sent_alert: 'ನಿಮ್ಮ ಫೋನ್ ಸಂಖ್ಯೆಗೆ OTP ಕಳುಹಿಸಲಾಗಿದೆ.',
+                otp_error_alert: 'ಅಮಾನ್ಯವಾದ OTP. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.',
+                otp_resend_alert: 'OTP ಮರು ಕಳುಹಿಸಲಾಗಿದೆ.',
+            }
+        };
+
+        let currentLang = 'en';
+
+        // Function to update all text content based on the language
+        const updateContent = (lang) => {
+            const langData = translations[lang];
+
+            const titleElement = document.querySelector('title');
+            if (titleElement) {
+                const key = titleElement.getAttribute('data-key');
+                if (langData[key]) {
+                    titleElement.textContent = langData[key];
+                }
+            }
+
+            const textElements = document.querySelectorAll('[data-key]');
+            textElements.forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (langData[key]) {
+                    el.textContent = langData[key];
+                }
+            });
+
+            const placeholders = document.querySelectorAll('[data-key-placeholder]');
+            placeholders.forEach(el => {
+                const key = el.getAttribute('data-key-placeholder');
+                if (langData[key]) {
+                    el.placeholder = langData[key];
+                }
+            });
+        };
+
+        const switchLanguage = (lang) => {
+            currentLang = lang;
+            updateContent(lang);
+
+            const langEnBtn = document.getElementById('lang-en');
+            const langKnBtn = document.getElementById('lang-kn');
+
+            if (langEnBtn) langEnBtn.classList.remove('active');
+            if (langKnBtn) langKnBtn.classList.remove('active');
+            if (lang === 'en' && langEnBtn) {
+                langEnBtn.classList.add('active');
+                document.documentElement.lang = 'en';
+            } else if (lang === 'kn' && langKnBtn) {
+                langKnBtn.classList.add('active');
+                document.documentElement.lang = 'kn';
+            }
+        };
+
+        window.onload = function() {
+            switchLanguage('en');
+
+            const sendOtpBtn = document.getElementById('send-otp-btn');
+            const verifyOtpBtn = document.getElementById('verify-otp-btn');
+            const phoneInputGroup = document.getElementById('phone-input-group');
+            const otpInputGroup = document.getElementById('otp-input-group');
+            const resendOtpLink = document.getElementById('resend-otp-link');
+            const phoneInput = document.getElementById('phone-number');
+
+            const otpInputs = document.querySelectorAll('.otp-input');
+            otpInputs.forEach((input, index) => {
+                input.addEventListener('input', (e) => {
+                    if (e.target.value.length === 1 && index < otpInputs.length - 1) {
+                        otpInputs[index + 1].focus();
+                    }
+                });
+            });
+
+            sendOtpBtn.addEventListener('click', () => {
+                const phoneNumber = phoneInput.value;
+                if (phoneNumber.length === 10 && !isNaN(phoneNumber)) {
+                    phoneInputGroup.classList.add('hidden');
+                    otpInputGroup.classList.remove('hidden');
+                    sendOtpBtn.classList.add('hidden');
+                    verifyOtpBtn.classList.remove('hidden');
+                    resendOtpLink.classList.remove('hidden');
+                    alert(translations[currentLang].otp_sent_alert);
+                } else {
+                    alert(translations[currentLang].invalid_phone_alert);
+                }
+            });
+
+            verifyOtpBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const otp = Array.from(otpInputs).map(input => input.value).join('');
+                if (otp === '1234' || otp === '123456') { // Mock OTP validation
+                    alert('OTP verified successfully! Logging you in...');
+                    window.location.href = 'dashboard.html';
+                } else {
+                    alert(translations[currentLang].otp_error_alert);
+                }
+            });
+
+            resendOtpLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                alert(translations[currentLang].otp_resend_alert);
+            });
+            
+            document.getElementById('back-to-login-link').addEventListener('click', (e) => {
+                e.preventDefault();
+                window.location.href = 'login.html'; 
+            });
+
+            const langEnBtn = document.getElementById('lang-en');
+            const langKnBtn = document.getElementById('lang-kn');
+            if (langEnBtn) {
+                langEnBtn.addEventListener('click', () => switchLanguage('en'));
+            }
+            if (langKnBtn) {
+                langKnBtn.addEventListener('click', () => switchLanguage('kn'));
+            }
+        };
+    </script>
+</body>
+</html>

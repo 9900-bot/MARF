@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-key="title">MARF Booking</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Kannada:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/906faa9c3f.js" crossorigin="anonymous"></script>
+    <style>
+        /* CSS Variables */
+        :root {
+            --primary-green: #173c1c;
+            --soft-earth-tone: #e8f5e9;
+            --accent-orange: #FFA500;
+            --accent-dark: #CC8400;
+            --text-dark: #173c1c;
+            --text-light: #fff;
+        }
+
+        /* Typography & General Styles */
+        body {
+            font-family: 'Poppins', 'Noto Sans Kannada', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text-dark);
+            background-color: var(--soft-earth-tone);
+            line-height: 1.8;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .font-poppins { font-family: 'Poppins', sans-serif; }
+        .font-kannada { font-family: 'Noto Sans Kannada', sans-serif; }
+        
+        .container {
+            max-width: 2000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .hidden { display: none !important; }
+
+        /* Animations */
+        .animate-pulse-slow {
+            animation: pulse-glow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse-glow {
+            0%, 100% {
+                filter: drop-shadow(0 0 1px rgba(255, 165, 0, 0.4));
+                transform: scale(1);
+            }
+            50% {
+                filter: drop-shadow(0 0 8px rgba(255, 165, 0, 0.8));
+                transform: scale(1.05);
+            }
+        }
+        
+         /* Header and Navigation */
+        header {
+            background-color: white;
+            color: var(--text-dark);
+            padding: 1.5rem 20px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            height: 50px;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+        }
+        .header-logo-text img{
+            width: 100%;
+            height: 70px;
+            margin-left: 40px;
+        }
+
+        /* Desktop Nav */
+        .desktop-nav {
+            display: none;
+            flex-grow: 1;
+            justify-content: center;
+            gap: 30px;
+        }
+        @media (min-width: 768px) {
+            .desktop-nav { display: flex; }
+        }
+        .desktop-nav a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.3rem;
+            position: relative;
+            transition: color 0.3s;
+            margin-right: 15px;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary-green);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 4px;
+            background-color: #173c1c;
+            border-radius: 2px;
+            transition: width 0.3s ease, left 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        .desktop-search-container {
+            display: none;
+            width: 25%;
+            align-items: center;
+            gap: 15px;
+            margin-right: 40px;
+        }
+        @media (min-width: 768px) {
+            .desktop-search-container { display: flex; }
+        }
+        
+        .desktop-search-bar {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            height: 40px;
+            gap: 0.5rem;
+            background-color: #f3f4f6;
+            border-radius: 9999px;
+            padding: 0.5rem 1rem;
+            border: 1px solid #e5e7eb;
+        }
+
+        .desktop-search-bar input {
+            background: transparent;
+            font-size: 1.3rem;
+            border: none;
+            outline: none;
+            color: var(--text-dark);
+        }
+
+        .location-detector-btn {
+            width: 20%;
+            background: none;
+            border: none;
+            color: var(--accent-orange);
+            padding: 0.5rem;
+            margin-left: 20px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .location-detector-btn i{
+            width: 100%;
+        }
+        .location-detector-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* Mobile Nav */
+        .mobile-header-group {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .mobile-menu-button {
+            background: none;
+            border: none;
+            color: var(--primary-green);
+            cursor: pointer;
+        }
+        @media (min-width: 768px) {
+            .mobile-menu-button { display: none; }
+        }
+        .mobile-nav-menu {
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+            padding: 1rem 0;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            margin-top: 10px;
+        }
+        .mobile-nav-menu a {
+            padding: 0.5rem 1rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+        .mobile-search-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background-color: #f3f4f6;
+            border-radius: 9999px;
+            border: 1px solid #e5e7eb;
+        }
+        .mobile-search-container input {
+            background: transparent;
+            border: none;
+            outline: none;
+            width: 100%;
+            color: var(--text-dark);
+        }
+        .mobile-search-container input::placeholder {
+            color: #6b7280;
+        }
+
+        /* User & Lang Switcher */
+        .user-menu-dropdown-container {
+            position: relative;
+            width: 5%;
+        }
+        .user-menu-button {
+            background: var(--soft-earth-tone);
+            border: none;
+            color: var(--primary-green);
+            padding: 0.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .user-menu-button:hover { background-color: rgba(23, 60, 28, 0.1); }
+        .user-dropdown {
+            position: absolute;
+            top: 112%;
+            right: 0;
+            margin-top: 10px;
+            width: 350px;
+            background-color: white;
+            /* border: 1px solid var(--primary-green); */
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+        .lang-switcher-container { 
+            padding: 10px;
+            width: 50%;
+            margin: 0 auto;            
+        }
+        .lang-switcher {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--text-dark);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        .lang-switcher button {
+            background: none;
+            border: none;
+            color: var(--text-dark);
+            padding: 15px 18px 10px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            font-family: 'Noto Sans Kannada', sans-serif;
+            font-size: 1.2rem;
+            flex: 1;
+        }
+        .lang-switcher button.active {
+            background-color: var(--primary-green);
+            color: var(--text-light);
+            font-weight: 700;
+        }
+        .user-dropdown-link {
+            display: block;
+            padding: 15px;
+            margin-left: 10px;
+            font-size: 1.5rem;
+            font-weight: 500;
+            text-decoration: none;
+            color: var(--text-dark);
+            transition: background-color 0.3s;
+        }
+        .user-dropdown-link:hover { background-color: #f3f4f6; }
+
+        .logout-btn{
+            background-color: #173c1c;
+            margin: 0 auto;
+            color: white;
+            border-radius: 15px;
+            height: 50px;
+            width: 160px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .logout-btn:hover{
+            background-color: var(--soft-earth-tone);
+            color: var(--text-dark);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 0rem 1rem 1rem;
+            max-width: 1500px;
+            margin: 0 auto;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+        .main-content h2{
+            text-align: center;
+            margin: 1rem auto;
+        }
+        .section-heading {
+            font-size: 2.8rem;
+            color: var(--primary-green);
+            margin-bottom: 2rem;
+        }
+        
+        /* Booking Page Layout */
+        .booking-page-container {
+            display: flex;
+            flex-direction: row;
+            gap: 2rem;
+        }
+        .equipment-details-section {
+            flex: 2;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: 1px solid var(--primary-green);
+            padding: 2rem;
+        }
+        .equipment-details-section h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 1rem 0 0.5rem;
+        }
+        .equipment-details-section img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        .details-group {
+            margin-bottom: 1rem;
+        }
+        .details-group p {
+            margin: 0;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .details-group p strong {
+            font-weight: 600;
+        }
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        .quantity-selector label {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        .quantity-selector input {
+            width: 80px;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            border: 1px solid var(--text-dark);
+            background-color: #f3f4f6;
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            box-sizing: border-box;
+        }
+
+        .booking-summary-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        .booking-summary-card, .payment-methods-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: 1px solid var(--primary-green);
+            padding: 2rem;
+        }
+        .booking-summary-card h3, .payment-methods-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 0 1rem;
+        }
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+        .final-total {
+            border-top: 2px solid var(--primary-green);
+            padding-top: 1rem;
+            margin-top: 1rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        .payment-option-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .payment-option {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        .payment-option input {
+            cursor: pointer;
+        }
+        .payment-option img {
+            height: 25px;
+        }
+        .payment-details-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .payment-details-form input, .payment-details-form select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 5px;
+            border: 1px solid var(--text-dark);
+            background-color: #f3f4f6;
+            font-size: 1.3rem;
+            color: var(--text-dark);
+            box-sizing: border-box;
+        }
+        .payment-details-form input::placeholder {
+            color: #6b7280;
+        }
+        .confirm-booking-btn {
+            background-color: var(--primary-green);
+            color: var(--text-light);
+            padding: 1rem 2rem;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border: none;
+            width: 100%;
+            margin-top: 2rem;
+        }
+        .confirm-booking-btn:hover { 
+            background-color: var(--soft-earth-tone);
+            color: var(--text-dark); 
+        }
+        
+        /* Confirmation Screen */
+        .confirmation-screen {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .confirmation-screen i {
+            font-size: 4rem;
+            color: var(--primary-green);
+            margin-bottom: 1rem;
+        }
+        .confirmation-screen h3 {
+            font-size: 2.5rem;
+            color: var(--primary-green);
+            margin-bottom: 1rem;
+        }
+        .confirmation-screen p {
+            font-size: 1.2rem;
+            max-width: 600px;
+        }
+        .view-history-btn {
+            background-color: var(--accent-orange);
+            color: var(--text-light);
+            padding: 1rem 2rem;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border: none;
+            margin-top: 2rem;
+        }
+        .view-history-btn:hover { background-color: var(--accent-dark); }
+
+        /* Footer */
+        footer {
+            width: 100%;
+            background-color: var(--primary-green);
+            color: var(--text-light);
+            text-align: center;
+            padding: 20px 0 5px;
+            margin-top: auto;
+        }
+        .legal-links p {
+            font-size: 1.3rem;
+            color: var(--text-light);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 10px;
+            margin-top: 5px;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .desktop-nav, .desktop-search-container { display: none; }
+            .mobile-header-group { flex-grow: 1; }
+            header { flex-wrap: wrap; height: auto; }
+            .user-menu-dropdown-container { order: 2; }
+            .user-dropdown { position: static; width: 100%; margin-top: 10px; }
+            .mobile-nav-menu.active { display: flex; }
+            .main-content { padding-top: 1rem; }
+            .booking-page-container { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="mobile-header-group">
+            <button id="mobile-menu-button" class="mobile-menu-button">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="header-logo-text font-poppins"><img src="../images/homelogo2.png" alt="MARF"></div>
+        </div>
+
+        <!-- Desktop Navigation -->
+        <nav class="desktop-nav">
+            <a href="dash.html" class="nav-link" data-key="nav_home">Home</a>
+            <a href="addequipment.html" class="nav-link" data-key="nav_add_equipment">Add Equipment</a>
+            <a href="hireoperators.html" class="nav-link" data-key="nav_hire_operator">Hire Operator</a>
+            <a href="addsolutions.html" class="nav-link" data-key="nav_farm_solutions">Farm Solutions</a>
+            <a href="addvideos.html" class="nav-link" data-key="nav_equipment_videos">Equipment Videos</a>
+        </nav>
+
+        <div class="desktop-search-container">
+            <div class="desktop-search-bar fa-2x">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search-input-desktop" data-key-placeholder="search_placeholder" placeholder="Search...">
+            </div>
+            <button class="location-detector-btn">
+                <i class="fas fa-location-arrow animate-pulse-slow fa-3x"></i>
+            </button>
+        </div>
+
+        <div class="user-menu-dropdown-container">
+            <button id="user-menu-button" class="user-menu-button">
+                <i class="fas fa-user-circle fa-4x"></i>
+            </button>
+            <div id="user-dropdown" class="user-dropdown hidden">
+                <div class="lang-switcher-container">
+                    <div class="lang-switcher">
+                        <button id="lang-en" class="active">English</button>
+                        <button id="lang-kn">ಕನ್ನಡ</button>
+                    </div>
+                </div>
+                <a href="account.html" class="user-dropdown-link"><span data-key="account">Account</span></a>
+                <a href="bookinghistory.html" class="user-dropdown-link"><span data-key="booking_history">Booking History</span></a>
+                <a href="payment-history.html" class="user-dropdown-link"><span data-key="payment_history">Payment History</span></a>
+                <button type="button" class="user-dropdown-link logout-btn" 
+                    data-key="logout"> 
+                    Logout
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Nav -->
+        <nav id="mobile-nav" class="mobile-nav-menu">
+            <a href="dash.html" class="nav-link" data-key="nav_home">Home</a>
+            <a href="addequipment.html" class="nav-link" data-key="nav_add_equipment">Add Equipment</a>
+            <a href="hireoperators.html" class="nav-link" data-key="nav_hire_operator">Hire Operator</a>
+            <a href="addsolutions.html" class="nav-link" data-key="nav_farm_solutions">Farm Solutions</a>
+            <a href="addvideos.html" class="nav-link" data-key="nav_equipment_videos">Equipment Videos</a>
+            <div class="mobile-search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search-input-mobile" data-key-placeholder="search_placeholder" placeholder="Search...">
+            </div>
+            <button class="location-detector-btn">
+                <i class="fas fa-location-arrow animate-pulse-slow"></i>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <h2 class="section-heading font-poppins" id="page-title" data-key="main_title">
+            Booking
+            <!-- <span class="font-kannada" style="display: block; font-size: 1.5rem; font-weight: normal; margin-top: 0.5rem;" data-key="main_title_kn">ಉಪಕರಣ ವಿಡಿಯೋಗಳು</span> -->
+        </h2>
+        <!-- <h2 class="section-heading font-poppins" id="page-title">
+            <span data-key="main_title">Booking Page</span>
+            <span class="font-kannada" style="display: block; font-size: 1.5rem; font-weight: normal; margin-top: 0.5rem;" data-key="main_title_kn">ಬುಕಿಂಗ್ ಪುಟ</span>
+        </h2> -->
+        
+        <div id="booking-details-view" class="booking-page-container">
+            <!-- Left Column - Equipment Details -->
+            <div class="equipment-details-section">
+                <img src="https://placehold.co/800x600/173c1c/e8f5e9?text=Tractor+Image" alt="Equipment Image">
+                <h3 data-key="equipment_name">John Deere 5050D Tractor</h3>
+                <div class="details-group">
+                    <p><i class="fas fa-tag"></i> <strong><span data-key="equipment_type">Type:</span></strong> <span data-key="equipment_type_value">Tractor</span></p>
+                    <p><i class="fas fa-rupee-sign"></i> <strong><span data-key="equipment_price_label">Price:</span></strong> <span data-key="equipment_price_value">₹1500/day</span></p>
+                    <p><i class="fas fa-map-marker-alt"></i> <strong><span data-key="equipment_location_label">Location:</span></strong> <span data-key="equipment_location_value">Mandya, Karnataka</span></p>
+                    <p><i class="fas fa-check-circle"></i> <strong><span data-key="equipment_availability_label">Availability:</span></strong> <span data-key="equipment_availability_value" style="color: var(--primary-green);">Available</span></p>
+                </div>
+                <div class="details-group">
+                    <p><strong><span data-key="equipment_description_label">Description:</span></strong> <span data-key="equipment_description_value">A powerful and reliable tractor perfect for tilling and land preparation.</span></p>
+                </div>
+                <div class="quantity-selector">
+                    <label for="rental-days" data-key="rental_days_label">Rental Days:</label>
+                    <input type="number" id="rental-days" value="1" min="1" onchange="updateSummary()">
+                </div>
+            </div>
+
+            <!-- Right Column - Booking Summary -->
+            <div class="booking-summary-section">
+                <div class="booking-summary-card">
+                    <h3 data-key="booking_summary_title">Booking Summary</h3>
+                    <div class="summary-item">
+                        <p><span data-key="summary_rental_days_label">Rental Days:</span></p>
+                        <p><span id="summary-days-value">1</span> <span data-key="day_suffix">Day(s)</span></p>
+                    </div>
+                    <div class="summary-item">
+                        <p><span data-key="summary_price_per_day_label">Price per Day:</span></p>
+                        <p><span data-key="summary_price_per_day_value">₹1500</span></p>
+                    </div>
+                    <div class="summary-item">
+                        <p><span data-key="summary_total_cost_label">Total Rental Cost:</span></p>
+                        <p><span id="summary-total-cost">₹1500</span></p>
+                    </div>
+                    <div class="summary-item">
+                        <p><span data-key="summary_platform_fee_label">Platform Fee (2%):</span></p>
+                        <p><span id="summary-platform-fee">₹30</span></p>
+                    </div>
+                    <div class="final-total summary-item">
+                        <p><strong><span data-key="summary_final_total_label">Final Total:</span></strong></p>
+                        <p><strong><span id="summary-final-total">₹1530</span></strong></p>
+                    </div>
+                </div>
+
+                <div class="payment-methods-card">
+                    <h3 data-key="payment_methods_title">Payment Methods</h3>
+                    <form id="payment-form">
+                        <div class="payment-option-list">
+                            <label class="payment-option">
+                                <input type="radio" name="payment-method" value="upi" checked>
+                                <!-- <img src="https://placehold.co/100x25/ffffff/000000?text=UPI" alt="UPI"> -->
+                                <span data-key="payment_upi_label">UPI</span>
+                            </label>
+                            <label class="payment-option">
+                                <input type="radio" name="payment-method" value="card">
+                                <!-- <img src="https://placehold.co/100x25/ffffff/000000?text=Card" alt="Credit/Debit Card"> -->
+                                <span data-key="payment_card_label">Credit/Debit Card</span>
+                            </label>
+                            <label class="payment-option">
+                                <input type="radio" name="payment-method" value="cash">
+                                <span data-key="payment_cash_label">Cash on Delivery / Pay at Pickup</span>
+                            </label>
+                        </div>
+
+                        <div id="payment-details" class="payment-details-form">
+                            <!-- Payment details will be dynamically injected here -->
+                            <div class="input-with-icon">
+                                <i class="fas fa-money-bill-wave"></i>
+                                <input type="text" id="upi-id" data-key-placeholder="upi_id_placeholder" placeholder="Enter UPI ID">
+                            </div>
+                        </div>
+
+                        <button type="submit" id="confirm-booking-btn" class="confirm-booking-btn" data-key="confirm_booking_btn">Confirm Booking</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="legal-links">
+            <p data-key="footer_text">&copy; 2024 MARF. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const translations = {
+            en: {
+                title: 'MARF Booking',
+                nav_home: 'Home',
+                nav_add_equipment: 'Add Equipment',
+                nav_hire_operator: 'Hire Operator',
+                nav_knowledge_hub: 'Knowledge Hub',
+                nav_farm_solutions: 'Farm Solutions',
+                nav_equipment_videos: 'Equipment Videos',
+                main_title: 'Booking',
+                main_title_kn: 'ಬುಕಿಂಗ್ ಪುಟ',
+                equipment_name: 'John Deere 5050D Tractor',
+                equipment_type: 'Type',
+                equipment_type_value: 'Tractor',
+                equipment_price_label: 'Price',
+                equipment_price_value: '₹1500/day',
+                equipment_location_label: 'Location',
+                equipment_location_value: 'Mandya, Karnataka',
+                equipment_availability_label: 'Availability',
+                equipment_availability_value: 'Available',
+                equipment_description_label: 'Description',
+                equipment_description_value: 'A powerful and reliable tractor perfect for tilling and land preparation.',
+                rental_days_label: 'Rental Days:',
+                booking_summary_title: 'Booking Summary',
+                summary_rental_days_label: 'Rental Days:',
+                day_suffix: 'Day(s)',
+                summary_price_per_day_label: 'Price per Day:',
+                summary_price_per_day_value: '₹1500',
+                summary_total_cost_label: 'Total Rental Cost:',
+                summary_platform_fee_label: 'Platform Fee (2%):',
+                summary_final_total_label: 'Final Total:',
+                payment_methods_title: 'Payment Methods',
+                payment_upi_label: 'UPI',
+                payment_card_label: 'Credit/Debit Card',
+                payment_cash_label: 'Cash on Delivery / Pay at Pickup',
+                confirm_booking_btn: 'Confirm Booking',
+                confirmation_title: 'Booking Confirmed!',
+                confirmation_text: 'Your booking has been successfully placed. Thank you for using MARF.',
+                booking_id_label: 'Booking ID:',
+                equipment_name_label: 'Equipment:',
+                booking_dates_label: 'Dates:',
+                total_amount_label: 'Total Amount:',
+                view_history_btn: 'View Booking History',
+                account: 'Account',
+                booking_history: 'Booking History',
+                payment_history: 'Payment History',
+                logout: 'Logout',
+                search_placeholder: 'Search...',
+                footer_text: '&copy; 2024 MARF. All rights reserved.',
+                upi_id_placeholder: 'Enter UPI ID',
+                card_number_placeholder: 'Card Number',
+                expiry_date_placeholder: 'MM/YY',
+                cvv_placeholder: 'CVV',
+                name_on_card_placeholder: 'Name on Card',
+                
+            },
+            kn: {
+                title: 'ಮಾರ್ಫ್ ಬುಕಿಂಗ್',
+                nav_home: 'ಹೋಮ್',
+                nav_add_equipment: 'ಸಲಕರಣೆ ಸೇರಿಸಿ',
+                nav_hire_operator: 'ಆಪರೇಟರ್ ನೇಮಿಸಿ',
+                nav_knowledge_hub: 'ಜ್ಞಾನ ಕೇಂದ್ರ',
+                nav_farm_solutions: 'ಕೃಷಿ ಪರಿಹಾರಗಳು',
+                nav_equipment_videos: 'ಉಪಕರಣ ವಿಡಿಯೋಗಳು',
+                main_title: 'ಬುಕಿಂಗ್',
+                main_title_kn: 'ಬುಕಿಂಗ್ ಪುಟ',
+                equipment_name: 'ಜಾನ್ ಡೀರೆ 5050D ಟ್ರಾಕ್ಟರ್',
+                equipment_type: 'ಪ್ರಕಾರ',
+                equipment_type_value: 'ಟ್ರಾಕ್ಟರ್',
+                equipment_price_label: 'ಬೆಲೆ',
+                equipment_price_value: '₹1500/ದಿನ',
+                equipment_location_label: 'ಸ್ಥಳ',
+                equipment_location_value: 'ಮಂಡ್ಯ, ಕರ್ನಾಟಕ',
+                equipment_availability_label: 'ಲಭ್ಯತೆ',
+                equipment_availability_value: 'ಲಭ್ಯವಿದೆ',
+                equipment_description_label: 'ವಿವರಣೆ',
+                equipment_description_value: 'ಉಳುಮೆ ಮತ್ತು ಭೂಮಿ ಸಿದ್ಧತೆಗಾಗಿ ಸೂಕ್ತವಾದ ಶಕ್ತಿಶಾಲಿ ಮತ್ತು ವಿಶ್ವಾಸಾರ್ಹ ಟ್ರಾಕ್ಟರ್.',
+                rental_days_label: 'ಬಾಡಿಗೆ ದಿನಗಳು:',
+                booking_summary_title: 'ಬುಕಿಂಗ್ ಸಾರಾಂಶ',
+                summary_rental_days_label: 'ಬಾಡಿಗೆ ದಿನಗಳು:',
+                day_suffix: 'ದಿನ(ಗಳು)',
+                summary_price_per_day_label: 'ಪ್ರತಿ ದಿನದ ಬೆಲೆ:',
+                summary_price_per_day_value: '₹1500',
+                summary_total_cost_label: 'ಒಟ್ಟು ಬಾಡಿಗೆ ವೆಚ್ಚ:',
+                summary_platform_fee_label: 'ಪ್ಲಾಟ್‌ಫಾರ್ಮ್ ಶುಲ್ಕ (2%):',
+                summary_final_total_label: 'ಅಂತಿಮ ಒಟ್ಟು:',
+                payment_methods_title: 'ಪಾವತಿ ವಿಧಾನಗಳು',
+                payment_upi_label: 'ಯುಪಿಐ',
+                payment_card_label: 'ಕ್ರೆಡಿಟ್/ಡೆಬಿಟ್ ಕಾರ್ಡ್',
+                payment_cash_label: 'ಕ್ಯಾಶ್ ಆನ್ ಡೆಲಿವರಿ / ಪಿಕ್‌ಅಪ್ ಸಮಯದಲ್ಲಿ ಪಾವತಿಸಿ',
+                confirm_booking_btn: 'ಬುಕಿಂಗ್ ದೃಢೀಕರಿಸಿ',
+                confirmation_title: 'ಬುಕಿಂಗ್ ಯಶಸ್ವಿಯಾಗಿದೆ!',
+                confirmation_text: 'ನಿಮ್ಮ ಬುಕಿಂಗ್ ಅನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಮಾಡಲಾಗಿದೆ. MARF ಬಳಸಿದ್ದಕ್ಕೆ ಧನ್ಯವಾದಗಳು.',
+                booking_id_label: 'ಬುಕಿಂಗ್ ಐಡಿ:',
+                equipment_name_label: 'ಉಪಕರಣ:',
+                booking_dates_label: 'ದಿನಾಂಕಗಳು:',
+                total_amount_label: 'ಒಟ್ಟು ಮೊತ್ತ:',
+                view_history_btn: 'ಬುಕಿಂಗ್ ಇತಿಹಾಸ ವೀಕ್ಷಿಸಿ',
+                account: 'ಖಾತೆ',
+                booking_history: 'ಬುಕಿಂಗ್ ಇತಿಹಾಸ',
+                payment_history: 'ಪಾವತಿ ಇತಿಹಾಸ',
+                logout: 'ಲಾಗ್ ಔಟ್',
+                search_placeholder: 'ಹುಡುಕಿ...',
+                footer_text: '&copy; 2024 ಮಾರ್ಫ್. ಎಲ್ಲಾ ಹಕ್ಕುಗಳನ್ನು ಕಾಯ್ದಿರಿಸಲಾಗಿದೆ.',
+                upi_id_placeholder: 'ಯುಪಿಐ ಐಡಿ ನಮೂದಿಸಿ',
+                card_number_placeholder: 'ಕಾರ್ಡ್ ಸಂಖ್ಯೆ',
+                expiry_date_placeholder: 'ತಿಂಗಳು/ವರ್ಷ',
+                cvv_placeholder: 'ಸಿವಿವಿ',
+                name_on_card_placeholder: 'ಕಾರ್ಡ್ ಮೇಲಿನ ಹೆಸರು',
+                select_bank: 'ಬ್ಯಾಂಕ್ ಆಯ್ಕೆಮಾಡಿ'
+            }
+        };
+
+        let currentLang = 'en';
+        
+        // Function to update all text content based on the language
+        const updateContent = (lang) => {
+            const langData = translations[lang];
+
+            // Update title
+            const titleElement = document.querySelector('title');
+            if (titleElement) {
+                const key = titleElement.getAttribute('data-key');
+                if (langData[key]) {
+                    titleElement.textContent = langData[key];
+                }
+            }
+
+            // Update all elements with data-key for textContent
+            const textElements = document.querySelectorAll('[data-key]:not(input):not(textarea):not(select):not(option)');
+            textElements.forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (langData[key]) {
+                    el.textContent = langData[key];
+                }
+            });
+
+            // Update placeholders with data-key-placeholder
+            const placeholders = document.querySelectorAll('[data-key-placeholder]');
+            placeholders.forEach(el => {
+                const key = el.getAttribute('data-key-placeholder');
+                if (langData[key]) {
+                    el.placeholder = langData[key];
+                }
+            });
+
+            // Update select options with data-key
+            const selectOptions = document.querySelectorAll('select option[data-key]');
+            selectOptions.forEach(option => {
+                const key = option.getAttribute('data-key');
+                if (langData[key]) {
+                    option.textContent = langData[key];
+                }
+            });
+
+            // Special handling for elements with nested spans (like the page title)
+            const pageTitleElement = document.getElementById('page-title');
+            if (pageTitleElement) {
+                const mainTitleSpan = pageTitleElement.querySelector('span[data-key="main_title"]');
+                const kannadaSpan = pageTitleElement.querySelector('span[data-key="main_title_kn"]');
+                
+                if (mainTitleSpan && langData.main_title) {
+                    mainTitleSpan.textContent = langData.main_title;
+                }
+                if (kannadaSpan && langData.main_title_kn) {
+                    kannadaSpan.textContent = langData.main_title_kn;
+                }
+            }
+            
+            // Update nav links
+            const navLinks = document.querySelectorAll('.desktop-nav a, .mobile-nav-menu a');
+            navLinks.forEach(link => {
+                const key = link.getAttribute('data-key');
+                if (langData[key]) {
+                    link.textContent = langData[key];
+                }
+            });
+            
+            // Update user dropdown links
+            const userLinks = document.querySelectorAll('.user-dropdown-link span');
+            userLinks.forEach(span => {
+                const key = span.getAttribute('data-key');
+                if (langData[key]) {
+                    span.textContent = langData[key];
+                }
+            });
+
+            // Update dynamic text
+            updateSummary(lang);
+        };
+
+        // Function to switch language
+        const switchLanguage = (lang) => {
+            currentLang = lang;
+            updateContent(lang);
+
+            const langEnBtn = document.getElementById('lang-en');
+            const langKnBtn = document.getElementById('lang-kn');
+
+            if (langEnBtn) langEnBtn.classList.remove('active');
+            if (langKnBtn) langKnBtn.classList.remove('active');
+            if (lang === 'en' && langEnBtn) {
+                langEnBtn.classList.add('active');
+                document.documentElement.lang = 'en';
+            } else if (lang === 'kn' && langKnBtn) {
+                langKnBtn.classList.add('active');
+                document.documentElement.lang = 'kn';
+            }
+        };
+
+        const updateSummary = (lang) => {
+            const rentalDaysInput = document.getElementById('rental-days');
+            const rentalDays = parseInt(rentalDaysInput.value);
+            const pricePerDay = 1500; // Hardcoded price for this example
+            const platformFeeRate = 0.02; // 2% platform fee
+            
+            const totalCost = rentalDays * pricePerDay;
+            const platformFee = totalCost * platformFeeRate;
+            const finalTotal = totalCost + platformFee;
+
+            document.getElementById('summary-days-value').textContent = rentalDays;
+            document.getElementById('summary-total-cost').textContent = `₹${totalCost}`;
+            document.getElementById('summary-platform-fee').textContent = `₹${platformFee}`;
+            document.getElementById('summary-final-total').textContent = `₹${finalTotal}`;
+
+            const langData = translations[lang];
+            document.getElementById('summary-days-value').nextElementSibling.textContent = ' ' + langData.day_suffix;
+            // document.getElementById('conf-equipment-name').textContent = langData.equipment_name;
+            // document.getElementById('conf-total-amount').textContent = `₹${finalTotal}`;
+        };
+
+        const renderPaymentDetailsForm = (method, lang) => {
+            const paymentDetailsContainer = document.getElementById('payment-details');
+            if (!paymentDetailsContainer) return;
+            const langData = translations[lang];
+
+            let formHtml = '';
+            if (method === 'upi') {
+                formHtml = `
+                    <div class="input-with-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <input type="text" id="upi-id" data-key-placeholder="upi_id_placeholder" placeholder="${langData.upi_id_placeholder}">
+                    </div>
+                `;
+            } else if (method === 'card') {
+                formHtml = `
+                    <div class="input-with-icon">
+                        <i class="fas fa-credit-card"></i>
+                        <input type="text" id="card-number" data-key-placeholder="card_number_placeholder" placeholder="${langData.card_number_placeholder}">
+                    </div>
+                    <div style="display: flex; gap: 1rem;">
+                        <input type="text" id="expiry-date" data-key-placeholder="expiry_date_placeholder" placeholder="${langData.expiry_date_placeholder}" style="width: 50%;">
+                        <input type="text" id="cvv" data-key-placeholder="cvv_placeholder" placeholder="${langData.cvv_placeholder}" style="width: 50%;">
+                    </div>
+                    <div class="input-with-icon">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="name-on-card" data-key-placeholder="name_on_card_placeholder" placeholder="${langData.name_on_card_placeholder}">
+                    </div>
+                `;
+            } else if (method === 'cash') {
+                formHtml = `
+                    <p data-key="payment_cash_info">You will pay the amount when you pick up the equipment.</p>
+                `;
+            }
+            paymentDetailsContainer.innerHTML = formHtml;
+            updateContent(currentLang);
+        };
+
+        // Onload function
+        window.onload = function() {
+            // Set initial language to English on load
+            switchLanguage('en');
+
+            // Header and dropdown functionality
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileNav = document.getElementById('mobile-nav');
+            if (mobileMenuButton && mobileNav) {
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileNav.classList.toggle('hidden');
+                });
+            }
+
+            const userMenuButton = document.getElementById('user-menu-button');
+            const userDropdown = document.getElementById('user-dropdown');
+            if (userMenuButton && userDropdown) {
+                userMenuButton.addEventListener('click', (event) => {
+                    userDropdown.classList.toggle('hidden');
+                    event.stopPropagation();
+                });
+            }
+
+            document.addEventListener('click', (event) => {
+                if (userDropdown && !userDropdown.contains(event.target) && !userMenuButton.contains(event.target)) {
+                    userDropdown.classList.add('hidden');
+                }
+            });
+
+            // Language Switcher
+            const langEnBtn = document.getElementById('lang-en');
+            if (langEnBtn) {
+                 langEnBtn.addEventListener('click', () => switchLanguage('en'));
+            }
+            const langKnBtn = document.getElementById('lang-kn');
+            if (langKnBtn) {
+                 langKnBtn.addEventListener('click', () => switchLanguage('kn'));
+            }
+
+            // Booking logic
+            const confirmBtn = document.getElementById('confirm-booking-btn');
+            const bookingView = document.getElementById('booking-details-view');
+            const confirmationScreen = document.getElementById('confirmation-screen');
+
+            if (confirmBtn) {
+                confirmBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    // In a real app, this would perform a booking action
+                    // For now, let's just show the confirmation screen
+                    bookingView.classList.add('hidden');
+                    confirmationScreen.classList.remove('hidden');
+                });
+            }
+            if (document.getElementById('view-history-btn')) {
+                document.getElementById('view-history-btn').addEventListener('click', () => {
+                    alert('Redirecting to Booking History...');
+                });
+            }
+            if (document.getElementById('rental-days')) {
+                document.getElementById('rental-days').addEventListener('input', () => updateSummary(currentLang));
+            }
+            
+            // Payment method change listener
+            const paymentMethods = document.querySelectorAll('input[name="payment-method"]');
+            paymentMethods.forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    renderPaymentDetailsForm(e.target.value, currentLang);
+                });
+            });
+            // Initial summary calculation and payment form render
+            updateSummary(currentLang);
+            renderPaymentDetailsForm('upi', currentLang);
+        };
+    </script>
