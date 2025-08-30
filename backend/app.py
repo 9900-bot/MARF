@@ -1,6 +1,4 @@
-# File: backend/app.py
-
-from flask import Flask, request, jsonify, send_from_directory, url_for, redirect, render_template
+from flask import Flask, request, jsonify, send_from_directory, url_for, redirect, render_template, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flask_jwt_extended import create_access_token, JWTManager, jwt_required, get_jwt_identity
@@ -12,14 +10,36 @@ import uuid
 import random
 from flask_mail import Mail, Message
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadSignature
-
+# Import for Google Sign-in
+from google.oauth2 import id_token
+from google.auth.transport import requests as google_requests
 # Import the database models from models.py
 from models import db, User, Equipment, Booking
 from sqlalchemy import or_
 
-# Create the Flask application instance
-app = Flask(__name__)
+import math
+import ssl
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
+
+def haversine(lat1, lon1, lat2, lon2):
+    """
+    Calculate great-circle distance (km) between two lat/lon points.
+    """
+    R = 6371  # Earth radius in km
+    dLat = math.radians(lat2 - lat1)
+    dLon = math.radians(lon2 - lon1)
+    a = math.sin(dLat/2)**2 + math.cos(math.radians(lat1)) \
+        * math.cos(math.radians(lat2)) * math.sin(dLon/2)**2
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
+    return R * c
+
+# Create the Flask application instance
+app = Flask(__name__, static_folder='../frontend/static', template_folder='../frontend')
+CORS(app)
+app.secret_key = "super_secret_key" 
 # --- Configuration ---
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'database.db')
@@ -34,6 +54,9 @@ app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = 'marfteam22@gmail.com'
 app.config['MAIL_PASSWORD'] = 'cprc jtem pvvx ggbk'
 mail = Mail(app)
+
+# You must provide your own Google Client ID here
+GOOGLE_CLIENT_ID = "YOUR_GOOGLE_CLIENT_ID_HERE"
 
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 jwt = JWTManager(app)
@@ -109,6 +132,11 @@ def send_verification_email(to_email, reset_link):
 
 
 # --- API Endpoints ---
+@app.route("/")
+@app.route("/dash.html")
+def serve_dashboard():
+    return render_template("dash.html")
+
 
 @app.route("/uploads/<filename>", methods=["GET"])
 def get_image(filename):
@@ -145,7 +173,6 @@ def register():
     db.session.commit()
 
     return jsonify({"msg": "User created successfully"}), 201
-
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -184,7 +211,8 @@ def google_callback():
         return jsonify({"msg": "Token not provided"}), 400
 
     try:
-        idinfo = id_token.verify_oauth2_token(token, requests.Request(), GOOGLE_CLIENT_ID)
+        # Use a new request object for the verification call
+        idinfo = id_token.verify_oauth2_token(token, google_requests.Request(), "337803351297-uuqu9h0uas0qq4okmhq4g2649jn3v9s6.apps.googleusercontent.com")
         email = idinfo.get("email")
         if not email:
             return jsonify({"msg": "Email not found in token"}), 400
@@ -212,6 +240,7 @@ def google_callback():
         
     except ValueError:
         return jsonify({"msg": "Invalid token"}), 400
+    
 
 
 @app.route("/forgot-password", methods=["POST"])
@@ -306,40 +335,87 @@ def reset_password():
 
     return jsonify({"msg": "Password reset successful"}), 200
 
+@app.route('/save-location', methods=['POST'])
+def save_location():
+    data = request.json
+    latitude = data.get("latitude")
+    longitude = data.get("longitude")
+
+    if not latitude or not longitude:
+        return jsonify({"msg": "Missing latitude or longitude"}), 400
+
+    # Store location in session
+    session['latitude'] = float(latitude)
+    session['longitude'] = float(longitude)
+
+    return jsonify({"msg": "Location updated successfully"}), 200
+
+
 @app.route("/addequipment", methods=["POST"])
 @jwt_required()
 def add_equipment():
     current_user_id = get_jwt_identity()
     user = User.query.get(current_user_id)
 
-    if user.role != 'owner':
+    if not user or user.role != 'owner':
         return jsonify({"msg": "Permission denied"}), 403
 
+    # form fields
     name = request.form.get("name")
     description = request.form.get("description")
     price = request.form.get("price")
     contact_number = request.form.get("contact_number")
     image_file = request.files.get("image")
+    location = request.form.get("location")      # human readable address
+    latitude = request.form.get("latitude")     # may be '' or None
+    longitude = request.form.get("longitude")
 
+    # basic validation (same as before + location optional)
     if not name or not description or not price or not contact_number or not image_file:
-        return jsonify({"msg": "All fields are required"}), 400
+        return jsonify({"msg": "All required fields (name, description, price, contact_number, image) are required"}), 400
 
+    try:
+        price_val = float(price)
+        if price_val <= 0:
+            return jsonify({"msg": "Please enter a valid positive price."}), 400
+    except ValueError:
+        return jsonify({"msg": "Invalid price value."}), 400
+
+    # save image
     image_filename = str(uuid.uuid4()) + os.path.splitext(image_file.filename)[1]
     image_path = os.path.join(app.config['UPLOAD_FOLDER'], image_filename)
     image_file.save(image_path)
 
+    # convert coordinates if provided
+    lat_val = None
+    lon_val = None
+    try:
+        if latitude:
+            lat_val = float(latitude)
+        if longitude:
+            lon_val = float(longitude)
+    except Exception:
+        # ignore conversion errors, store None
+        lat_val = None
+        lon_val = None
+
     new_equipment = Equipment(
         name=name,
         description=description,
-        price=float(price),
+        price=price_val,
         owner_id=current_user_id,
         contact_number=contact_number,
-        image_filename=image_filename
+        image_filename=image_filename,
+        location=location,
+        latitude=lat_val,
+        longitude=lon_val
     )
+
     db.session.add(new_equipment)
     db.session.commit()
 
     return jsonify({"msg": "Equipment added successfully"}), 201
+
 
 @app.route("/my-equipment", methods=["GET"])
 @jwt_required()
@@ -347,7 +423,7 @@ def my_equipment():
     current_user_id = get_jwt_identity()
     user = User.query.get(current_user_id)
 
-    if user.role != 'owner':
+    if not user or user.role != 'owner':
         return jsonify({"msg": "Permission denied. Only owners can view their equipment."}), 403
 
     owner_equipment = Equipment.query.filter_by(owner_id=current_user_id).all()
@@ -358,27 +434,75 @@ def my_equipment():
         "description": equip.description,
         "price": equip.price,
         "contact_number": equip.contact_number,
-        "image_url": f"/uploads/{equip.image_filename}" if equip.image_filename else "https://placehold.co/600x400/cccccc/333333?text=No+Image"
+        "image_url": f"/uploads/{equip.image_filename}" if equip.image_filename else "https://placehold.co/600x400/cccccc/333333?text=No+Image",
+        "location": equip.location,
+        "latitude": equip.latitude,
+        "longitude": equip.longitude
     } for equip in owner_equipment]
 
     return jsonify(equipment_list), 200
 
-
 @app.route("/equipment", methods=["GET"])
-def list_equipment():
-    all_equipment = Equipment.query.all()
-    
-    equipment_list = [{
-        "id": equip.id,
-        "name": equip.name,
-        "description": equip.description,
-        "price": equip.price,
-        "owner_id": equip.owner_id,
-        "contact_number": equip.contact_number,
-        "image_url": f"/uploads/{equip.image_filename}" if equip.image_filename else "https://placehold.co/600x400/cccccc/333333?text=No+Image"
-    } for equip in all_equipment]
+def get_equipment():
+    # Get location from session if available, fallback to query args
+    lat = session.get('latitude', request.args.get("lat", type=float))
+    lon = session.get('longitude', request.args.get("lon", type=float))
+
+    equipment = Equipment.query.all()
+    equipment_list = []
+
+    for equip in equipment:
+        dist = None
+        if lat and lon and equip.latitude and equip.longitude:
+            dist = haversine(lat, lon, equip.latitude, equip.longitude)
+
+        equipment_list.append({
+            "id": equip.id,
+            "name": equip.name,
+            "description": equip.description,
+            "price": equip.price,
+            "contact_number": equip.contact_number,
+            "image_url": f"/uploads/{equip.image_filename}" if equip.image_filename else "https://placehold.co/600x400/cccccc/333333?text=No+Image",
+            "location": equip.location,
+            "latitude": equip.latitude,
+            "longitude": equip.longitude,
+            "distance": dist
+        })
+
+    # Sort by distance if a location is available
+    if lat is not None and lon is not None:
+        equipment_list.sort(key=lambda x: x["distance"] if x["distance"] is not None else float("inf"))
 
     return jsonify(equipment_list), 200
+
+
+@app.route("/delete-equipment/<int:equipment_id>", methods=["DELETE"])
+@jwt_required()
+def delete_equipment(equipment_id):
+    current_user_id = get_jwt_identity()
+    user = User.query.get(current_user_id)
+
+    if not user or user.role != "owner":
+        return jsonify({"error": "Permission denied"}), 403
+
+    equipment = Equipment.query.get(equipment_id)
+
+    if not equipment:
+        return jsonify({"error": "Equipment not found"}), 404
+
+    if equipment.owner_id != current_user_id:
+        return jsonify({"error": "You can only delete your own equipment"}), 403
+
+    # Delete associated image file if exists
+    if equipment.image_filename:
+        image_path = os.path.join(app.config['UPLOAD_FOLDER'], equipment.image_filename)
+        if os.path.exists(image_path):
+            os.remove(image_path)
+
+    db.session.delete(equipment)
+    db.session.commit()
+
+    return jsonify({"msg": "Equipment deleted successfully"}), 200
 
 
 @app.route("/book", methods=["POST"])

@@ -472,8 +472,8 @@
         }
     </style>
     <!-- Leaflet CSS + JS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
 </head>
 <body>
@@ -548,7 +548,6 @@
     <main class="main-content">
         <h2 class="section-heading font-poppins" id="page-title" data-key="main_title">
             Add Your Equipment
-            <!-- <span class="font-kannada" style="display: block; font-size: 1.5rem; font-weight: normal; margin-top: 0.5rem;" data-key="main_title_kn">ನಿಮ್ಮ ಉಪಕರಣ ಸೇರಿಸಿ</span> -->
         </h2>
         
         <div class="form-card">
@@ -608,45 +607,16 @@
                     <input type="file" id="image-upload" name="image" accept="image/*">
                 </div>
 
-   <!-- Location -->
-<!-- Location -->
-<div class="form-group">
-    <label for="location">Location</label>
-    <input type="text" id="location" name="location" placeholder="Enter your equipment location">
-    <button type="button" onclick="getLocation()">📍 Use My Location</button>
-</div>
-<div id="map" style="height:300px;"></div>
-
-
-    <!-- Yellow location button inside input
-    <button type="button" 
-            id="getLocationBtn" 
-            class="absolute right-2 top-9 text-yellow-500 hover:text-yellow-600">
-        <i class="fas fa-location-arrow animate-pulse-slow"></i>
-    </button>
-</div>
- Map for selecting location -->
-<!-- <div id="map" style="height:300px; margin-top:10px;"></div> --> 
-
-
-<script>
-var map = L.map('map').setView([15.3, 74.5], 13); // Default center
-
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors'
-}).addTo(map);
-
-var marker = L.marker([15.3, 74.5], {draggable:true}).addTo(map);
-
-marker.on('dragend', function(e) {
-    var latlng = marker.getLatLng();
-    fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latlng.lat}&lon=${latlng.lng}`)
-    .then(r => r.json())
-    .then(data => {
-        document.getElementById("location").value = data.display_name;
-    });
-});
-</script>
+                <!-- Location -->
+                <div class="form-group">
+                    <label for="location" data-key="location_label">Location</label>
+                    <input type="text" id="location" name="location" data-key-placeholder="location_placeholder" placeholder="Enter your equipment location">
+                    <button type="button" onclick="getLocation()" class="save-btn" style="margin-top: 10px; width: auto; padding: 10px 20px;">📍 Use My Location</button>
+                </div>
+                <div id="map" style="height:300px; margin-top:10px;"></div>
+                <!-- Hidden fields to carry lat/lon to backend -->
+                <input type="hidden" id="latitude" name="latitude">
+                <input type="hidden" id="longitude" name="longitude">
 
 
                 <!-- Availability -->
@@ -853,6 +823,12 @@ marker.on('dragend', function(e) {
 
         window.onload = function() {
             switchLanguage('en');
+            
+            // Language Switcher functionality
+            const langEnBtn = document.getElementById('lang-en');
+            const langKnBtn = document.getElementById('lang-kn');
+            if (langEnBtn) langEnBtn.addEventListener('click', () => switchLanguage('en'));
+            if (langKnBtn) langKnBtn.addEventListener('click', () => switchLanguage('kn'));
 
             const addEquipmentForm = document.getElementById('add-equipment-form');
             if (addEquipmentForm) {
@@ -904,6 +880,9 @@ marker.on('dragend', function(e) {
                         return;
                     }
                     
+                    const latitude = document.getElementById("latitude").value;
+                    const longitude = document.getElementById("longitude").value;
+
                     const formData = new FormData();
                     formData.append('name', name);
                     formData.append('description', description);
@@ -911,6 +890,8 @@ marker.on('dragend', function(e) {
                     formData.append('contact_number', contactNumber);
                     formData.append('location', location);
                     formData.append('image', imageFile);
+                    formData.append('latitude', latitude);   
+                    formData.append('longitude', longitude);
 
                     try {
                         const response = await fetch('http://127.0.0.1:5000/addequipment', {
@@ -947,190 +928,100 @@ marker.on('dragend', function(e) {
             }
         };
 
-        // Geolocation Script
-        document.addEventListener("DOMContentLoaded", () => {
-            const locationInput = document.getElementById("location");
-            const detectButtons = document.querySelectorAll(".location-detector-btn");
+        document.addEventListener("DOMContentLoaded", async function () {
+            const editId = localStorage.getItem("editEquipmentId");
 
-            function detectLocation() {
-                if (!navigator.geolocation) {
-                    alert("Geolocation is not supported by your browser.");
-                    return;
-                }
+            if (editId) {
+                const response = await fetch(`http://127.0.0.1:5000/equipment/${editId}`, {
+                    headers: { "Authorization": "Bearer " + localStorage.getItem("token") }
+                });
+                const equipment = await response.json();
 
-                navigator.geolocation.getCurrentPosition(success, error);
+                // ✅ Match with your actual form input IDs
+                document.getElementById("equipment-name").value = equipment.name;
+                document.getElementById("equipment-type").value = equipment.type;
+                document.getElementById("description").value = equipment.description;
+                document.getElementById("price").value = equipment.price;
+                document.getElementById("contact-number").value = equipment.contact_number;
+                document.getElementById("location").value = equipment.location;
+
+                document.getElementById("save-button").innerText = "Update Equipment";
             }
-
-            function success(position) {
-                const latitude = position.coords.latitude;
-                const longitude = position.coords.longitude;
-
-                fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        const address = data.display_name || `${latitude}, ${longitude}`;
-                        locationInput.value = address;
-                    })
-                    .catch(() => {
-                        locationInput.value = `${latitude}, ${longitude}`;
-                    });
-            }
-
-            function error() {
-                alert("Unable to retrieve your location.");
-            }
-
-            detectButtons.forEach(btn => btn.addEventListener("click", detectLocation));
         });
     </script>
-<script>
-(function () {
-  const locationInput = document.getElementById('location');
-  const locateBtn = document.getElementById('getLocationBtn');
+    
+    <script>
+        var map, marker;
+        
+        // Use a flag to prevent multiple initializations
+        var isMapInitialized = false;
 
-  let map, marker;
+        function initMap(lat, lon, zoom) {
+            if (isMapInitialized) {
+                map.setView([lat, lon], zoom);
+                marker.setLatLng([lat, lon]);
+                return;
+            }
 
-  // 1) Init map at a neutral default, marker draggable
-  function initMap(lat = 15.3, lng = 74.5, zoom = 13) {
-    map = L.map('map').setView([lat, lng], zoom);
+            map = L.map('map').setView([lat, lon], zoom);
+            isMapInitialized = true;
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '© OpenStreetMap contributors'
-    }).addTo(map);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
 
-    marker = L.marker([lat, lng], { draggable: true }).addTo(map);
+            marker = L.marker([lat, lon], { draggable: true }).addTo(map);
 
-    // Update address when marker moves
-    marker.on('dragend', handleMarkerMoved);
+            marker.on('dragend', function(e) {
+                var latlng = marker.getLatLng();
+                document.getElementById("latitude").value = latlng.lat;
+                document.getElementById("longitude").value = latlng.lng;
+                fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latlng.lat}&lon=${latlng.lng}`)
+                    .then(r => r.json())
+                    .then(data => {
+                        document.getElementById("location").value = data.display_name;
+                    });
+            });
 
-    // Also allow click-to-move
-    map.on('click', (e) => {
-      marker.setLatLng(e.latlng);
-      handleMarkerMoved();
-    });
-
-    // Fix first-render sizing
-    setTimeout(() => map.invalidateSize(), 300);
-  }
-
-  // 2) Reverse geocode marker position → fill input
-  function reverseGeocode(lat, lng) {
-    fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`)
-      .then(r => r.json())
-      .then(data => {
-        const address = data.display_name || `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
-        locationInput.value = address;
-      })
-      .catch(() => {
-        locationInput.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
-      });
-  }
-
-  function handleMarkerMoved() {
-    const { lat, lng } = marker.getLatLng();
-    reverseGeocode(lat, lng);
-  }
-
-  // 3) Try to auto-locate the user (on load and on button click)
-  function locateUser() {
-    if (!navigator.geolocation) {
-      console.warn('Geolocation not supported');
-      return;
-    }
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        const lat = pos.coords.latitude;
-        const lng = pos.coords.longitude;
-
-        if (!map) initMap(lat, lng, 16);
-        else {
-          map.setView([lat, lng], 16);
-          marker.setLatLng([lat, lng]);
+            // Also allow click-to-move
+            map.on('click', (e) => {
+              marker.setLatLng(e.latlng);
+              document.getElementById("latitude").value = e.latlng.lat;
+              document.getElementById("longitude").value = e.latlng.lng;
+              fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${e.latlng.lat}&lon=${e.latlng.lng}`)
+                .then(r => r.json())
+                .then(data => {
+                    document.getElementById("location").value = data.display_name;
+                });
+            });
         }
-        reverseGeocode(lat, lng);
-      },
-      (err) => {
-        console.warn('Geolocation failed:', err);
-        if (!map) initMap(); // show default map if we haven't yet
-      },
-      { enableHighAccuracy: true, timeout: 8000, maximumAge: 30000 }
-    );
-  }
-
-  // 4) Forward geocode when user types an address (optional but handy)
-  function forwardGeocode(query) {
-    if (!query || query.trim().length < 5) return;
-    fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&q=${encodeURIComponent(query)}&limit=1`)
-      .then(r => r.json())
-      .then(res => {
-        if (res && res[0]) {
-          const lat = parseFloat(res[0].lat);
-          const lng = parseFloat(res[0].lon);
-          map.setView([lat, lng], 16);
-          marker.setLatLng([lat, lng]);
+        
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+        
+                    document.getElementById("latitude").value = lat;
+                    document.getElementById("longitude").value = lon;
+        
+                    initMap(lat, lon, 15);
+        
+                    fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`)
+                        .then(r => r.json())
+                        .then(data => {
+                            document.getElementById("location").value = data.display_name;
+                        });
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
         }
-      })
-      .catch(() => {});
-  }
-
-  // Wire up
-  initMap();        // show map immediately with default
-  locateUser();     // auto-fetch current location & fill input
-
-  locateBtn?.addEventListener('click', locateUser);
-  locationInput.addEventListener('change', () => forwardGeocode(locationInput.value));
-})();
-</script>
-
-<script>
-var map = L.map('map').setView([15.3, 74.5], 13); 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors'
-}).addTo(map);
-
-var marker = L.marker([15.3, 74.5], {draggable:true}).addTo(map);
-
-function buildAddress(components) {
-    return [
-        components.road || "",
-        components.village || components.town || components.city || "",
-        components.state || "",
-        components.postcode || "",
-        components.country || ""
-    ].filter(Boolean).join(", ");
-}
-
-function setAddress(lat, lon) {
-    fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`)
-    .then(r => r.json())
-    .then(data => {
-        let address = buildAddress(data.address);
-        document.getElementById("location").value = address || data.display_name;
-        marker.setLatLng([lat, lon]);
-        map.setView([lat, lon], 15);
-    });
-}
-
-function getLocation() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(pos) {
-            setAddress(pos.coords.latitude, pos.coords.longitude);
-        }, function(err) {
-            alert("Unable to retrieve location: " + err.message);
+        
+        // Initial map load on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            initMap(15.3, 74.5, 13); // Default view
         });
-    } else {
-        alert("Geolocation not supported");
-    }
-}
-
-marker.on('dragend', function(e) {
-    var latlng = marker.getLatLng();
-    setAddress(latlng.lat, latlng.lng);
-});
-</script>
-
-
-
+    </script>
 </body>
 </html>

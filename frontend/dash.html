@@ -442,15 +442,20 @@
 
 
 
-        <div class="desktop-search-container">
-            <div class="desktop-search-bar">
-                <i class="fas fa-search fa-2x"></i>
-                <input type="text" id="search-input-desktop" data-text-en="Search for equipment..." data-text-kn="ಉಪಕರಣಗಳನ್ನು ಹುಡುಕಿ..." placeholder="Search for equipment...">
-            </div>
-            <button class="location-detector-btn">
-                <i class="fas fa-location-arrow animate-pulse-slow fa-3x"></i>
-            </button>
-        </div>
+        <div id="location-display" 
+     style="font-size: 14px; font-weight: bold; color: green; margin-right: 10px; cursor: pointer;"
+     onclick="openMap()">
+    📍 Detecting location...
+</div>
+    <div class="desktop-search-bar">
+        <i class="fas fa-search fa-2x"></i>
+        <input type="text" id="search-input-desktop" data-text-en="Search for equipment..." data-text-kn="ಉಪಕರಣಗಳನ್ನು ಹುಡುಕಿ..." placeholder="Search for equipment...">
+    </div>
+    <button class="location-detector-btn">
+        <i class="fas fa-location-arrow animate-pulse-slow fa-3x"></i>
+    </button>
+</div>
+
 
         <div class="user-menu-dropdown-container">
             <button id="user-menu-button" class="user-menu-button">
@@ -556,42 +561,6 @@
             }
         };
 
-        const equipmentData = [
-            { name: 'John Deere 5050D Tractor', type: 'Tractor', price: 1500, distance: 2.5, image: 'https://placehold.co/600x400/173c1c/e8f5e9?text=John+Deere' },
-            { name: 'Mahindra 265 DI Power Plus', type: 'Tractor', price: 1200, distance: 4.1, image: 'https://placehold.co/600x400/173c1c/e8f5e9?text=Mahindra' },
-            { name: 'Shaktiman Rotavator', type: 'Rotavator', price: 800, distance: 1.8, image: 'https://placehold.co/600x400/173c1c/e8f5e9?text=Shaktiman' },
-            { name: 'JCB 3DX Super', type: 'Excavator', price: 3000, distance: 6.7, image: 'https://placehold.co/600x400/173c1c/e8f5e9?text=JCB' },
-            { name: 'Kirloskar Centrifugal Pump', type: 'Water Pump', price: 350, distance: 3.2, image: 'https://placehold.co/600x400/173c1c/e8f5e9?text=Kirloskar' },
-            { name: 'New Holland 3630 TX Plus', type: 'Tractor', price: 1650, distance: 5.0, image: 'https://placehold.co/600x400/173c1c/e8f5e9?text=New+Holland' },
-            { name: 'Stihl Sprayer', type: 'Sprayer', price: 450, distance: 0.9, image: 'https://placehold.co/600x400/173c1c/e8f5e9?text=Stihl' },
-            { name: 'Massey Ferguson 241 DI Dynatrack', type: 'Tractor', price: 1400, distance: 7.3, image: 'https://placehold.co/600x400/173c1c/e8f5e9?text=Massey+Ferguson' },
-        ];
-        
-        let currentLang = 'en';
-
-        const createEquipmentCard = (equipment) => {
-            const lang = translations[currentLang];
-            const equipmentType = lang.equipment_types[equipment.type] || equipment.type;
-            
-            return `
-                <div class="equipment-card">
-                    <img
-                        src="${equipment.image}"
-                        alt="${equipment.name}"
-                        class="equipment-card-img"
-                        onerror="this.onerror=null; this.src='https://placehold.co/600x400/cccccc/333333?text=Image+Not+Found';"
-                    />
-                    <div class="equipment-card-content">
-                        <h3 class="card-title font-poppins">${equipment.name}</h3>
-                        <p class="card-type">${equipmentType}</p>
-                        <p class="equipment-price">₹${equipment.price}<span>${lang.price_suffix}</span></p>
-                        <p class="card-distance"><i class="fa-solid fa-location-dot"></i> ${equipment.distance} ${lang.distance_suffix}</p>
-                        <button class="book-now-button">${lang.book_now}</button>
-                    </div>
-                </div>
-            `;
-        };
-
         const updateContent = (lang) => {
             const elements = document.querySelectorAll('[data-text-en]');
             elements.forEach(el => {
@@ -601,9 +570,7 @@
             document.getElementById('search-input-desktop').placeholder = translations[lang].search_placeholder;
             document.getElementById('search-input-mobile').placeholder = translations[lang].search_placeholder;
 
-            // Update equipment cards
-            const equipmentGrid = document.getElementById('equipment-grid');
-            equipmentGrid.innerHTML = equipmentData.map(createEquipmentCard).join('');
+            
         };
 
         const switchLanguage = (lang) => {
@@ -624,37 +591,276 @@
             }
         };
 
-        window.onload = function() {
-            // Set initial language to English on load
-            switchLanguage('en');
+       window.onload = function() {
+    // Set initial language to English on load
+    switchLanguage('en');
 
-            // Language Switcher functionality
-            const langEnBtn = document.getElementById('lang-en');
-            const langKnBtn = document.getElementById('lang-kn');
-            langEnBtn.addEventListener('click', () => switchLanguage('en'));
-            langKnBtn.addEventListener('click', () => switchLanguage('kn'));
+    // Language Switcher functionality
+    const langEnBtn = document.getElementById('lang-en');
+    const langKnBtn = document.getElementById('lang-kn');
+    langEnBtn.addEventListener('click', () => switchLanguage('en'));
+    langKnBtn.addEventListener('click', () => switchLanguage('kn'));
 
-            // Mobile menu toggle logic
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileNav = document.getElementById('mobile-nav');
-            mobileMenuButton.addEventListener('click', () => {
-                mobileNav.classList.toggle('hidden');
+    // Mobile menu toggle logic
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileNav = document.getElementById('mobile-nav');
+    mobileMenuButton.addEventListener('click', () => {
+        mobileNav.classList.toggle('hidden');
+    });
+
+    // User menu toggle logic
+    const userMenuButton = document.getElementById('user-menu-button');
+    const userDropdown = document.getElementById('user-dropdown');
+    userMenuButton.addEventListener('click', (event) => {
+        userDropdown.classList.toggle('hidden');
+        event.stopPropagation();
+    });
+
+    document.addEventListener('click', (event) => {
+        if (!userDropdown.contains(event.target) && !userMenuButton.contains(event.target)) {
+            userDropdown.classList.add('hidden');
+        }
+    });
+
+    // Initial load
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((pos) => {
+            window.currentLat = pos.coords.latitude;
+            window.currentLon = pos.coords.longitude;
+            console.log("📍 User Location:", window.currentLat, window.currentLon);
+            
+            // Save to backend and then load equipments
+            saveLocationAndLoadEquipments(window.currentLat, window.currentLon);
+
+        }, () => {
+            console.warn("⚠️ Location not given, loading without distance");
+            loadEquipments(); // fallback
+        });
+    } else {
+        console.warn("⚠️ Geolocation not supported, loading without distance");
+        loadEquipments(); // fallback if not supported
+    }
+
+}
+        // Helper function to save location and load equipments
+        async function saveLocationAndLoadEquipments(lat, lon) {
+            try {
+                const response = await fetch("http://127.0.0.1:5000/save-location", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        // "Authorization": "Bearer " + localStorage.getItem("token") // Removed for simplicity since it's now session-based
+                    },
+                    body: JSON.stringify({
+                        latitude: lat,
+                        longitude: lon
+                    })
+                });
+                const data = await response.json();
+                console.log("✅ Location saved:", data);
+                
+                loadEquipments(lat, lon);
+            } catch (err) {
+                console.error("❌ Error saving location:", err);
+                loadEquipments(); // Fallback if save fails
+            }
+        }
+
+        async function loadEquipments(lat, lon) {
+    try {
+        // Always fall back to window.currentLat/Lon
+        const finalLat = lat ?? window.currentLat;
+        const finalLon = lon ?? window.currentLon;
+
+        let url = `http://127.0.0.1:5000/equipment?lat=${finalLat}&lon=${finalLon}`;
+
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("Failed to fetch equipments");
+
+        const equipments = await response.json();
+
+        const equipmentGrid = document.getElementById("equipment-grid");
+        equipmentGrid.innerHTML = "";
+
+        if (equipments.length === 0) {
+            equipmentGrid.innerHTML = `
+                <p style="text-align:center; width:100%; font-size:1.5rem; color: #777;">
+                    No equipment found. ${!finalLat ? 'Please enable location to see nearby equipment.' : ''}
+                </p>
+            `;
+            return;
+        }
+
+        equipments.forEach(equip => {
+            const card = document.createElement("div");
+            card.className = "equipment-card";
+
+            const distanceDisplay = equip.distance !== null && equip.distance !== undefined 
+                ? `<p class="card-distance"><b>${equip.distance.toFixed(1)} km away</b></p>`
+                : '';
+
+            card.innerHTML = `
+                <img
+                    src="${equip.image_url.startsWith("http") ? equip.image_url : "http://127.0.0.1:5000" + equip.image_url}"
+                    alt="${equip.name}"
+                    class="equipment-card-img"
+                    onerror="this.onerror=null; this.src='https://placehold.co/600x400/cccccc/333333?text=Image+Not+Found';"
+                />
+                <div class="equipment-card-content">
+                    <h3 class="card-title font-poppins">${equip.name}</h3>
+                    <p class="card-type">${equip.description || "No description"}</p>
+                    <p class="equipment-price">₹${equip.price}/day</p>
+                    <p><i class="fa-solid fa-phone"></i> ${equip.contact_number}</p>
+                    <p><i class="fa-solid fa-location-dot"></i> ${equip.location || "Unknown"}</p>
+                    ${distanceDisplay}
+                    <button class="book-now-button">Book Now</button>
+                </div>
+            `;
+            equipmentGrid.appendChild(card);
+        });
+    } catch (err) {
+        console.error("Error loading equipments:", err);
+    }
+}
+
+
+        // Detect location button logic
+document.querySelectorAll(".location-detector-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((pos) => {
+                let lat = pos.coords.latitude;
+                let lon = pos.coords.longitude;
+                window.currentLat = lat;
+                window.currentLon = lon;
+
+
+                console.log("User Location:", lat, lon);
+                saveLocationAndLoadEquipments(lat, lon);
+
+                // Reverse geocode using OpenStreetMap Nominatim
+fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`)
+    .then(res => res.json())
+    .then(data => {
+        let place = data.display_name || `Lat: ${lat}, Lng: ${lon}`;
+        document.getElementById("location-display").innerText = "📍 " + place;
+
+        // Save location & place to backend
+        fetch("http://127.0.0.1:5000/save-location", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ latitude: lat, longitude: lon, place: place })
+        });
+    })
+    .catch(err => console.error("Error fetching place:", err));
+
             });
+        } else {
+            alert("Geolocation not supported in your browser");
+        }
+    });
+});
 
-            // User menu toggle logic
-            const userMenuButton = document.getElementById('user-menu-button');
-            const userDropdown = document.getElementById('user-dropdown');
-            userMenuButton.addEventListener('click', (event) => {
-                userDropdown.classList.toggle('hidden');
-                event.stopPropagation();
-            });
 
-            document.addEventListener('click', (event) => {
-                if (!userDropdown.contains(event.target) && !userMenuButton.contains(event.target)) {
-                    userDropdown.classList.add('hidden');
+    // 🌍 Leaflet map logic
+    let map, marker;
+
+    function openMap() {
+    document.getElementById("mapModal").style.display = "block";
+
+    let lat = window.currentLat || 12.9716; // use detected lat or fallback
+    let lon = window.currentLon || 77.5946; // use detected lon or fallback
+
+    if (!map) {
+        map = L.map('map').setView([lat, lon], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        marker = L.marker([lat, lon], { draggable: true }).addTo(map);
+    } else {
+        map.setView([lat, lon], 13);
+        marker.setLatLng([lat, lon]);
+    }
+
+    // Fix rendering issue when modal opens
+    setTimeout(() => { map.invalidateSize(); }, 200);
+}
+
+    function saveNewLocation() {
+    let pos = marker.getLatLng();
+
+    // Save to backend
+    saveLocationAndLoadEquipments(pos.lat, pos.lng);
+
+
+    // 🌍 Reverse geocode new location
+    fetch(`https://nominatim.openstreetmap.org/reverse?lat=${pos.lat}&lon=${pos.lng}&format=json`)
+        .then(res => res.json())
+        .then(data => {
+            let place = data.display_name || `Lat: ${pos.lat.toFixed(4)}, Lng: ${pos.lng.toFixed(4)}`;
+            
+            // ✅ Update the location display beside search bar
+            document.getElementById("location-display").innerText = "📍 " + place;
+
+            // Update globals so future map opens at the new spot
+            window.currentLat = pos.lat;
+            window.currentLon = pos.lng;
+
+            alert(`📍 Location updated: ${place}`);
+            closeMap();
+        })
+        .catch(err => {
+            console.error("Error fetching place:", err);
+            alert(`📍 Location updated: ${pos.lat.toFixed(4)}, ${pos.lng.toFixed(4)}`);
+            closeMap();
+        });
+}
+
+
+    function closeMap() {
+        document.getElementById("mapModal").style.display = "none";
+    }
+    
+    // 🔍 Equipment search filter only (no sorting here)
+    function setupSearch() {
+        function filterEquipment(query) {
+            query = query.toLowerCase();
+            const equipmentCards = document.querySelectorAll(".equipment-card");
+
+            equipmentCards.forEach(card => {
+                const name = card.querySelector(".card-title").innerText.toLowerCase();
+                const description = card.querySelector(".card-type").innerText.toLowerCase();
+                if (name.includes(query) || description.includes(query)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
                 }
             });
-        };
+        }
+
+        document.getElementById("search-input-desktop").addEventListener("input", (e) => {
+            filterEquipment(e.target.value);
+        });
+
+        document.getElementById("search-input-mobile").addEventListener("input", (e) => {
+            filterEquipment(e.target.value);
+        });
+    }
+    setupSearch();
+
     </script>
+    
+    <!-- Location Edit Modal -->
+<div id="mapModal" style="display:none; position:fixed; top:10%; left:10%; width:80%; height:80%; background:#fff; border:2px solid #333; z-index:2000;">
+   <div id="map" style="height:90%;"></div>
+   <button onclick="saveNewLocation()">Save</button>
+   <button onclick="closeMap()">Close</button>
+</div>
+
+<!-- Leaflet -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
 </body>
 </html>

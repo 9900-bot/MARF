@@ -28,9 +28,14 @@ class Equipment(db.Model):
     owner_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     contact_number = db.Column(db.String(20), nullable=False)
     image_filename = db.Column(db.String(255), nullable=True)
+    # NEW: store human-readable address + coordinates
+    location = db.Column(db.String(255), nullable=True)   # e.g. "Kundapura, Udupi, Karnataka, India"
+    latitude = db.Column(db.Float, nullable=True)
+    longitude = db.Column(db.Float, nullable=True)
 
     def __repr__(self):
         return f"<Equipment {self.name}>"
+
 
 class Booking(db.Model):
     id = db.Column(db.Integer, primary_key=True)
