@@ -1017,5 +1017,39 @@ def review_solution(solution_id):
     
     return jsonify(msg=f"Solution has been successfully {decision}."), 200
 
+# --- ADD THIS NEW ENDPOINT TO YOUR app.py FILE ---
+
+@app.route("/my-solutions", methods=["GET"])
+@jwt_required()
+def my_solutions():
+    """
+    Fetches all farm solutions submitted by the currently logged-in user.
+    """
+    try:
+        current_user_id = int(get_jwt_identity())
+    except (ValueError, TypeError):
+        return jsonify({"msg": "Invalid token identity"}), 422
+        
+    # Query for all solutions created by the current user, ordered by most recent first
+    user_solutions = FarmSolution.query.filter_by(
+        user_id=current_user_id
+    ).order_by(
+        FarmSolution.submitted_at.desc()
+    ).all()
+    
+    # Serialize the data into a list of dictionaries
+    solutions_list = [
+        {
+            "id": sol.id,
+            "title": sol.title,
+            "description": sol.description,
+            "submitted_at": sol.submitted_at.strftime("%Y-%m-%d"),
+            "status": sol.status,  # e.g., 'pending_review', 'approved', 'rejected'
+            "admin_notes": sol.admin_notes # Optional: show feedback to the user
+        } for sol in user_solutions
+    ]
+    
+    return jsonify(solutions_list), 200
+
 if __name__ == "__main__":
     app.run(debug=True)
