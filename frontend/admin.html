@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MARF Admin - Solution Moderation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/906faa9c3f.js" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --primary-green: #173c1c;
+            --soft-earth-tone: #e8f5e9;
+            --accent-orange: #FFA500;
+            --accent-red: #d9534f;
+            --accent-green: #5cb85c;
+            --text-dark: #173c1c;
+            --text-light: #fff;
+            --border-color: #ccc;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            background-color: var(--soft-earth-tone);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+        .hidden { display: none !important; }
+        header {
+            background-color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .header-logo-text { font-size: 1.5rem; font-weight: 700; }
+        .main-content {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .section-heading {
+            font-size: 2.5rem;
+            color: var(--primary-green);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        #pending-solutions-container {
+            display: grid;
+            gap: 1.5rem;
+        }
+        .admin-card {
+            background-color: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: box-shadow 0.3s ease;
+        }
+        .admin-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .card-header h3 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        .card-header .meta {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        .card-body {
+            margin: 1rem 0;
+            padding: 1rem;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            border: 1px solid #eee;
+        }
+        .card-actions {
+            margin-top: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+        }
+        .admin-notes-input {
+            flex-grow: 1;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 1rem;
+            min-width: 250px;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .action-btn {
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+        .action-btn:hover {
+            opacity: 0.85;
+        }
+        .approve-btn { background-color: var(--accent-green); }
+        .reject-btn { background-color: var(--accent-red); }
+        .access-denied, .no-solutions {
+            text-align: center;
+            font-size: 1.2rem;
+            padding: 3rem;
+            background-color: #fff;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-logo-text">MARF Admin</div>
+        <nav>
+            <a href="dash.html" style="text-decoration: none; color: var(--text-dark);">Back to Site</a>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <h2 class="section-heading">Solution Moderation Queue</h2>
+        <div id="pending-solutions-container">
+            </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const API_BASE_URL = 'http://127.0.0.1:5000';
+            const container = document.getElementById('pending-solutions-container');
+
+            async function fetchPendingSolutions() {
+                container.innerHTML = '<p>Loading pending reviews...</p>';
+
+                const token = localStorage.getItem('access_token');
+                const userRole = localStorage.getItem('role');
+
+                try {
+                    const response = await fetch(`${API_BASE_URL}/api/admin/solutions/pending`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+
+                    if (response.status === 401 || response.status === 403) {
+                         container.innerHTML = `<div class="access-denied"><h3>Session Error</h3><p>Your session may have expired or you do not have permission. Please <a href="login.html">log in again</a>.</p></div>`;
+                         return;
+                    }
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch data from the server.');
+                    }
+
+                    const solutions = await response.json();
+                    renderSolutions(solutions);
+
+                } catch (error) {
+                    console.error('Error:', error);
+                    container.innerHTML = '<div class="access-denied"><h3>Error</h3><p>Could not load pending solutions.</p></div>';
+                }
+            }
+
+            function renderSolutions(solutions) {
+                container.innerHTML = '';
+
+                if (solutions.length === 0) {
+                    container.innerHTML = '<div class="no-solutions"><p>The moderation queue is empty. Great job!</p></div>';
+                    return;
+                }
+
+                solutions.forEach(solution => {
+                    const card = document.createElement('div');
+                    card.className = 'admin-card';
+                    card.setAttribute('data-id', solution.id);
+                    card.innerHTML = `
+                        <div class="card-header">
+                            <h3>${solution.title}</h3>
+                            <div class="meta">Submitted by: <strong>${solution.author_name}</strong> on ${solution.submitted_at}</div>
+                        </div>
+                        <div class="card-body">
+                            <p>${solution.description.replace(/\n/g, '<br>')}</p>
+                        </div>
+                        <div class="card-actions">
+                            <textarea class="admin-notes-input" placeholder="Add optional notes for rejection..."></textarea>
+                            <div class="action-buttons">
+                                <button class="action-btn approve-btn">Approve</button>
+                                <button class="action-btn reject-btn">Reject</button>
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            }
+            
+            async function handleReviewDecision(event) {
+                const target = event.target;
+                const isApprove = target.classList.contains('approve-btn');
+                const isReject = target.classList.contains('reject-btn');
+
+                if (!isApprove && !isReject) {
+                    return;
+                }
+
+                const card = target.closest('.admin-card');
+                const solutionId = card.getAttribute('data-id');
+                const notesInput = card.querySelector('.admin-notes-input');
+                const notes = notesInput.value.trim();
+                const decision = isApprove ? 'approved' : 'rejected';
+                
+                if (isReject && !notes) {
+                    alert('Please provide a reason in the notes for rejecting a solution.');
+                    notesInput.focus();
+                    return;
+                }
+                
+                const token = localStorage.getItem('access_token');
+                
+                try {
+                    target.disabled = true; // Disable the button to prevent double clicks
+                    const response = await fetch(`${API_BASE_URL}/api/admin/solutions/review/${solutionId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ decision, notes })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (!response.ok) {
+                        throw new Error(result.msg || 'An unknown error occurred.');
+                    }
+                    
+                    card.style.transition = 'opacity 0.5s ease';
+                    card.style.opacity = '0';
+                    setTimeout(() => {
+                        card.remove();
+                        if (container.children.length === 0) {
+                             container.innerHTML = '<div class="no-solutions"><p>The moderation queue is empty. Great job!</p></div>';
+                        }
+                    }, 500);
+
+                } catch (error) {
+                    alert(`Error: ${error.message}`);
+                    target.disabled = false; // Re-enable button on error
+                }
+            }
+            
+            container.addEventListener('click', handleReviewDecision);
+            fetchPendingSolutions();
+        });
+    </script>
+
+</body>
+</html>

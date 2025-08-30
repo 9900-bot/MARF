@@ -1,0 +1,21 @@
+-- database: ./database.db
+
+CREATE TABLE `operators` (
+    `operator_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `user_id` BIGINT UNSIGNED NOT NULL,
+    `full_name` VARCHAR(255) NOT NULL,
+    `contact_number` VARCHAR(20) NOT NULL,
+    `location_name` VARCHAR(255) NOT NULL COMMENT 'Human-readable location text entered by the user.',
+    `latitude` DECIMAL(10, 8) NOT NULL,
+    `longitude` DECIMAL(11, 8) NOT NULL,
+    `location_point` POINT NOT NULL SRID 4326 COMMENT 'Stores lat/lng as a single spatial data type for efficient queries.',
+    `availability_status` ENUM('available', 'unavailable') NOT NULL DEFAULT 'available',
+    `is_active` BOOLEAN NOT NULL DEFAULT TRUE COMMENT 'Soft delete flag. FALSE if the operator is removed from the platform.',
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`operator_id`),
+    INDEX `idx_user_id` (`user_id`),
+    INDEX `idx_availability_status` (`availability_status`),
+    SPATIAL INDEX `sp_idx_location_point` (`location_point`),
+    CONSTRAINT `fk_operators_user` FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE
+)

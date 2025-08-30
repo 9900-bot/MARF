@@ -14,7 +14,7 @@ from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadSignature
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
 # Import the database models from models.py
-from models import db, User, Equipment, Booking
+from models import *
 from sqlalchemy import or_
 
 import math
@@ -22,6 +22,8 @@ import ssl
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from geopy.geocoders import Nominatim
+from sqlalchemy import func
 
 
 def haversine(lat1, lon1, lat2, lon2):
@@ -64,7 +66,18 @@ db.init_app(app)
 CORS(app)
 
 with app.app_context():
-    db.create_all()
+    db.create_all() 
+
+# --- ADD THIS NEW FUNCTION ANYWHERE IN YOUR app.py ---
+@app.cli.command("init-db")
+def init_db_command():
+    """Drops and recreates the database tables."""
+    with app.app_context():
+        print("--- Dropping all database tables... ---")
+        db.drop_all()
+        print("--- Creating all database tables... ---")
+        db.create_all()
+        print("--- Database initialized successfully! ---")
 
 # --- Password Validation Function ---
 def validate_password(password):
@@ -335,20 +348,6 @@ def reset_password():
 
     return jsonify({"msg": "Password reset successful"}), 200
 
-@app.route('/save-location', methods=['POST'])
-def save_location():
-    data = request.json
-    latitude = data.get("latitude")
-    longitude = data.get("longitude")
-
-    if not latitude or not longitude:
-        return jsonify({"msg": "Missing latitude or longitude"}), 400
-
-    # Store location in session
-    session['latitude'] = float(latitude)
-    session['longitude'] = float(longitude)
-
-    return jsonify({"msg": "Location updated successfully"}), 200
 
 
 @app.route("/addequipment", methods=["POST"])
@@ -584,6 +583,439 @@ def dashboard():
         "full_name": user.full_name,
         "id": user.id
     }), 200
+
+@app.route("/my-account", methods=["GET"])
+@jwt_required()
+def my_account():
+    current_user_id = get_jwt_identity()
+    user = User.query.get(current_user_id)
+
+    if not user:
+        return jsonify({"msg": "User not found"}), 404
+
+    return jsonify({
+        "title": "My Account",
+        "full_name": user.full_name,
+        "email": user.email,
+        "phone": user.username,  # hardcoded or fallback
+        "address": "Mandya, Karnataka",  # hardcoded or fallback
+        "language": "English",  # default
+        "profile_picture_url": "https://placehold.co/200x200"
+    }), 200
+
+# --- OPERATOR API ENDPOINTS (REPLACE the old ones in your app.py) ---
+
+# --- REPLACE the old /api/operators POST endpoint with this new, improved version ---
+
+@app.route("/api/operators", methods=['POST'])
+@jwt_required()
+def register_operator():
+    """
+    Endpoint for a logged-in user to register as an operator.
+    This also changes the user's role.
+    This version performs geocoding on the backend for accuracy.
+    """
+    try:
+        current_user_id = int(get_jwt_identity())
+    except (ValueError, TypeError):
+        return jsonify({"msg": "Invalid token identity"}), 422
+
+    user = User.query.get(current_user_id)
+
+    if not user:
+        return jsonify({"msg": "User not found"}), 404
+    
+    if user.role == 'owner':
+        return jsonify({"msg": "Users with the 'owner' role cannot also be operators."}), 403
+        
+    data = request.get_json()
+    # Note: We no longer require latitude and longitude from the client.
+    required_fields = ['fullName', 'contactNumber', 'locationName', 'availability']
+    if not all(field in data for field in required_fields):
+        return jsonify({"msg": "Missing required fields (fullName, contactNumber, locationName, availability)"}), 400
+
+    location_name = data.get('locationName')
+    lat, lon = None, None
+
+    # --- START OF THE FIX: Geocoding the address ---
+    try:
+        # Initialize the geocoder (Nominatim is a free service from OpenStreetMap)
+        geolocator = Nominatim(user_agent="marf_app_v1") 
+        
+        # Attempt to get coordinates from the provided location name
+        location_data = geolocator.geocode(location_name)
+        
+        if location_data:
+            lat = location_data.latitude
+            lon = location_data.longitude
+            print(f"✅ Geocoding successful for '{location_name}': ({lat}, {lon})")
+        else:
+            # If geocoding fails, we can't create an operator with a valid location.
+            print(f"❌ Geocoding failed for '{location_name}'")
+            return jsonify({"msg": f"Could not find coordinates for the location: '{location_name}'. Please provide a more specific address."}), 400
+
+    except Exception as e:
+        print(f"❌ An error occurred during geocoding: {e}")
+        return jsonify({"msg": "An error occurred while processing the location."}), 500
+    # --- END OF THE FIX ---
+
+    new_operator = Operator(
+        user_id=current_user_id,
+        full_name=data['fullName'],
+        contact_number=data['contactNumber'],
+        location_name=location_name, # Store the original human-readable name
+        latitude=lat,               # Store the newly found latitude
+        longitude=lon,              # Store the newly found longitude
+        availability_status=data['availability']
+    )
+    
+    user.role = 'operator'
+    
+    db.session.add(new_operator)
+    db.session.commit()
+
+    return jsonify({"msg": "Successfully registered as an operator. Your role has been updated."}), 201
+# --- REPLACE this endpoint in app.py ---
+@app.route('/save-location', methods=['POST'])
+@jwt_required() # Protect this endpoint
+def save_location():
+    data = request.json
+    latitude = data.get("latitude")
+    longitude = data.get("longitude")
+
+    if not latitude or not longitude:
+        return jsonify({"msg": "Missing latitude or longitude"}), 400
+
+    # Store location in the user's session
+    session['latitude'] = float(latitude)
+    session['longitude'] = float(longitude)
+
+    return jsonify({"msg": "Location saved to session successfully"}), 200
+
+
+# --- REPLACE this endpoint in app.py ---
+# --- REMOVE the old register_operator and get_operators functions ---
+# --- ADD this new combined function in their place ---
+
+from flask_jwt_extended import verify_jwt_in_request, get_jwt_identity # Make sure this is imported at the top
+
+@app.route("/api/operators", methods=['GET', 'POST'])
+def handle_operators():
+# In app.py, inside the handle_operators function
+
+    # --- POST Request Logic (for registering a new operator) ---
+    if request.method == 'POST':
+        # This block is for creating a new operator. It must be protected.
+        try:
+            verify_jwt_in_request()
+        except Exception as e:
+            return jsonify(msg="Missing or invalid authorization token."), 401
+
+        try:
+            current_user_id = int(get_jwt_identity())
+        except (ValueError, TypeError):
+            return jsonify({"msg": "Invalid token identity"}), 422
+
+        user = User.query.get(current_user_id)
+        if not user:
+            return jsonify({"msg": "User not found"}), 404
+        
+        # --- LOGIC CHANGE STARTS HERE ---
+
+        # REMOVED: The check that a user can only be one operator.
+        # REMOVED: The restriction that 'owners' cannot add operators. This is more flexible.
+        
+        data = request.get_json()
+        required_fields = ['fullName', 'contactNumber', 'locationName', 'availability']
+        if not all(field in data for field in required_fields):
+            return jsonify({"msg": "Missing required fields (fullName, contactNumber, locationName, availability)"}), 400
+
+        # ADDED: A new, better check. Prevent a user from adding two operators with the same phone number.
+        contact_number = data.get('contactNumber')
+        existing_operator = Operator.query.filter_by(user_id=current_user_id, contact_number=contact_number).first()
+        if existing_operator:
+            return jsonify({"msg": f"You have already created an operator profile with the contact number {contact_number}."}), 409
+
+        location_name = data.get('locationName')
+        lat, lon = None, None
+
+        try:
+            geolocator = Nominatim(user_agent="marf_app_v2") # Changed user agent version
+            location_data = geolocator.geocode(location_name)
+            
+            if location_data:
+                lat = location_data.latitude
+                lon = location_data.longitude
+            else:
+                return jsonify({"msg": f"Could not find coordinates for location: '{location_name}'."}), 400
+        except Exception as e:
+            print(f"❌ Geocoding error: {e}")
+            return jsonify({"msg": "An error occurred while processing the location."}), 500
+
+        new_operator = Operator(
+            user_id=current_user_id, # The user is the manager/creator
+            full_name=data['fullName'],
+            contact_number=contact_number,
+            location_name=location_name,
+            latitude=lat,
+            longitude=lon,
+            availability_status=data['availability']
+        )
+        
+        # REMOVED: We no longer change the user's role. A user is a user, they just manage operators.
+        # user.role = 'operator' 
+        
+        db.session.add(new_operator)
+        db.session.commit()
+        
+        # UPDATED: The success message is now more accurate.
+        return jsonify({"msg": "Operator profile created successfully."}), 201
+    # --- GET Request Logic (for searching/filtering operators) ---
+    if request.method == 'GET':
+        args = request.args
+        name_filter = args.get('name')
+        availability_filter = args.get('availability')
+        distance_km = args.get('distance', type=float)
+        
+        lat = args.get('lat', session.get('latitude'), type=float)
+        lng = args.get('lon', session.get('longitude'), type=float)
+
+        query = db.session.query(Operator).filter(Operator.is_active == True)
+
+        if name_filter:
+            query = query.filter(Operator.full_name.ilike(f"%{name_filter}%"))
+        if availability_filter and availability_filter != 'all':
+            query = query.filter(Operator.availability_status == availability_filter)
+
+        if lat is not None and lng is not None:
+            distance_sql = 6371 * func.acos(
+                func.cos(func.radians(lat)) * func.cos(func.radians(Operator.latitude)) *
+                func.cos(func.radians(Operator.longitude) - func.radians(lng)) +
+                func.sin(func.radians(lat)) * func.sin(func.radians(Operator.latitude))
+            )
+            
+            query = query.add_columns(distance_sql.label('distance'))
+            
+            if distance_km is not None:
+                query = query.filter(distance_sql <= distance_km)
+                
+            query = query.order_by(distance_sql)
+            
+            results = query.all()
+            operator_list = []
+            for row in results:
+                op, dist = row
+                op_data = {
+                    "id": op.id, "user_id": op.user_id, "full_name": op.full_name,
+                    "contact_number": op.contact_number, "location_name": op.location_name,
+                    "latitude": op.latitude, "longitude": op.longitude,
+                    "availability_status": op.availability_status, "distance": dist
+                }
+                operator_list.append(op_data)
+        else:
+            results = query.all()
+            operator_list = [
+                {"id": op.id, "user_id": op.user_id, "full_name": op.full_name,
+                 "contact_number": op.contact_number, "location_name": op.location_name,
+                 "latitude": op.latitude, "longitude": op.longitude,
+                 "availability_status": op.availability_status, "distance": None} for op in results
+            ]
+
+        return jsonify(operator_list), 200
+
+# --- ADD THIS NEW ENDPOINT to app.py ---
+
+@app.route("/my-operators", methods=["GET"])
+@jwt_required()
+def my_operators():
+    """
+    Endpoint for a logged-in user to view all the operator
+    profiles they have created.
+    """
+    try:
+        current_user_id = int(get_jwt_identity())
+    except (ValueError, TypeError):
+        return jsonify({"msg": "Invalid token identity"}), 422
+        
+    # Query for all operators created by the current user
+    user_operators = Operator.query.filter_by(user_id=current_user_id).order_by(Operator.full_name).all()
+    
+    # Serialize the data into a list of dictionaries
+    operator_list = [
+        {
+            "id": op.id,
+            "user_id": op.user_id,
+            "full_name": op.full_name,
+            "contact_number": op.contact_number,
+            "location_name": op.location_name,
+            "latitude": op.latitude,
+            "longitude": op.longitude,
+            "availability_status": op.availability_status,
+            "is_active": op.is_active
+        } for op in user_operators
+    ]
+    
+    return jsonify(operator_list), 200
+
+# --- FARM SOLUTIONS API ENDPOINTS ---
+# Add these new functions to your app.py file
+
+@app.route("/api/solutions", methods=["GET"])
+def get_solutions():
+    """
+    Public endpoint to fetch all APPROVED farm solutions.
+    """
+    # Query for solutions that are approved and join with the User table to get author info
+    approved_solutions = db.session.query(FarmSolution, User).join(
+        User, FarmSolution.user_id == User.id
+    ).filter(
+        FarmSolution.status == 'approved'
+    ).order_by(
+        FarmSolution.submitted_at.desc()
+    ).all()
+
+    solutions_list = []
+    for solution, user in approved_solutions:
+        solutions_list.append({
+            "id": solution.id,
+            "title": solution.title,
+            "description": solution.description,
+            "submitted_at": solution.submitted_at.strftime("%B %d, %Y"),
+            "author_name": user.full_name,
+            # You might want to add a location field to your User model in the future
+            "author_location": "Karnataka, India" 
+        })
+        
+    return jsonify(solutions_list), 200
+
+
+@app.route("/api/solutions", methods=["POST"])
+@jwt_required()
+def submit_solution():
+    """
+    Protected endpoint for a logged-in user to submit a new farm solution.
+    """
+    try:
+        current_user_id = int(get_jwt_identity())
+    except (ValueError, TypeError):
+        return jsonify({"msg": "Invalid token identity"}), 422
+    
+    data = request.get_json()
+    title = data.get("title")
+    description = data.get("description")
+
+    if not title or not description:
+        return jsonify({"msg": "Title and description are required."}), 400
+
+    new_solution = FarmSolution(
+        user_id=current_user_id,
+        title=title,
+        description=description
+        # The 'status' and 'submitted_at' fields will use their default values
+    )
+
+    db.session.add(new_solution)
+    db.session.commit()
+
+    return jsonify({"msg": "Your solution has been submitted for review. Thank you!"}), 201
+
+# Add these imports at the top of your app.py if they are not already there
+from flask_jwt_extended import verify_jwt_in_request
+from functools import wraps
+
+# --- ADMIN PANEL API ENDPOINTS ---
+
+# Helper decorator to protect routes for admins only
+def admin_required():
+    def wrapper(fn):
+        @wraps(fn)
+        def decorator(*args, **kwargs):
+            verify_jwt_in_request()
+            claims = get_jwt() # You might need to import get_jwt from flask_jwt_extended
+            if claims.get('role') != 'admin':
+                return jsonify(msg='Admins only!'), 403
+            else:
+                return fn(*args, **kwargs)
+        return decorator
+    return wrapper
+
+
+@app.route("/api/admin/solutions/pending", methods=["GET"])
+@jwt_required() # First, ensure user is logged in
+def get_pending_solutions():
+    """
+    Fetches all farm solutions with a 'pending_review' status.
+    Protected to ensure only admins can access it.
+    """
+    # We need to get the user ID and then check their role from the database
+    # as claims might not be set up in your simple token.
+    try:
+        current_user_id = int(get_jwt_identity())
+        user = User.query.get(current_user_id)
+        if not user or user.role != 'admin':
+            return jsonify(msg="Administrator access required."), 403
+    except (ValueError, TypeError):
+        return jsonify(msg="Invalid token."), 422
+
+    pending_solutions = db.session.query(FarmSolution, User).join(
+        User, FarmSolution.user_id == User.id
+    ).filter(
+        FarmSolution.status == 'pending_review'
+    ).order_by(
+        FarmSolution.submitted_at.asc() # Show oldest first
+    ).all()
+
+    solutions_list = []
+    for solution, author in pending_solutions:
+        solutions_list.append({
+            "id": solution.id,
+            "title": solution.title,
+            "description": solution.description,
+            "submitted_at": solution.submitted_at.strftime("%B %d, %Y"),
+            "author_name": author.full_name
+        })
+        
+    return jsonify(solutions_list), 200
+
+
+@app.route("/api/admin/solutions/review/<int:solution_id>", methods=["POST"])
+@jwt_required()
+def review_solution(solution_id):
+    """
+    Updates the status of a farm solution to 'approved' or 'rejected'.
+    Protected to ensure only admins can perform this action.
+    """
+    try:
+        moderator_id = int(get_jwt_identity())
+        user = User.query.get(moderator_id)
+        if not user or user.role != 'admin':
+            return jsonify(msg="Administrator access required."), 403
+    except (ValueError, TypeError):
+        return jsonify(msg="Invalid token."), 422
+    
+    solution = FarmSolution.query.get(solution_id)
+    if not solution:
+        return jsonify(msg="Solution not found."), 404
+        
+    if solution.status != 'pending_review':
+        return jsonify(msg="This solution has already been reviewed."), 400
+
+    data = request.get_json()
+    decision = data.get("decision")
+    notes = data.get("notes")
+
+    if decision not in ['approved', 'rejected']:
+        return jsonify(msg="Invalid decision. Must be 'approved' or 'rejected'."), 400
+
+    # Update the solution record
+    solution.status = decision
+    solution.moderator_id = moderator_id
+    solution.admin_notes = notes
+    solution.reviewed_at = datetime.utcnow()
+    
+    db.session.commit()
+    
+    return jsonify(msg=f"Solution has been successfully {decision}."), 200
 
 if __name__ == "__main__":
     app.run(debug=True)

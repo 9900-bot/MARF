@@ -1028,6 +1028,61 @@ async function editEquipment(equipmentId) {
     window.location.href = `editEquipment.html?id=${equipmentId}`;
 }
 </script>
+<script>
+async function fetchMyAccount() {
+    const token = localStorage.getItem("access_token");
+    const nameEl = document.getElementById("profile-name");
+    const emailEl = document.getElementById("profile-email");
+    const phoneEl = document.getElementById("profile-phone");
+    const addressEl = document.querySelector("[data-key='profile_address']");
+    const langEl = document.querySelector("[data-key='profile_language']");
+    const profileImgEl = document.querySelector(".profile-image-container img");
+
+    if (!token) {
+        nameEl.textContent = "Guest User";
+        emailEl.textContent = "Please login";
+        return;
+    }
+
+    try {
+        const response = await fetch("http://127.0.0.1:5000/my-account", {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            console.error("Account fetch failed:", error);
+            nameEl.textContent = "Unknown User";
+            emailEl.textContent = "Error loading account";
+            return;
+        }
+
+        const data = await response.json();
+
+        // Fill values
+        nameEl.textContent = data.full_name || "Not set";
+        emailEl.textContent = data.email || "Not provided";
+        phoneEl.textContent = data.phone || "Not provided";
+        addressEl.textContent = data.address || "Not provided";
+        langEl.textContent = data.language || "Not set";
+        profileImgEl.src = data.profile_picture_url || "https://placehold.co/120x120/173c1c/e8f5e9?text=U";
+
+    } catch (err) {
+        console.error("Error fetching account:", err);
+        nameEl.textContent = "Error";
+        emailEl.textContent = "Could not load account";
+    }
+}
+
+// Run on page load
+document.addEventListener("DOMContentLoaded", () => {
+    fetchMyAccount();
+    fetchMyEquipment(); // your existing function
+});
+</script>
 
 </body>
 </html>
